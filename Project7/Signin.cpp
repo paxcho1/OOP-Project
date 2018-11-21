@@ -54,10 +54,10 @@ int Signin::in(SOCKET client)
 			//vector에 정보 추가
 			V_id.push_back(id);
 			ofstream wFile("Id_index.bin",ios_base::binary);//파일 쓰기로 열기
-			unsigned V_idSize V_id.size();
+			unsigned V_idSize = V_id.size();
 			//파일 기
 			wFile.write(reinterpret_cast<char *>(&V_idSize), sizeof(unsigned));
-			wFile.write(reinterpret_cast<char *>(&V_id[0]), V_id.size() * sizeof(string))
+			wFile.write(reinterpret_cast<char *>(&V_id[0]), V_id.size() * sizeof(string));
 			wFile.close();
 			//binary 저장
 		}
