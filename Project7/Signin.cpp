@@ -25,13 +25,11 @@ int Signin::in(SOCKET client)
 		if (Id_Bytein <= 0) {
 			return -1;
 		}
-		ifstream rFile("Id_index.bin",ios::in |ios::binary);
-		size_t size;
-		rFile >> size;
-		V_id.resize(size);
-		for (size_t i = 0; i < size; i++) {
-			rFile.read(reinterpret_cast<char *>(&V_id), sizeof(string));
-		}
+		ifstream rFile("Id_index.bin", ios_base::binary);
+		unsigned vsize;
+
+		rFile.read(reinterpret_cast<char*>(&vsize), sizeof(unsigned));
+		rFile.read(reinterpret_cast<char*>(&V_id[0]), vsize * sizeof(string));
 		rFile.close();
 		//in_index 파일 불러오기(binary)
 		//ifstream File("Id_index.bin", ios::in | ios::binary);
@@ -54,11 +52,10 @@ int Signin::in(SOCKET client)
 			}
 			//vector에 정보 추가
 			V_id.push_back(id);
-			ofstream wFile("Id_index.bin", ios::out | ios::binary);
-			wFile << V_id.size();
-			for (size_t i = 0; i<V_id.size(); ++i) {
-				wFile.write(reinterpret_cast<const char*>(&V_id), sizeof(string));
-			}
+			ofstream wFile("Id_index.bin",ios_base::binary);
+			unsigned V_idSize V_id.size();
+			wFile.write(reinterpret_cast<char *>(&V_idSize), sizeof(unsigned));
+			wFile.write(reinterpret_cast<char *>(&V_id[0]), V_id.size() * sizeof(string))
 			wFile.close();
 			//binary 저장
 		}
