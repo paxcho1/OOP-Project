@@ -30,7 +30,9 @@ int Signin::in(SOCKET client)
 
 		//읽기
 		rFile.read(reinterpret_cast<char*>(&vsize), sizeof(unsigned));
-		rFile.read(reinterpret_cast<char*>(&V_id[0]), vsize * sizeof(string));
+		vector<string> theId(vsize);
+		rFile.read(reinterpret_cast<char*>(&theId[0]), vsize * sizeof(string));
+		V_id = theId;
 		rFile.close();
 		//in_index 파일 불러오기(binary)
 		//ifstream File("Id_index.bin", ios::in | ios::binary);
