@@ -16,7 +16,7 @@ int Signin::in(SOCKET client)
 	char password[MAX_BUFFER_SIZE];
 	int Id_Bytein;
 	int Password_Bytein;
-	//id Áßº¹°Ë»ç
+	//id ì¤‘ë³µê²€ì‚¬
 	int overlap = 0;
 	vector<string> V_id;
 	set<pair<string, string>> user_Info;
@@ -25,24 +25,25 @@ int Signin::in(SOCKET client)
 		if (Id_Bytein <= 0) {
 			return -1;
 		}
-		ifstream rFile("Id_index.bin",ios::in |ios::binary);
-		size_t size;
-		rFile >> size;
-		V_id.resize(size);
-		for (size_t i = 0; i < size; i++) {
-			rFile.read(reinterpret_cast<char *>(&V_id), sizeof(string));
-		}
+		ifstream rFile("Id_index.bin", ios_base::binary);//íŒŒì¼ ì½ê¸°ë¡œ ì—´ê¸°
+		unsigned vsize;
+
+		//ì½ê¸°
+		rFile.read(reinterpret_cast<char*>(&vsize), sizeof(unsigned));
+		vector<string> theId(vsize);
+		rFile.read(reinterpret_cast<char*>(&theId[0]), vsize * sizeof(string));
+		V_id = theId;
 		rFile.close();
-		//in_index ÆÄÀÏ ºÒ·¯¿À±â(binary)
+		//in_index íŒŒì¼ ë¶ˆëŸ¬ì˜¤ê¸°(binary)
 		//ifstream File("Id_index.bin", ios::in | ios::binary);
 		
-		cout << "¹Ì·¡°¡ ¾Èº¸¿©";
+		cout << "ë¯¸ë˜ê°€ ì•ˆë³´ì—¬";
 		if (find(V_id.begin(), V_id.end(), id) == V_id.end()) {
-			//id°¡ ¾øÀ»¶§
+			//idê°€ ì—†ì„ë•Œ
 			overlap = 1;
 			send(client, "succeed", 8, 0);
-			//id°¡ ¾ø´Ù´Â ¸Ş¼¼Áö send
-			//´ÙÀ½Ã¢
+			//idê°€ ì—†ë‹¤ëŠ” ë©”ì„¸ì§€ send
+			//ë‹¤ìŒì°½
 
 			Id_Bytein = tool::Recv(client, id);
 			if (Id_Bytein <= 0) {
@@ -52,22 +53,22 @@ int Signin::in(SOCKET client)
 			if (Password_Bytein <= 0) {
 				return -1;
 			}
-			//vector¿¡ Á¤º¸ Ãß°¡
+			//vectorì— ì •ë³´ ì¶”ê°€
 			V_id.push_back(id);
-			ofstream wFile("Id_index.bin", ios::out | ios::binary);
-			wFile << V_id.size();
-			for (size_t i = 0; i<V_id.size(); ++i) {
-				wFile.write(reinterpret_cast<const char*>(&V_id), sizeof(string));
-			}
+			ofstream wFile("Id_index.bin",ios_base::binary);//íŒŒì¼ ì“°ê¸°ë¡œ ì—´ê¸°
+			unsigned V_idSize = V_id.size();
+			//íŒŒì¼ ê¸°
+			wFile.write(reinterpret_cast<char *>(&V_idSize), sizeof(unsigned));
+			wFile.write(reinterpret_cast<char *>(&V_id[0]), V_id.size() * sizeof(string));
 			wFile.close();
-			//binary ÀúÀå
+			//binary ì €ì¥
 		}
 		else {
 
 			send(client, "overlap", 8, 0);
 		}
 		
-			//id Áßº¹ ¸Ş¼¼Áö send
+			//id ì¤‘ë³µ ë©”ì„¸ì§€ send
 	}while (overlap==0);
 
 
