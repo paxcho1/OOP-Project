@@ -1,7 +1,4 @@
 #include "Messanger.h"
-
-
-
 Messanger::Messanger(SOCKET client,string Id):tool(client)
 {
 }
@@ -24,20 +21,22 @@ int Messanger::in(SOCKET client,string Id) {
 			return 0;
 		}
 		else if (strcmp(msg, "Alarm") == 0) {
-			while (strcmp(msg, "Alarm") != 0) {
-				if (strcmp(msg, "MessangerClose") == 0) {// 메신저 종료
-					return 0;
-				}
-				Send(client, "Alarm");
-				Alarm alam(client, Id);
-				alam.in(client, Id);
-				Recv(client, msg);
-			}//알람이 아니라 msg를 받을때까지 계속 반복
+			Send(client, "Alarm");
+			Alarm alam(client, Id);
+			alam.in(client, Id);
+			//알람이 아니라 msg를 받을때까지 계속 반복
+		}
+		else if (strcmp(msg, "SendInvite") == 0) {
+			cout << "Sending invite message" << endl;
+			char recv_id[MAX_BUFFER_SIZE];
+			Recv(client, recv_id);
+			AddFriends Add(client, Id , recv_id);
+			Add.Send_invite(client, Id, recv_id);
 		}
 		else if (Bytein <= 0) {
 			return -1;
 		}
-		else {
+		else {//메세지를 입력받았다 //filename msg 형태로 받음
 			
 			char* ptr = strtok(msg, " ");
 			string file = (strcpy,ptr);//file = filename
@@ -84,6 +83,5 @@ int Messanger::in(SOCKET client,string Id) {
 				ptr = strtok(NULL, ",");
 			}
 		}
-
 	}
 }

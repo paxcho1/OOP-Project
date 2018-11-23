@@ -18,9 +18,6 @@ int Alarm::in(SOCKET client,string Id) {//client의 id를 이용해 alarm폴더의 모든�
 	string Filepath;
 	WIN32_FIND_DATA FindData;
 	HANDLE hFind;
-	
-	//struct _finddata_t fd;
-	//intptr_t handle; 
 	hFind = FindFirstFile((LPCSTR)path, &FindData);
 	if (hFind ==INVALID_HANDLE_VALUE)//file에 아무것도 없을때
 	{
