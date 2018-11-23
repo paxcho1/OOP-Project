@@ -23,5 +23,5 @@ public:
 	void VectorToTxt(const char* fileName, vector<string> &theId);
 	void TxtToVector(const char* fileName, vector<string> &theId);
 	void MapToTxt(const char* fileName, map<string, string> &user_Info);
-
+	void SocketToTxt(const char* fileName, map<string, SOCKET> &user_Info);
 };

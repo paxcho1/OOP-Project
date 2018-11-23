@@ -15,9 +15,9 @@ int Messanger::in(SOCKET client,string Id) {
 	char path[255];
 	char file[MAX_BUFFER_SIZE];
 	char msg[MAX_BUFFER_SIZE];
-
-
-
+	map<string, SOCKET>socket_info;
+	socket_info.insert(pair<string, SOCKET>(Id, client));
+	tool::SocketToTxt("c:/server/Id_Socket_map.txt", socket_info);
 
 
 

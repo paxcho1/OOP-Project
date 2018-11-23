@@ -26,7 +26,7 @@ int Signin::in(SOCKET client)
 		if (Id_Bytein <= 0) {
 			return -1;
 		}
-		tool::TxtToVector("id_index.txt", V_id);
+		tool::TxtToVector("c:/server/id_index.txt", V_id);
 
 		//in_index 파일 불러오기(txt)
 
@@ -49,12 +49,10 @@ int Signin::in(SOCKET client)
 			if (Password_Bytein <= 0) {
 				return -1;
 			}
-			tool::VectorToTxt("id_index.txt", V_id);
-
+			tool::VectorToTxt("c:/server/id_index.txt", V_id);
 			//txt파일 저장
 		}
 		else {
-
 			send(client, "overlap\nRe-enter your id\n", 27, 0);
 		}
 
@@ -71,7 +69,7 @@ int Signin::in(SOCKET client)
 	_mkdir(path.c_str());
 	user_Info.insert(pair<string, string>(id, password));
 
-	tool::MapToTxt("Id_Ps_map.txt", user_Info);
+	tool::MapToTxt("c:/server/Id_Ps_map.txt", user_Info);
 	return 0;
 
 }

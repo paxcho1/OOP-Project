@@ -48,3 +48,11 @@ void tool::MapToTxt(const char* fileName, map<string, string> &Map) {
 
 	wFile.close();
 }
+void tool::SocketToTxt(const char* fileName, map<string, SOCKET> &Map) {
+	ofstream wFile(fileName);
+	for (map<string, SOCKET>::const_iterator iterator = Map.begin(); iterator != Map.end(); ++iterator) {
+		wFile << iterator->first << "|" << iterator->second;
+		wFile << "\n";
+	}
+	wFile.close();
+}

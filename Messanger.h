@@ -6,6 +6,7 @@
 #include <fstream>
 #include <windows.h>
 #include <stdio.h>
+#include <map>
 #include <algorithm>
 #include "Tool.h"
 #include "Alarm.h"
