@@ -16,34 +16,43 @@ int Signin::in(SOCKET client)
 	char password[MAX_BUFFER_SIZE];
 	int Id_Bytein;
 	int Password_Bytein;
-	//id ì¤‘ë³µê²€ì‚¬
+	//id Áßº¹°Ë»ç
 	int overlap = 0;
 	vector<string> V_id;
-	set<pair<string, string>> user_Info;
+	string file_string;
+	map<string, string> user_Info;
 	do {
 		Id_Bytein = tool::Recv(client, id);
 		if (Id_Bytein <= 0) {
 			return -1;
 		}
-		ifstream rFile("Id_index.bin", ios_base::binary);//íŒŒì¼ ì½ê¸°ë¡œ ì—´ê¸°
-		unsigned vsize;
-
-		//ì½ê¸°
-		rFile.read(reinterpret_cast<char*>(&vsize), sizeof(unsigned));
-		vector<string> theId(vsize);
-		rFile.read(reinterpret_cast<char*>(&theId[0]), vsize * sizeof(string));
-		V_id = theId;
+		ifstream rFile("Id_index.txt");
+		while (getline(rFile, file_string)) {
+			if (file_string.size() > 0)
+				V_id.push_back(file_string);
+		}
 		rFile.close();
-		//in_index íŒŒì¼ ë¶ˆëŸ¬ì˜¤ê¸°(binary)
+			/*
+			ifstream rFile("Id_index.bin", ios_base::binary);
+			unsigned vsize;
+
+			rFile.read(reinterpret_cast<char*>(&vsize), sizeof(unsigned));
+			//V_id.resize(vsize);
+			vector<string> the_Id(vsize);
+			rFile.read(reinterpret_cast<char*>(&the_Id[0]), vsize * sizeof(string));
+			V_id = the_Id;
+			rFile.close();
+		*/
+		//in_index ÆÄÀÏ ºÒ·¯¿À±â(binary)
 		//ifstream File("Id_index.bin", ios::in | ios::binary);
 		
-		cout << "ë¯¸ë˜ê°€ ì•ˆë³´ì—¬";
+		cout << "¹Ì·¡°¡ ¾Èº¸¿©";
 		if (find(V_id.begin(), V_id.end(), id) == V_id.end()) {
-			//idê°€ ì—†ì„ë•Œ
+			//id°¡ ¾øÀ»¶§
 			overlap = 1;
 			send(client, "succeed", 8, 0);
-			//idê°€ ì—†ë‹¤ëŠ” ë©”ì„¸ì§€ send
-			//ë‹¤ìŒì°½
+			//id°¡ ¾ø´Ù´Â ¸Ş¼¼Áö send
+			//´ÙÀ½Ã¢
 
 			Id_Bytein = tool::Recv(client, id);
 			if (Id_Bytein <= 0) {
@@ -53,25 +62,42 @@ int Signin::in(SOCKET client)
 			if (Password_Bytein <= 0) {
 				return -1;
 			}
-			//vectorì— ì •ë³´ ì¶”ê°€
+			//vector¿¡ Á¤º¸ Ãß°¡
+			
 			V_id.push_back(id);
-			ofstream wFile("Id_index.bin",ios_base::binary);//íŒŒì¼ ì“°ê¸°ë¡œ ì—´ê¸°
+			ofstream wFile("Id_index.txt");
+			ostream_iterator<string> wFile_iterator(wFile, "\n");
+			copy(V_id.begin(), V_id.end(), wFile_iterator);
+			wFile.close();
+			/*
+			ofstream wFile("Id_index.bin",ios_base::binary);
 			unsigned V_idSize = V_id.size();
-			//íŒŒì¼ ê¸°
 			wFile.write(reinterpret_cast<char *>(&V_idSize), sizeof(unsigned));
 			wFile.write(reinterpret_cast<char *>(&V_id[0]), V_id.size() * sizeof(string));
 			wFile.close();
-			//binary ì €ì¥
+			*/
+			//binary ÀúÀå
 		}
 		else {
 
 			send(client, "overlap", 8, 0);
 		}
 		
-			//id ì¤‘ë³µ ë©”ì„¸ì§€ send
+			//id Áßº¹ ¸Ş¼¼Áö send
+	
 	}while (overlap==0);
+	
+	user_Info.insert(pair<string, string>(id, password));
+	
+	ofstream wFile("Id_Ps_map.txt");
+	for (map<string, string>::const_iterator iterator = user_Info.begin(); iterator != user_Info.end();) {
+		wFile << iterator->first << "|" << iterator->second;
+		wFile << "\n";
+	}
 
+	wFile.close();
 
 	return 0;
 
 }
+ 

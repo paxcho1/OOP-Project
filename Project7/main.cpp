@@ -12,6 +12,11 @@ void Sign(SOCKET client) {
 	Signin sign(client);
 	sign.in(client);
 }
+/*void Login(SOCKET client) {
+	Login login(client);
+
+}
+*/
 int main() {
 	while (1) {
 		WSADATA data;
@@ -64,6 +69,8 @@ int main() {
 							SIGN.detach();
 						}
 						else if (buf == "Login") {
+							//thread Login
+							//thread Login();
 						
 						}
 						//메세지 수신

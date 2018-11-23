@@ -3,12 +3,14 @@
 #include <string>
 #include "Tool.h"
 #include <vector>
-#include <set>
+#include <map>
 #include <algorithm>
 #include <iostream>
 #include <fstream>
 #include <istream>
 #include <sstream>
+#include <iterator>
+
 #define MAX_BUFFER_SIZE 40910
 using namespace std;
 class Signin: public tool
