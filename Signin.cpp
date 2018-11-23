@@ -62,6 +62,13 @@ int Signin::in(SOCKET client)
 
 	} while (overlap == 0);
 	send(client, "Successfully finished signin", 29, 0);
+	string file = id;
+	string path = "c:/server/" + file;
+	_mkdir(path.c_str());
+	path = "c:/server/" + file + "/chat" + file + "alarm";
+	_mkdir(path.c_str());
+	path = "c:/server/" + file + "/friends" + file + "alarm";
+	_mkdir(path.c_str());
 	user_Info.insert(pair<string, string>(id, password));
 
 	tool::MapToTxt("Id_Ps_map.txt", user_Info);

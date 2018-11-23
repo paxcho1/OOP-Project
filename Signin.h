@@ -1,4 +1,5 @@
 #pragma once
+#include <direct.h>
 #include <WinSock2.h>
 #include <string>
 #include "Tool.h"
