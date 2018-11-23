@@ -6,22 +6,16 @@
 #include <fstream>
 #include <windows.h>
 #include <stdio.h>
-#include <map>
 #include <algorithm>
 #include "Tool.h"
-#include "Alarm.h"
-#include "AddFriends.h"
 #include <stdlib.h>
-#pragma comment(lib,"ws2_32")
-using namespace std;
-class Messanger:public tool
+class MakeChat :public tool
 {
 private:
-	SOCKET client;
 	string Id;
+	SOCKET client;
 public:
-	Messanger(SOCKET client, string Id);
-	~Messanger();
-	int in(SOCKET client,string id);
+	MakeChat(SOCKET client, string Id);
+	~MakeChat();
+	int Make(SOCKET client, string Id);
 };
-
