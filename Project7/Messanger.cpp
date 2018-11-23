@@ -76,13 +76,12 @@ int Messanger::in(SOCKET client,string Id) {
 		
 		char filename[MAX_BUFFER_SIZE];
 		strcpy(filename, file);
-		char *ptr = strtok(filename,"chat:");//index 관련 전부 삭제
-		ptr = strtok(NULL, ",");
+		char *ptr = strtok(filename,",");//index 관련 전부 삭제
 		while (ptr != NULL) {//ptr은 채팅방에 있는 다른 user_id이다.
 			if (ptr != Id) {
 				string str = ptr;// another_user_id
 				string index_path = "c:/server/Socket_Id_Map.txt";
-				pathstr = "c:/server/" + str + "/" + str + "alarm/" + file + ".txt";//filename은 같다 user/alarm/filename의 경로
+				pathstr = "c:/server/" + str + "/chat" + str + "alarm/" + file + ".txt";//filename은 같다 user/alarm/filename의 경로
 				strcpy(path, pathstr.c_str());
 				ofstream DWrite(path, ios::app);
 				if (DWrite.is_open()) {
