@@ -11,5 +11,6 @@ AddFriends::~AddFriends()
 {
 }
 int AddFriends::Send_invite(SOCKET client, string Id) {
+
 	return 1;
 }
