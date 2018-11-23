@@ -34,7 +34,7 @@ void tool::Send(SOCKET client, string msg) {
 int tool::Recv(SOCKET client, char buf[]) {
 
 	ZeroMemory(buf, MAX_BUFFER_SIZE);
-	int Bytein = recv(client, buf, MAX_BUFFER_SIZE, 0);//¸Þ¼¼Áö¸¦ ÀÔ·Â¹ÞÀ½
+	int Bytein = recv(client, buf, MAX_BUFFER_SIZE, 0);//error handle
 	if (Bytein <= 0) {
 		return 0;
 	}
@@ -74,8 +74,8 @@ void tool::TxtToMap(const char* fileName, map<string, string> &Map) {
 		splitString(v_str, file_string, '|');
 		for (vector<string>::iterator iterator = v_str.begin(); iterator != v_str.end(); (++iterator)) {
 
-			Map[*iterator] = *(++iterator);
-
+			Map[*(--iterator)] = *(++iterator);
+			++iterator;
 		}
 	}
 
@@ -96,7 +96,8 @@ void tool::TxtToSocket(const char* fileName, map<string, SOCKET> &Id_Socket) {
 	while (getline(rFile, file_string)) {
 		splitString(v_str, file_string, '|');
 		for (vector<string>::iterator iterator = v_str.begin(); iterator != v_str.end(); ++iterator) {
-			Id_Socket[*iterator] = stoi(*(++iterator));
+			Id_Socket[*(--iterator)] = stoi(*(++iterator));
+			++iterator;
 		}
 	}
 }

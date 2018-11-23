@@ -21,6 +21,7 @@ int Signin::in(SOCKET client)
 	vector<string> V_id;
 	string file_string;
 	map<string, string> user_Info;
+	tool::TxtToVector("id_index.txt", V_id);
 	do {
 		Id_Bytein = tool::Recv(client, id);
 		if (strcmp(password, "SigninClose") == 0) {
@@ -29,8 +30,6 @@ int Signin::in(SOCKET client)
 		else if (Id_Bytein <= 0) {
 			return -1;
 		}
-
-		tool::TxtToVector("id_index.txt", V_id);
 
 		//in_index 파일 불러오기(txt)
 
@@ -76,13 +75,16 @@ int Signin::in(SOCKET client)
 	_mkdir(path.c_str());
 	path = "c:/server/" + file + "/friends" + file + "alarm";
 	_mkdir(path.c_str());
+	path = "c:/server/" + file + "/friends" + file + "invite";
+	_mkdir(path.c_str());
 	path = "c:/server/" + file + "/friends" + file;
 	_mkdir(path.c_str());
+
 	//txt에서 map으로
-	tool::TxtToMap("Id_Ps_map.txt", user_Info);
+	tool::TxtToMap("c://Id_Ps_map.txt", user_Info);
 	user_Info.insert(pair<string, string>(id, password));
 
-	tool::MapToTxt("Id_Ps_map.txt", user_Info);
+	tool::MapToTxt("c://Id_Ps_map.txt", user_Info);
 	return 0;
-
 }
+
