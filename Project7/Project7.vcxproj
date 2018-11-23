@@ -115,11 +115,17 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="AddFriends.cpp" />
+    <ClCompile Include="Alarm.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Messanger.cpp" />
     <ClCompile Include="Signin.cpp" />
     <ClCompile Include="Tool.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="AddFriends.h" />
+    <ClInclude Include="Alarm.h" />
+    <ClInclude Include="Messanger.h" />
     <ClInclude Include="Signin.h" />
     <ClInclude Include="Tool.h" />
   </ItemGroup>

@@ -2,21 +2,30 @@
 #include <iostream>
 #include <WS2tcpip.h>
 #include <sstream>
-#include <thread>
+#include <thread>  
+#include <direct.h>
+#include <WS2tcpip.h>
 #include "Signin.h"
-
+#include "Alarm.h"
+#include "Messanger.h"
 using namespace std;
 
+fd_set Fd;
 #pragma comment(lib,"ws2_32.lib")
 void Sign(SOCKET client) {
 	Signin sign(client);
 	sign.in(client);
 }
-/*void Login(SOCKET client) {
-	Login login(client);
-
+void Alam(SOCKET client, string id) {
+	Alarm alarm(client, id);
+	alarm.in(client,id);
 }
-*/
+void Message(SOCKET client, string id) {
+	//Alarm alarm(client, id);
+	//alarm.in(client, id);
+	Messanger messanger(client, id);
+	messanger.in(client, id);
+}
 int main() {
 	while (1) {
 		WSADATA data;
@@ -27,7 +36,7 @@ int main() {
 			cout << "윈속 초기화 실패" << endl;
 		}
 		cout << "윈속 초기화 성공" << endl;
-
+		_mkdir("c:/server");
 		SOCKET listensocket = socket(AF_INET, SOCK_STREAM, 0);
 		sockaddr_in insocket;
 		insocket.sin_family = AF_INET;
@@ -37,7 +46,6 @@ int main() {
 		inet_pton(AF_INET, ip.c_str(), &insocket.sin_addr);
 		::bind(listensocket, (sockaddr*)&insocket, sizeof(insocket));
 		listen(listensocket, SOMAXCONN);
-		fd_set Fd;
 		FD_ZERO(&Fd);
 		FD_SET(listensocket, &Fd);
 		cout << "listensock을 master에 추가" << endl;
@@ -55,23 +63,47 @@ int main() {
 					FD_SET(client, &Fd);
 				}
 				else {
-					char buf[4096];
-					ZeroMemory(buf, 4096);
-					int byteIn = recv(sock, buf, 4096, 0);
+					char buf[MAX_BUFFER_SIZE];
+					ZeroMemory(buf, MAX_BUFFER_SIZE);
+					int byteIn = recv(sock, buf, MAX_BUFFER_SIZE, 0);
 					if (byteIn <= 0) {
 						closesocket(sock);
 						FD_CLR(sock, &Fd);
 					}
 					else {
-						if (strcmp(buf,"Signin")!=1) {//client의 login 요청
+						if (strcmp(buf,"Signin") == 0) {//client의 login 요청
 							//thread Signin
 							thread SIGN(&Sign, sock);
 							SIGN.detach();
 						}
-						else if (buf == "Login") {
-							//thread Login
-							//thread Login();
+						else if (strcmp(buf, "Login") == 0) {
 						
+						}
+						else if (strcmp(buf, "Alarm") == 0) {
+							char buf[MAX_BUFFER_SIZE];
+							ZeroMemory(buf, MAX_BUFFER_SIZE);
+							int byteIn = recv(sock, buf, MAX_BUFFER_SIZE, 0);
+							if (byteIn <= 0) {
+								closesocket(sock);
+								FD_CLR(sock, &Fd);
+							}
+							else {
+								thread Alarm(&Alam, sock, buf);
+								Alarm.detach();
+							}
+						}
+						else if (strcmp(buf, "Messanger") == 0) {
+							char buf[MAX_BUFFER_SIZE];
+							ZeroMemory(buf, MAX_BUFFER_SIZE);
+							int byteIn = recv(sock, buf, MAX_BUFFER_SIZE, 0);
+							if (byteIn <= 0) {
+								closesocket(sock);
+								FD_CLR(sock, &Fd);
+							}
+							else {
+								thread Messange(&Message, sock, buf);
+								Messange.detach();
+							}
 						}
 						//메세지 수신
 						//event 수신

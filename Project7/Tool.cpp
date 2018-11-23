@@ -9,6 +9,9 @@ tool::tool(SOCKET client)
 tool::~tool()
 {
 }
+void tool::Send(SOCKET client, string msg) {
+	send(client, msg.c_str(), msg.size()+1, 0);
+}
 
 int tool::Recv(SOCKET client, char buf[]) {
 
