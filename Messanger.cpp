@@ -2,22 +2,27 @@
 Messanger::Messanger(SOCKET client,string Id):tool(client)
 {
 }
-
-
 Messanger::~Messanger()
 {
 }
-
 int Messanger::in(SOCKET client,string Id) {
 	char path[255];
 	char file[MAX_BUFFER_SIZE];
 	char msg[MAX_BUFFER_SIZE];
+	map<string, SOCKET>::iterator iter;
 	map<string, SOCKET>socket_info;
+	cout << "메신저 접속 id:" + Id << endl;
+	tool::TxtToSocket("c:/server/Id_Socket_map.txt", socket_info);
 	socket_info.insert(pair<string, SOCKET>(Id, client));
 	tool::SocketToTxt("c:/server/Id_Socket_map.txt", socket_info);
+	socket_info.clear();
+	tool::TxtToSocket("c:/server/Id_Socket_map.txt", socket_info);
 	while (1) {
 		int Bytein = Recv(client, msg);//메세지 입력받음 여기서 메신저의 종료도 입력받는다.
 		if (strcmp(msg, "MessangerClose") == 0) {// 메신저 종료
+			iter = socket_info.find(Id);
+			socket_info.erase(iter);
+			tool::SocketToTxt("c:/server/Id_Socket_map.txt", socket_info);
 			return 0;
 		}
 		else if (strcmp(msg, "Alarm") == 0) {
@@ -33,7 +38,17 @@ int Messanger::in(SOCKET client,string Id) {
 			AddFriends Add(client, Id , recv_id);
 			Add.Send_invite(client, Id, recv_id);
 		}
+		else if (strcmp(msg, "AcceptInvite") == 0) {
+			cout << "Accepting invite message" << endl;
+			char recv_id[MAX_BUFFER_SIZE];
+			Recv(client, recv_id);
+			AddFriends Add(client, Id, recv_id);
+			Add.Accept_invite(client, Id, recv_id);
+		}
 		else if (Bytein <= 0) {
+			iter = socket_info.find(Id);
+			socket_info.erase(iter);
+			tool::SocketToTxt("c:/server/Id_Socket_map.txt", socket_info);
 			return -1;
 		}
 		else {//메세지를 입력받았다 //filename msg 형태로 받음
@@ -61,6 +76,7 @@ int Messanger::in(SOCKET client,string Id) {
 			char filename[MAX_BUFFER_SIZE];
 			strcpy(filename, file.c_str());
 			ptr = strtok(filename, ",");//index 관련 전부 삭제
+			SOCKET destsock;
 			while (ptr != NULL) {//ptr은 채팅방에 있는 다른 user_id이다.
 				if (ptr != Id) {
 					string str = ptr;// another_user_id
@@ -76,7 +92,13 @@ int Messanger::in(SOCKET client,string Id) {
 						return -1;
 					}
 					DWrite.close();
-					//if (ptrfind = 1) {//현재 해당 user가 접속중
+					iter = socket_info.find(ptr);
+					if (iter != socket_info.end()) {}
+					else {
+						destsock = iter->second;
+						cout << "목표 소켓" + destsock << endl;
+						Send(destsock, "Alarm");
+					}//if (ptrfind = 1) {//현재 해당 user가 접속중
 					//	//send alarm message
 					//}+
 				}

@@ -19,5 +19,6 @@ public:
 	AddFriends(SOCKET client, string Id,string recv_id);
 	~AddFriends();
 	int Send_invite(SOCKET client, string Id, string recv_id);
+	int Accept_invite(SOCKET client, string Id, string recv_id);
 };
 
