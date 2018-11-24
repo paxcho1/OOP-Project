@@ -22,14 +22,14 @@ int Login::logging(SOCKET client) {
 	int CheckPassword = 0;
 	string str;
 	const char* msg ;
-	tool::TxtToMap("C:\Id_Ps_map.txt", user_Info);
+	tool::TxtToMap("c:/server/Id_Ps_map.txt", user_Info);
 
 	str = "enter your Id and Password";
 	
-	send(client, str.c_str(), str.size(), 0);
+	send(client, str.c_str(), MAX_BUFFER_SIZE, 0);
 	do {
-		Id_Bytein = tool::Recv(client, Id); //¾ÆÀÌµğ ¹Ş±â
-		Password_Bytein = tool::Recv(client, Password);//ºñ¹ø ¹Ş±â
+		Id_Bytein = tool::Recv(client, Id); //ì•„ì´ë”” ë°›ê¸°
+		Password_Bytein = tool::Recv(client, Password);//ë¹„ë²ˆ ë°›ê¸°
 
 		
 		CheckId = 0;
@@ -37,16 +37,16 @@ int Login::logging(SOCKET client) {
 
 		for (iter = user_Info.begin(); iter != user_Info.end(); (++iter)) {
 			if (iter->first == Id) {
-				CheckId = 1;//Id°¡ µî·ÏµÇ¾î ÀÖÀ½
+				CheckId = 1;//Idê°€ ë“±ë¡ë˜ì–´ ìˆìŒ
 				if (iter->second == Password) {
 						CheckPassword = 1;
 						str = "Successfully Login";
-						send(client,str.c_str(), str.size(), 0);
+						send(client,str.c_str(), MAX_BUFFER_SIZE, 0);
 						
 				}
 				else {
 					str = "Ether your id or password is wrong";
-					send(client, str.c_str(), str.size(), 0);
+					send(client, str.c_str(), MAX_BUFFER_SIZE, 0);
 					
 				}
 					
@@ -55,10 +55,10 @@ int Login::logging(SOCKET client) {
 				
 			}
 		}
-		//Id°¡ µî·ÏµÇ¾î ÀÖÁö ¾ÊÀ½
+		//Idê°€ ë“±ë¡ë˜ì–´ ìˆì§€ ì•ŠìŒ
 		if (CheckId != 1 || CheckPassword != 1) {
 			str = "Ether your id or password is wrong";
-			send(client, str.c_str(), str.size(), 0);
+			send(client, str.c_str(), MAX_BUFFER_SIZE, 0);
 		}
 		
 
