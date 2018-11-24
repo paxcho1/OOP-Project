@@ -15,10 +15,11 @@ int Messanger::in(SOCKET client,string Id) {
 	socket_info.insert(pair<string, SOCKET>(Id, client));
 	tool::SocketToTxt("c:/server/Id_Socket_map.txt", socket_info);
 	socket_info.clear();
-	tool::TxtToSocket("c:/server/Id_Socket_map.txt", socket_info);
 	while (1) {
 		int Bytein = Recv(client, msg);//메세지 입력받음 여기서 메신저의 종료도 입력받는다.
 		if (strcmp(msg, "MessangerClose") == 0) {// 메신저 종료
+			tool::TxtToSocket("c:/server/Id_Socket_map.txt", socket_info);
+			cout << "id:" + Id + " is now logout" << endl;
 			iter = socket_info.find(Id);
 			socket_info.erase(iter);
 			tool::SocketToTxt("c:/server/Id_Socket_map.txt", socket_info);
@@ -34,8 +35,9 @@ int Messanger::in(SOCKET client,string Id) {
 			cout << "Sending invite message" << endl;
 			char buf[MAX_BUFFER_SIZE];
 			string recv_id = MessangerRecv(client,Id, buf);
-			if (strcmp(msg, "MessangerClose") == 0 || strcmp (msg,"SocketError"))
+			if (strcmp(msg, "MessangerClose") == 0 || strcmp (msg,"SocketError")==0)
 			{
+				cout << "id:" + Id + " is now logout" << endl;
 				return 0;
 			}
 			AddFriends Add(client, Id , recv_id);
@@ -45,8 +47,9 @@ int Messanger::in(SOCKET client,string Id) {
 			cout << "Accepting invite message" << endl;
 			char buf[MAX_BUFFER_SIZE];
 			string recv_id =MessangerRecv(client,Id, buf);
-			if (strcmp(msg, "MessangerClose") == 0 || strcmp(msg, "SocketError"))
+			if (strcmp(msg, "MessangerClose") == 0 || strcmp(msg, "SocketError") ==0)
 			{
+				cout << "id:" + Id + " is now logout" << endl;
 				return 0;
 			}
 			AddFriends Add(client, Id, recv_id);
@@ -58,6 +61,7 @@ int Messanger::in(SOCKET client,string Id) {
 			Make.Make(client, Id);
 		}
 		else if (Bytein <= 0) {
+			tool::TxtToSocket("c:/server/Id_Socket_map.txt", socket_info);
 			iter = socket_info.find(Id);
 			socket_info.erase(iter);
 			cout << "id:" + Id + " is now logout" << endl;
@@ -105,13 +109,16 @@ int Messanger::in(SOCKET client,string Id) {
 						return -1;
 					}
 					DWrite.close();
+					tool::TxtToSocket("c:/server/Id_Socket_map.txt", socket_info);
 					iter = socket_info.find(ptr);
-					if (iter != socket_info.end()) {}
+					if (iter == socket_info.end()) {}
 					else {
 						destsock = iter->second;
 						cout << "목표 소켓" + destsock << endl;
 						Send(destsock, "Alarm");
-					}//if (ptrfind = 1) {//현재 해당 user가 접속중
+					}
+					socket_info.clear();
+					//if (ptrfind = 1) {//현재 해당 user가 접속중
 					//	//send alarm message
 					//}+
 				}

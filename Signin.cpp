@@ -81,10 +81,10 @@ int Signin::in(SOCKET client)
 	_mkdir(path.c_str());
 
 	//txt에서 map으로
-	tool::TxtToMap("c://Id_Ps_map.txt", user_Info);
+	tool::TxtToMap("c:/server/Id_Ps_map.txt", user_Info);
 	user_Info.insert(pair<string, string>(id, password));
 
-	tool::MapToTxt("c://Id_Ps_map.txt", user_Info);
+	tool::MapToTxt("c:/serverId_Ps_map.txt", user_Info);
 	return 0;
 }
 

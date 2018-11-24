@@ -8,6 +8,7 @@
 #include "Signin.h"
 #include "Alarm.h"
 #include "Messanger.h"
+#include "Tool.h"
 using namespace std;
 
 fd_set Fd;
@@ -34,7 +35,13 @@ int main() {
 	while (1) {
 		WSADATA data;
 		WORD ver = MAKEWORD(2, 2);
-
+		map<string, SOCKET>socket_info;
+		ofstream wFile("c:/server/Id_Socket_map.txt");
+		for (map<string, SOCKET>::const_iterator iterator = socket_info.begin(); iterator != socket_info.end(); ++iterator) {
+			wFile << iterator->first << "|" << iterator->second;
+			wFile << "\n";
+		}
+		wFile.close();
 		int wsInit = WSAStartup(ver, &data);
 		if (wsInit != 0) {
 			cout << "윈속 초기화 실패" << endl;
@@ -97,6 +104,7 @@ int main() {
 							}
 						}
 						else if (strcmp(buf, "Messanger") == 0) {
+							cout << "Messanger in" << endl;
 							char buf[MAX_BUFFER_SIZE];
 							ZeroMemory(buf, MAX_BUFFER_SIZE);
 							int byteIn = recv(sock, buf, MAX_BUFFER_SIZE, 0);

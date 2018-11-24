@@ -50,6 +50,7 @@ string tool::MessangerRecv(SOCKET client, string Id, char buf[]) {
 	ZeroMemory(buf, MAX_BUFFER_SIZE);
 	int Bytein = recv(client, buf, MAX_BUFFER_SIZE, 0);//error handle
 	if (strcmp(buf, "MessangerClose") == 0) {// 메신저 종료
+		cout << "id:" + Id + " is now logout" << endl;
 		tool::TxtToSocket("c:/server/Id_Socket_map.txt", socket_info);
 		iter = socket_info.find(Id);
 		socket_info.erase(iter);
@@ -76,6 +77,7 @@ string tool::MessangerRecv(SOCKET client, string Id, char buf[]) {
 		return MessangerRecv(client,Id, buf);
 	}
 	else if (Bytein <= 0) {
+		cout << "id:" + Id + " is now logout" << endl;
 		tool::TxtToSocket("c:/server/Id_Socket_map.txt", socket_info);
 		iter = socket_info.find(Id);
 		socket_info.erase(iter);
