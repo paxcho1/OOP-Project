@@ -11,7 +11,7 @@
 #include <stdlib.h>
 #pragma comment(lib,"ws2_32")
 using namespace std;
-class Alarm:public tool
+class Alarm
 {
 private:
 	string Id;
@@ -19,6 +19,9 @@ private:
 public:
 	Alarm(SOCKET client,string Id);
 	~Alarm();
-	int in(SOCKET client,string Id);
+	int Chatin(SOCKET client,string Id);
+	int FriendsIndex(SOCKET client, string Id);
+	int FriendsInvite(SOCKET client, string Id);
+	int NewFriends(SOCKET client, string Id);
 };
 

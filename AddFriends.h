@@ -8,6 +8,7 @@
 #include <stdio.h>
 #include <algorithm>
 #include "Tool.h"
+#include "Alarm.h"
 #include <stdlib.h>
 class AddFriends:public tool
 {
