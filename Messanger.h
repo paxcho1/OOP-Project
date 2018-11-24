@@ -11,6 +11,7 @@
 #include "Tool.h"
 #include "Alarm.h"
 #include "AddFriends.h"
+#include "MakeChat.h"
 #include <stdlib.h>
 #pragma comment(lib,"ws2_32")
 using namespace std;

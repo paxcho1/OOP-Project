@@ -274,7 +274,13 @@ int Alarm::NewFriends(SOCKET client, string Id) {//client의 id를 이용해 alarm폴�
 		// 파일전송//client 내부에 alarm 폴더 생성
 		//후에 client 는 이 폴더를 기준으로 alarm을 설정함
 		// 파일삭제
-
+		::remove(Filepath.c_str()); 
+		Filepath = "c:/server/" + Id + "/" + "friends" + Id + "/" + FindData.cFileName;//초대장은 friendsrecv_idinvite에 저장
+		ofstream Write(Filepath, ios::app);
+		if (Write.is_open()) {
+			cout << "writing file" << endl;
+			Write << Id << endl;
+		}
 	} while (FindNextFile(hFind, &FindData));//handler을 통한 file 검색
 
 
