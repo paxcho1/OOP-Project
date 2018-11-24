@@ -16,7 +16,6 @@ int Signin::in(SOCKET client)
 	char password[MAX_BUFFER_SIZE];
 	int Id_Bytein;
 	int Password_Bytein;
-	//id Áßº¹°Ë»ç
 	int overlap = 0;
 	vector<string> V_id;
 	string file_string;
@@ -24,29 +23,29 @@ int Signin::in(SOCKET client)
 	tool::TxtToVector("id_index.txt", V_id);
 	do {
 		Id_Bytein = tool::Recv(client, id);
-		if (strcmp(password, "SigninClose") == 0) {
+		if (strcmp(id, "SigninClose") == 0) {
 			return -1;
 		}
 		else if (Id_Bytein <= 0) {
 			return -1;
 		}
 
-		//in_index ÆÄÀÏ ºÒ·¯¿À±â(txt)
+		//in_index íŒŒì¼ ë¶ˆëŸ¬ì˜¤ê¸°(txt)
 
-		cout << "¹Ì·¡°¡ ¾Èº¸¿©";
+		//id ì¤‘ë³µê²€ì‚¬	
 		if (find(V_id.begin(), V_id.end(), id) == V_id.end()) {
-			//id°¡ ¾øÀ»¶§
+			//idê°€ ì—†ì„ë•Œ
 			overlap = 1;
-			send(client, "succeed\nYou can use this id\nNow enter your password", 55, 0);
-			//id°¡ ¾ø´Ù´Â ¸Þ¼¼Áö send
-			//´ÙÀ½Ã¢
+			send(client, "succeed\nYou can use this id\nNow enter your password", MAX_BUFFER_SIZE, 0);
+			//idê°€ ì—†ë‹¤ëŠ” ë©”ì„¸ì§€ send
+			//ë‹¤ìŒì°½
 
 			/*Id_Bytein = tool::Recv(client, id);
 			if (Id_Bytein <= 0) {
 			   return -1;
 			}
 			*/
-			//vector¿¡ Á¤º¸ Ãß°¡
+			//vectorì— ì •ë³´ ì¶”ê°€
 			V_id.push_back(id);
 			Password_Bytein = tool::Recv(client, password);
 			if (strcmp(password, "SigninClose")==0) {
@@ -57,17 +56,17 @@ int Signin::in(SOCKET client)
 			}
 			tool::VectorToTxt("id_index.txt", V_id);
 
-			//txtÆÄÀÏ ÀúÀå
+			//txtíŒŒì¼ ì €ìž¥
 		}
 		else {
 
-			send(client, "overlap\nRe-enter your id\n", 27, 0);
+			send(client, "overlap\nRe-enter your id\n", MAX_BUFFER_SIZE, 0);
 		}
 
-		//id Áßº¹ ¸Þ¼¼Áö send
+		//id ì¤‘ë³µ ë©”ì„¸ì§€ send
 
 	} while (overlap == 0);
-	send(client, "Successfully finished signin", 29, 0);
+	send(client, "Successfully finished signin", MAX_BUFFER_SIZE, 0);
 	string file = id;
 	string path = "c:/server/" + file;
 	_mkdir(path.c_str());
@@ -80,11 +79,11 @@ int Signin::in(SOCKET client)
 	path = "c:/server/" + file + "/friends" + file;
 	_mkdir(path.c_str());
 
-	//txt¿¡¼­ mapÀ¸·Î
+	//txtì—ì„œ mapìœ¼ë¡œ
 	tool::TxtToMap("c:/server/Id_Ps_map.txt", user_Info);
 	user_Info.insert(pair<string, string>(id, password));
 
-	tool::MapToTxt("c:/serverId_Ps_map.txt", user_Info);
+	tool::MapToTxt("c:/server/Id_Ps_map.txt", user_Info);
 	return 0;
 }
 
