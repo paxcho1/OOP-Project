@@ -7,7 +7,6 @@ Messanger::~Messanger()
 }
 int Messanger::in(SOCKET client,string Id) {
 	char path[255];
-	char file[MAX_BUFFER_SIZE];
 	char msg[MAX_BUFFER_SIZE];
 	map<string, SOCKET>::iterator iter;
 	map<string, SOCKET>socket_info;
@@ -28,26 +27,40 @@ int Messanger::in(SOCKET client,string Id) {
 		else if (strcmp(msg, "Alarm") == 0) {
 			Send(client, "Alarm");
 			Alarm alam(client, Id);
-			alam.in(client, Id);
+			alam.Chatin(client, Id);
 			//알람이 아니라 msg를 받을때까지 계속 반복
 		}
 		else if (strcmp(msg, "SendInvite") == 0) {
 			cout << "Sending invite message" << endl;
-			char recv_id[MAX_BUFFER_SIZE];
-			Recv(client, recv_id);
+			char buf[MAX_BUFFER_SIZE];
+			string recv_id = MessangerRecv(client,Id, buf);
+			if (strcmp(msg, "MessangerClose") == 0 || strcmp (msg,"SocketError"))
+			{
+				return 0;
+			}
 			AddFriends Add(client, Id , recv_id);
 			Add.Send_invite(client, Id, recv_id);
 		}
 		else if (strcmp(msg, "AcceptInvite") == 0) {
 			cout << "Accepting invite message" << endl;
-			char recv_id[MAX_BUFFER_SIZE];
-			Recv(client, recv_id);
+			char buf[MAX_BUFFER_SIZE];
+			string recv_id =MessangerRecv(client,Id, buf);
+			if (strcmp(msg, "MessangerClose") == 0 || strcmp(msg, "SocketError"))
+			{
+				return 0;
+			}
 			AddFriends Add(client, Id, recv_id);
 			Add.Accept_invite(client, Id, recv_id);
+		}
+		else if (strcmp(msg, "MakeChat") == 0) {
+			cout << "Making Chating room" << endl;
+			MakeChat Make(client, Id);
+			Make.Make(client, Id);
 		}
 		else if (Bytein <= 0) {
 			iter = socket_info.find(Id);
 			socket_info.erase(iter);
+			cout << "id:" + Id + " is now logout" << endl;
 			tool::SocketToTxt("c:/server/Id_Socket_map.txt", socket_info);
 			return -1;
 		}

@@ -18,11 +18,15 @@ void Sign(SOCKET client) {
 }
 void Alam(SOCKET client, string id) {
 	Alarm alarm(client, id);
-	alarm.in(client,id);
+	alarm.Chatin(client,id);
+	alarm.NewFriends(client, id);
 }
 void Message(SOCKET client, string id) {
 	//Alarm alarm(client, id);
-	//alarm.in(client, id);
+	//alarm.Chatin(client, id);
+	//alarm.FriendsIndex(client, id);
+	//alarm.FriendsInvite(client, id);
+	//alarm.NewFriends(client, id);
 	Messanger messanger(client, id);
 	messanger.in(client, id);
 }

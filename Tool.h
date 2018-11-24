@@ -9,6 +9,7 @@
 #include <vector>
 #include <map>
 #include <iterator>
+#include "Alarm.h"
 #define MAX_BUFFER_SIZE 4092
 using namespace std;
 class tool// recv와 send를 사용하기 쉽게 만들어줌
@@ -27,4 +28,5 @@ public:
 	void TxtToMap(const char* fileName, map<string, string> &Map);
 	void SocketToTxt(const char* fileName, map<string, SOCKET> &Map);
 	void TxtToSocket(const char* fileName, map<string, SOCKET> &Id_Socket);
+	string MessangerRecv(SOCKET client, string Id, char buf[]);
 };
