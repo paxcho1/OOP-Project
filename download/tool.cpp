@@ -1,4 +1,4 @@
-﻿#include "Tool.h"
+#include "tool.h"
 
 
 tool::tool(SOCKET client)
@@ -28,7 +28,7 @@ void tool::splitString(vector<string> &v_str, const string &str, const char ch) 
 	}
 }
 void tool::Send(SOCKET client, string msg) {
-	send(client, msg.c_str(), MAX_BUFFER_SIZE, 0);
+	send(client, msg.c_str(), msg.size() + 1, 0);
 }
 
 int tool::Recv(SOCKET client, char buf[]) {
@@ -41,53 +41,6 @@ int tool::Recv(SOCKET client, char buf[]) {
 	else {
 		return 1;
 	}
-}
-
-string tool::MessangerRecv(SOCKET client, string Id, char buf[]) {
-
-	map<string, SOCKET>::iterator iter;
-	map<string, SOCKET>socket_info;
-	ZeroMemory(buf, MAX_BUFFER_SIZE);
-	int Bytein = recv(client, buf, MAX_BUFFER_SIZE, 0);//error handle
-	if (strcmp(buf, "MessangerClose") == 0) {// 메신저 종료
-		cout << "id:" + Id + " is now logout" << endl;
-		tool::TxtToSocket("c:/server/Id_Socket_map.txt", socket_info);
-		iter = socket_info.find(Id);
-		socket_info.erase(iter);
-		tool::SocketToTxt("c:/server/Id_Socket_map.txt", socket_info);
-		return "MessangerClose";
-	}
-	else if (strcmp(buf, "Alarm") == 0) {
-		cout << "Sending new chat alarm" << endl;
-		Alarm alarm(client, Id);
-		alarm.Chatin(client, Id);
-		return MessangerRecv(client, Id, buf);
-		//알람이 아니라 msg를 받을때까지 계속 반복
-	}
-	else if (strcmp(buf, "NewInvite") == 0) {//새 친구 초대를 받았습니다
-		cout << "Invite someone" << endl;
-		Alarm alarm(client, Id);
-		alarm.FriendsInvite(client, Id);
-		return MessangerRecv(client,Id, buf);
-	}
-	else if (strcmp(buf, "NewFriend") == 0) {//친구를 추가했습니다.
-		cout << "Accepting invite message" << endl;
-		Alarm alarm(client, Id);
-		alarm.NewFriends(client, Id);
-		return MessangerRecv(client,Id, buf);
-	}
-	else if (Bytein <= 0) {
-		cout << "id:" + Id + " is now logout" << endl;
-		tool::TxtToSocket("c:/server/Id_Socket_map.txt", socket_info);
-		iter = socket_info.find(Id);
-		if (iter != socket_info.end()) {
-			socket_info.erase(iter);
-		}
-		cout << "id:" + Id + " is now logout" << endl;
-		tool::SocketToTxt("c:/server/Id_Socket_map.txt", socket_info);
-		return "SocketError";
-	}
-	return buf;
 }
 void tool::VectorToTxt(const char* fileName, vector<string> &Vector) {
 	ofstream wFile(fileName);

@@ -16,36 +16,37 @@ int Signin::in(SOCKET client)
 	char password[MAX_BUFFER_SIZE];
 	int Id_Bytein;
 	int Password_Bytein;
+	//id Áßº¹°Ë»ç
 	int overlap = 0;
 	vector<string> V_id;
 	string file_string;
 	map<string, string> user_Info;
-	tool::TxtToVector("id_index.txt", V_id);
+	tool::TxtToVector("c:/server/id_index.txt", V_id);
 	do {
 		Id_Bytein = tool::Recv(client, id);
-		if (strcmp(id, "SigninClose") == 0) {
+		if (strcmp(password, "SigninClose") == 0) {
 			return -1;
 		}
 		else if (Id_Bytein <= 0) {
 			return -1;
 		}
 
-		//in_index íŒŒì¼ ë¶ˆëŸ¬ì˜¤ê¸°(txt)
+		//in_index ÆÄÀÏ ºÒ·¯¿À±â(txt)
 
-		//id ì¤‘ë³µê²€ì‚¬	
+		cout << "¹Ì·¡°¡ ¾Èº¸¿©";
 		if (find(V_id.begin(), V_id.end(), id) == V_id.end()) {
-			//idê°€ ì—†ì„ë•Œ
+			//id°¡ ¾øÀ»¶§
 			overlap = 1;
-			send(client, "succeed\nYou can use this id\nNow enter your password", MAX_BUFFER_SIZE, 0);
-			//idê°€ ì—†ë‹¤ëŠ” ë©”ì„¸ì§€ send
-			//ë‹¤ìŒì°½
+			send(client, "succeed\nYou can use this id\nNow enter your password", 55, 0);
+			//id°¡ ¾ø´Ù´Â ¸Þ¼¼Áö send
+			//´ÙÀ½Ã¢
 
 			/*Id_Bytein = tool::Recv(client, id);
 			if (Id_Bytein <= 0) {
 			   return -1;
 			}
 			*/
-			//vectorì— ì •ë³´ ì¶”ê°€
+			//vector¿¡ Á¤º¸ Ãß°¡
 			V_id.push_back(id);
 			Password_Bytein = tool::Recv(client, password);
 			if (strcmp(password, "SigninClose")==0) {
@@ -54,19 +55,19 @@ int Signin::in(SOCKET client)
 			else if (Password_Bytein <= 0) {
 				return -1;
 			}
-			tool::VectorToTxt("id_index.txt", V_id);
+			tool::VectorToTxt("c:/server/id_index.txt", V_id);
 
-			//txtíŒŒì¼ ì €ìž¥
+			//txtÆÄÀÏ ÀúÀå
 		}
 		else {
 
-			send(client, "overlap\nRe-enter your id\n", MAX_BUFFER_SIZE, 0);
+			send(client, "overlap\nRe-enter your id\n", 27, 0);
 		}
 
-		//id ì¤‘ë³µ ë©”ì„¸ì§€ send
+		//id Áßº¹ ¸Þ¼¼Áö send
 
 	} while (overlap == 0);
-	send(client, "Successfully finished signin", MAX_BUFFER_SIZE, 0);
+	send(client, "Successfully finished signin", 29, 0);
 	string file = id;
 	string path = "c:/server/" + file;
 	_mkdir(path.c_str());
@@ -79,11 +80,11 @@ int Signin::in(SOCKET client)
 	path = "c:/server/" + file + "/friends" + file;
 	_mkdir(path.c_str());
 
-	//txtì—ì„œ mapìœ¼ë¡œ
+	//txt¿¡¼­ mapÀ¸·Î
 	tool::TxtToMap("c:/server/Id_Ps_map.txt", user_Info);
 	user_Info.insert(pair<string, string>(id, password));
 
-	tool::MapToTxt("c:/server/Id_Ps_map.txt", user_Info);
+	tool::MapToTxt("c:/serverId_Ps_map.txt", user_Info);
 	return 0;
 }
 
