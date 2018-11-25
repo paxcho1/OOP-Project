@@ -1,0 +1,3 @@
+﻿  Receiver.cpp
+c:\users\dirgs\source\repos\download\download\receiver.cpp(243): warning C4715: 'Receiver::Get': 모든 제어 경로에서 값을 반환하지는 않습니다.
+  download.vcxproj -> c:\Users\dirgs\source\repos\download\Debug\download.exe

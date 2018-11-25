@@ -9,7 +9,6 @@
 #include "Alarm.h"
 #include "Messanger.h"
 #include "Tool.h"
-#include "Login.h"
 using namespace std;
 
 fd_set Fd;
@@ -24,17 +23,20 @@ void Alam(SOCKET client, string id) {
 	alarm.NewFriends(client, id);
 }
 void Message(SOCKET client, string id) {
-	//Alarm alarm(client, id);
-	//alarm.Chatin(client, id);
-	//alarm.FriendsIndex(client, id);
-	//alarm.FriendsInvite(client, id);
-	//alarm.NewFriends(client, id);
+	tool Tool(client);
+	Alarm alarm(client, id);
+	Tool.Send(client, "Chat");
+	alarm.Chat(client,id);
+	Tool.Send(client, "Alarm");
+	alarm.Chatin(client, id);
+	Tool.Send(client, "Friends");
+	alarm.FriendsIndex(client, id);
+	Tool.Send(client, "NewInvite");
+	alarm.FriendsInvite(client, id);
+	Tool.Send(client, "NewFriend");
+	alarm.NewFriends(client, id);
 	Messanger messanger(client, id);
 	messanger.in(client, id);
-}
-void Log(SOCKET client) {
-	Login login(client);
-	login.logging(client);
 }
 int main() {
 	while (1) {
@@ -49,9 +51,9 @@ int main() {
 		wFile.close();
 		int wsInit = WSAStartup(ver, &data);
 		if (wsInit != 0) {
-			cout << "ìœˆì† ì´ˆê¸°í™” ì‹¤íŒ¨" << endl;
+			cout << "À©¼Ó ÃÊ±âÈ­ ½ÇÆÐ" << endl;
 		}
-		cout << "ìœˆì† ì´ˆê¸°í™” ì„±ê³µ" << endl;
+		cout << "À©¼Ó ÃÊ±âÈ­ ¼º°ø" << endl;
 		_mkdir("c:/server");
 		SOCKET listensocket = socket(AF_INET, SOCK_STREAM, 0);
 		sockaddr_in insocket;
@@ -64,18 +66,18 @@ int main() {
 		listen(listensocket, SOMAXCONN);
 		FD_ZERO(&Fd);
 		FD_SET(listensocket, &Fd);
-		cout << "listensockì„ masterì— ì¶”ê°€" << endl;
+		cout << "listensockÀ» master¿¡ Ãß°¡" << endl;
 		while (1) {
 			fd_set copy = Fd;
 
 			int socketCount = select(0, &copy, nullptr, nullptr, nullptr);
-			cout << "select ì‹¤í–‰" << socketCount << "ì— ì´ë²¤íŠ¸ ë°œìƒ" << endl;
+			cout << "select ½ÇÇà" << socketCount << "¿¡ ÀÌº¥Æ® ¹ß»ý" << endl;
 			for (int i = 0; i < socketCount; i++) {
 				SOCKET sock = copy.fd_array[i];
 				if (sock == listensocket)
 				{
 					SOCKET client = accept(listensocket, nullptr, nullptr);
-					cout << "ì†Œì¼“ accept" << endl;
+					cout << "¼ÒÄÏ accept" << endl;
 					FD_SET(client, &Fd);
 				}
 				else {
@@ -87,15 +89,13 @@ int main() {
 						FD_CLR(sock, &Fd);
 					}
 					else {
-						if (strcmp(buf,"Signin") == 0) {//clientì˜ login ìš”ì²­
+						if (strcmp(buf,"Signin") == 0) {//clientÀÇ login ¿äÃ»
 							//thread Signin
 							thread SIGN(&Sign, sock);
 							SIGN.detach();
 						}
 						else if (strcmp(buf, "Login") == 0) {
-							//thread Login
-							thread LOGIN(&Log, sock);
-							LOGIN.detach();
+						
 						}
 						else if (strcmp(buf, "Alarm") == 0) {
 							char buf[MAX_BUFFER_SIZE];
@@ -124,14 +124,14 @@ int main() {
 								Messange.detach();
 							}
 						}
-						//ë©”ì„¸ì§€ ìˆ˜ì‹ 
-						//event ìˆ˜ì‹ 
-						//recv í˜„ìž¬ clientì˜ ìƒíƒœë¥¼ ìž…ë ¥ë°›ê³ 
+						//¸Þ¼¼Áö ¼ö½Å
+						//event ¼ö½Å
+						//recv ÇöÀç clientÀÇ »óÅÂ¸¦ ÀÔ·Â¹Þ°í
 						//switch(msg)
 
-						//thread êµ¬ë¶„ detach
+						//thread ±¸ºÐ detach
 						{
-								//case êµ¬ë¶„
+								//case ±¸ºÐ
 								{
 									//login();
 
