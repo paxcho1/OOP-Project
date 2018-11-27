@@ -38,14 +38,14 @@ int AddFriends::Accept_invite(SOCKET client, string Id, string recv_id) {//id는 
 	ofstream DWrite(filepath, ios::app);
 	if (DWrite.is_open()) {
 		cout << "friends write on : " + recv_id << endl;
-		DWrite << " " << endl;
+		DWrite << Id << endl;
 	}
 	DWrite.close();
 	filepath = "c:/server/" + Id + "/" + "friends" + Id + "/" + recv_id + ".txt";//초대를 받으면 바로 친구목록으로 보냄
 	ofstream IWrite(filepath, ios::app);
 	if (IWrite.is_open()) {
 		cout << "friends write on : " + Id << endl;
-		IWrite << " " << endl;
+		IWrite << recv_id << endl;
 	}
 	IWrite.close();
 
@@ -53,14 +53,14 @@ int AddFriends::Accept_invite(SOCKET client, string Id, string recv_id) {//id는 
 	ofstream AWrite(filepath, ios::app);
 	if (AWrite.is_open()) {
 		cout << "friends write on :" + recv_id + "alarm" << endl;
-		AWrite << " " << endl;
+		AWrite << Id << endl;
 	}
 	AWrite.close(); 
 	filepath = "c:/server/" + Id + "/" + "friends" + Id + "alarm/" + recv_id + ".txt";//초대를 받으면 받았다는 알림을 server에 저장함^^
 	ofstream kWrite(filepath, ios::app);
 	if (kWrite.is_open()) {
 		cout << "friends write on :" + Id + "alarm" << endl;
-		kWrite << " " << endl;
+		kWrite << recv_id << endl;
 	}
 	kWrite.close();
 	tool::TxtToSocket("c:/server/Id_Socket_map.txt", socket_info);

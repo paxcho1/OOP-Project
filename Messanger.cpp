@@ -16,8 +16,11 @@ int Messanger::in(SOCKET client,string Id) {
 	tool::SocketToTxt("c:/server/Id_Socket_map.txt", socket_info);
 	socket_info.clear();
 	while (1) {
+		ZeroMemory(msg, MAX_BUFFER_SIZE);
 		int Bytein = Recv(client, msg);//메세지 입력받음 여기서 메신저의 종료도 입력받는다.
-		if (strcmp(msg, "MessangerClose") == 0) {// 메신저 종료
+		string code = msg;
+		code = code.substr(0, 3);
+		if (strcmp(code.c_str(), "000") == 0) {// MessangerClose 입력받음
 			tool::TxtToSocket("c:/server/Id_Socket_map.txt", socket_info);
 			cout << "id:" + Id + " is now logout" << endl;
 			iter = socket_info.find(Id);
@@ -27,13 +30,13 @@ int Messanger::in(SOCKET client,string Id) {
 			tool::SocketToTxt("c:/server/Id_Socket_map.txt", socket_info);
 			return 0;
 		}
-		else if (strcmp(msg, "Alarm") == 0) {
+		else if (strcmp(code.c_str(), "001") == 0) {//Alarm 입력받음
 			Send(client, "Alarm");
 			Alarm alam(client, Id);
 			alam.Chatin(client, Id);
 			//알람이 아니라 msg를 받을때까지 계속 반복
 		}
-		else if (strcmp(msg, "SendInvite") == 0) {
+		else if (strcmp(code.c_str(), "002") == 0) {//SendInvite 입력받음
 			cout << "Sending invite message" << endl;
 			char buf[MAX_BUFFER_SIZE];
 			string recv_id = MessangerRecv(client,Id, buf);
@@ -45,7 +48,7 @@ int Messanger::in(SOCKET client,string Id) {
 			AddFriends Add(client, Id , recv_id);
 			Add.Send_invite(client, Id, recv_id);
 		}
-		else if (strcmp(msg, "AcceptInvite") == 0) {
+		else if (strcmp(code.c_str(), "003") == 0) {
 			cout << "Accepting invite message" << endl;
 			char buf[MAX_BUFFER_SIZE];
 			string recv_id =MessangerRecv(client,Id, buf);
@@ -57,22 +60,13 @@ int Messanger::in(SOCKET client,string Id) {
 			AddFriends Add(client, Id, recv_id);
 			Add.Accept_invite(client, Id, recv_id);
 		}
-		else if (strcmp(msg, "MakeChat") == 0) {
+		else if (strcmp(code.c_str(), "004") == 0) {
 			cout << "Making Chating room" << endl;
 			MakeChat Make(client, Id);
-			Make.Make(client, Id);
+
+			Make.Make(client, Id ,msg);
 		}
-		else if (Bytein <= 0) {
-			tool::TxtToSocket("c:/server/Id_Socket_map.txt", socket_info);
-			iter = socket_info.find(Id);
-			if (iter != socket_info.end()) {
-				socket_info.erase(iter);
-			}
-			cout << "id:" + Id + " is now logout" << endl;
-			tool::SocketToTxt("c:/server/Id_Socket_map.txt", socket_info);
-			return -1;
-		}
-		else {//메세지를 입력받았다 //filename msg 형태로 받음
+		else if (strcmp(code.c_str(),"005")==0) {//메세지를 입력받았다 //filename msg 형태로 받음
 			char* ptr = strtok(msg, " ");
 			string file = (strcpy,ptr);//file = filename
 			ptr = strtok(NULL, " ");
@@ -100,7 +94,7 @@ int Messanger::in(SOCKET client,string Id) {
 			while (ptr != NULL) {//ptr은 채팅방에 있는 다른 user_id이다.
 				if (ptr != Id) {
 					string str = ptr;// another_user_id
-					string index_path = "c:/server/Socket_Id_Map.txt";
+					//string index_path = "c:/server/Socket_Id_Map.txt";
 					pathstr = "c:/server/" + str + "/chat" + str + "alarm/" + file + ".txt";//filename은 같다 user/alarm/filename의 경로
 					strcpy(path, pathstr.c_str());
 					ofstream DWrite(path, ios::app);
@@ -119,8 +113,8 @@ int Messanger::in(SOCKET client,string Id) {
 						destsock = iter->second;
 						cout << "목표 소켓 접속중"<< endl;
 						Send(destsock, "Alarm");
-						Alarm alarm(destsock, iter ->first);
-						alarm.Chatin(destsock, iter->first);
+						Alarm alarm(destsock, iter -> first);
+						alarm.Chatin(destsock, iter -> first);
 					}
 					socket_info.clear();
 					//if (ptrfind = 1) {//현재 해당 user가 접속중
@@ -129,6 +123,16 @@ int Messanger::in(SOCKET client,string Id) {
 				}
 				ptr = strtok(NULL, ",");
 			}
+		}
+		else if (Bytein <= 0) {
+			tool::TxtToSocket("c:/server/Id_Socket_map.txt", socket_info);
+			iter = socket_info.find(Id);
+			if (iter != socket_info.end()) {
+				socket_info.erase(iter);
+			}
+			cout << "id:" + Id + " is now logout" << endl;
+			tool::SocketToTxt("c:/server/Id_Socket_map.txt", socket_info);
+			return -1;
 		}
 	}
 }

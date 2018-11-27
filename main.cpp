@@ -17,11 +17,6 @@ void Sign(SOCKET client) {
 	Signin sign(client);
 	sign.in(client);
 }
-void Alam(SOCKET client, string id) {
-	Alarm alarm(client, id);
-	alarm.Chatin(client,id);
-	alarm.NewFriends(client, id);
-}
 void Message(SOCKET client, string id) {
 	tool Tool(client);
 	Alarm alarm(client, id);
@@ -96,19 +91,6 @@ int main() {
 						}
 						else if (strcmp(buf, "Login") == 0) {
 						
-						}
-						else if (strcmp(buf, "Alarm") == 0) {
-							char buf[MAX_BUFFER_SIZE];
-							ZeroMemory(buf, MAX_BUFFER_SIZE);
-							int byteIn = recv(sock, buf, MAX_BUFFER_SIZE, 0);
-							if (byteIn <= 0) {
-								closesocket(sock);
-								FD_CLR(sock, &Fd);
-							}
-							else {
-								thread Alarm(&Alam, sock, buf);
-								Alarm.detach();
-							}
 						}
 						else if (strcmp(buf, "Messanger") == 0) {
 							cout << "Messanger in" << endl;
