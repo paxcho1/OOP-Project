@@ -17,5 +17,5 @@ private:
 public:
 	MakeChat(SOCKET client, string Id);
 	~MakeChat();
-	int Make(SOCKET client, string Id);
+	int Make(SOCKET client, string Id, char* msg);
 };
