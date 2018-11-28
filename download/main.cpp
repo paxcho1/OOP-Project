@@ -9,7 +9,6 @@
 #include <mutex>
 #include "Receiver.h"
 #pragma comment(lib,"ws2_32.lib")
-#define MAX_BUFFER_SIZE (4092)
 using namespace std;
 mutex mtx;
 void get(SOCKET server, string Id, char msg[])
@@ -31,8 +30,21 @@ void get(SOCKET server, string Id, char msg[])
 void Send(SOCKET server)
 {
 	char buffer[4096];
-	cin.getline(buffer, sizeof(buffer));
-	send(server, buffer, 4092, 0);
+	cin.getline(buffer, MAX_BUFFER_SIZE);
+	if (strcmp(buffer, "AcceptInvite") ==0) {
+		send(server, buffer, MAX_BUFFER_SIZE, 0);
+		cin.getline(buffer, MAX_BUFFER_SIZE);
+		// 자신의 폴더에 있는 invite file/buffer.txt 삭제
+		send(server, buffer, MAX_BUFFER_SIZE, 0);
+	}
+	else if (strcmp(buffer, "SendInvite")==0) {
+		send(server, buffer, MAX_BUFFER_SIZE, 0);
+		//자신의 친구목록에 해당하는가 확인
+		cin.getline(buffer, MAX_BUFFER_SIZE);
+		send(server, buffer, MAX_BUFFER_SIZE,0);
+	}
+
+	send(server, buffer, MAX_BUFFER_SIZE,0);
 }
 int main()
 {
@@ -66,8 +78,6 @@ int main()
 	filepath = "c:/client/" + Id;//로그인하면 파일생성
 	_mkdir(filepath.c_str());
 	filepath = "c:/client/" + Id + "/ChatAlarm";//로그인하면 파일생성
-	_mkdir(filepath.c_str());
-	filepath = "c:/client/" + Id + "/FriendsAlarm";//로그인하면 파일생성
 	_mkdir(filepath.c_str());
 	filepath = "c:/client/" + Id + "/FriendsIndex";//로그인하면 파일생성
 	_mkdir(filepath.c_str());

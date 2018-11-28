@@ -66,7 +66,6 @@ int Alarm::Chat(SOCKET client, string Id) {//client의 id를 이용해 alarm폴더의 모
 		// 파일전송//client 내부에 alarm 폴더 생성
 		//후에 client 는 이 폴더를 기준으로 alarm을 설정함
 		// 파일삭제
-
 	} while (FindNextFile(hFind, &FindData));//handler을 통한 file 검색
 
 

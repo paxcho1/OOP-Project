@@ -15,6 +15,7 @@ int Receiver::Chat(SOCKET server, string Id) {
 	char msg[MAX_BUFFER_SIZE];
 	ZeroMemory(msg, MAX_BUFFER_SIZE);
 	string filepath = Get(server, Id, msg);//get filename.txt
+	//띄우기
 	while (strcmp(msg, "endfile") != 0) {
 		cout << filepath << endl;//fd.name 출력
 		filepath = "c:/client/" + Id + "/" + filepath;
@@ -131,13 +132,13 @@ int Receiver::NewInvite(SOCKET server, string Id) {
 	}
 	return 0;
 }
-int Receiver::NewFriend(SOCKET server, string Id) {
+int Receiver::NewFriends(SOCKET server, string Id) {
 	char msg[MAX_BUFFER_SIZE];
 	ZeroMemory(msg, MAX_BUFFER_SIZE);
 	string filepath = Get(server,Id, msg);//get filename.txt
 	while (strcmp(msg, "endfile") != 0) {
 		cout << filepath << endl;//fd.name 출력
-		filepath = "c:/client/" + Id + "/FriendsAlarm/" + filepath;
+		filepath = "c:/client/" + Id + "/FriendsIndex/" + filepath;
 		Get(server, Id, msg);//total byte size
 		int totalbytes = atoi(msg);
 		FILE *fp = fopen(filepath.c_str(), "wb");
@@ -211,27 +212,72 @@ int Receiver::FriendsIndex(SOCKET server, string Id) {
 	}
 	return 0;
 }
-string Receiver::Get(SOCKET server, string Id, char buf[]) {
+int Receiver::Newmsg(SOCKET server, string Id, string file, string message) {
+	string filepath = "c:/client/" + Id + "/ChatAlarm/" + file + ".txt";
+	ofstream Write(filepath, ios::app);
+	if (Write.is_open()) {
+		cout << "writing file" << endl;
+		Write << message << endl;
+	}
+	Write.close();
+	return 0;
+}
+string Receiver::Get(SOCKET server, string Id, char* buf) {
 	int Bytein = recv(server, buf, MAX_BUFFER_SIZE, 0);
-	if (strcmp(buf, "Chat") == 0) {
-		Chat(server, Id);
-		Get(server, Id, buf);
+	string code = buf;
+	code = code.substr(0, 3);
+	if (strcmp(code.c_str(), "001") == 0) {
+		Chat(server, Id); return buf;
 	}
-	else if (strcmp(buf, "Alarm") == 0) {
-		Chatin(server, Id);
-		Get(server, Id, buf);
+	else if (strcmp(code.c_str(), "002") == 0) {
+		Chatin(server, Id); return buf;
 	}
-	else if (strcmp(buf, "Friends") == 0) {
-		FriendsIndex(server, Id);
-		Get(server, Id, buf);
+	else if (strcmp(code.c_str(), "003") == 0) {
+		FriendsIndex(server, Id); return buf;
 	}
-	else if (strcmp(buf, "NewInvite")==0) {
-		NewInvite(server, Id);
-		Get(server, Id, buf);
+	else if (strcmp(code.c_str(), "004")==0) {
+		NewInvite(server, Id); return buf;
 	}
-	else if (strcmp(buf, "NewFriend") == 0) {
-		NewFriend(server, Id);
-		Get(server, Id, buf);
+	else if (strcmp(code.c_str(), "005") == 0) {
+		NewFriends(server, Id); return buf;
+	}
+	else if (strcmp(code.c_str(), "006") == 0) {//message 받음 //만약 현제 client가 해당 채팅창에 접속중
+		strtok(buf, " ");
+		char* ptr = strtok(NULL, " ");
+		string file = (strcpy, ptr);
+		ptr = strtok(NULL, " ");
+		string sender = (strcpy, ptr);
+		char Str[MAX_BUFFER_SIZE];
+		string tokmsg;
+		strcpy(Str, "");
+		while (ptr != NULL) {
+			strcat(Str,ptr);
+			tokmsg = strcat(Str, " ");
+			ptr = strtok(NULL, " ");
+		}
+		Newmsg(server, Id, file, tokmsg); return buf;
+	}
+	else if (strcmp(code.c_str(), "007") == 0) {//Invite 받음
+		strtok(buf, " ");
+		char* Invite_id = strtok(NULL, " ");
+		string filepath = "c:/client/" + Id + "/InviteAlarm/" + Invite_id + ".txt";
+		ofstream Write(filepath, ios::app);
+		if (Write.is_open()) {
+			cout << "writingfile:" + filepath << endl;
+			Write << Invite_id <<endl;
+		}
+		Write.close();
+	}
+	else if (strcmp(code.c_str(), "008") == 0) {//새친구의 알람
+		strtok(buf, " ");
+		char* new_friend = strtok(NULL, " ");
+		string filepath = "c:/client/" + Id + "/FriendsIndex/" + new_friend + ".txt";//friends Alarm으로 가지않음.
+		ofstream Write(filepath, ios::app);
+		if (Write.is_open()) {
+			cout << "writingfile:" + filepath << endl;
+			Write << new_friend << endl;
+		}
+		Write.close();
 	}
 	else if (Bytein <= 0) {
 		exit(0);

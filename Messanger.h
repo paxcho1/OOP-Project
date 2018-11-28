@@ -25,4 +25,3 @@ public:
 	~Messanger();
 	int in(SOCKET client,string id);
 };
-
