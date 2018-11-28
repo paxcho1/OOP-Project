@@ -22,9 +22,8 @@ int AddFriends::Send_invite(SOCKET client, string Id , string recv_id) {//id 는 
 	else {
 		destsock = iter->second;
 		cout << "목표 소켓 접속중"<< endl;
-		Send(destsock, "NewInvite");//새 친구초대가 있다는 알람
-		Alarm aram(destsock,recv_id);//파일 전송
-		aram.FriendsInvite(destsock, recv_id);
+		string Smsg = "007 " + Id;
+		Send(destsock, Smsg);
 	}
 	return 0;
 }
@@ -48,35 +47,25 @@ int AddFriends::Accept_invite(SOCKET client, string Id, string recv_id) {//id는 
 		IWrite << recv_id << endl;
 	}
 	IWrite.close();
-
-	filepath = "c:/server/" + recv_id + "/" + "friends" + recv_id + "alarm/" + Id + ".txt";//초대를 받으면 받았다는 알림을 server에 저장함^^
-	ofstream AWrite(filepath, ios::app);
-	if (AWrite.is_open()) {
-		cout << "friends write on :" + recv_id + "alarm" << endl;
-		AWrite << Id << endl;
-	}
-	AWrite.close(); 
-	filepath = "c:/server/" + Id + "/" + "friends" + Id + "alarm/" + recv_id + ".txt";//초대를 받으면 받았다는 알림을 server에 저장함^^
-	ofstream kWrite(filepath, ios::app);
-	if (kWrite.is_open()) {
-		cout << "friends write on :" + Id + "alarm" << endl;
-		kWrite << recv_id << endl;
-	}
-	kWrite.close();
 	tool::TxtToSocket("c:/server/Id_Socket_map.txt", socket_info);
 	iter = socket_info.find(recv_id);
-	if (iter == socket_info.end()) {}
+	if (iter == socket_info.end()) {
+		filepath = "c:/server/" + recv_id + "/" + "friends" + recv_id + "alarm/" + Id + ".txt";//초대를 받으면 받았다는 알림을 server에 저장함^^
+		ofstream AWrite(filepath, ios::app);
+		if (AWrite.is_open()) {
+			cout << "friends write on :" + recv_id + "alarm" << endl;
+			AWrite << Id << endl;
+		}
+		AWrite.close();
+	}
 	else {
-
 		destsock = iter->second;
 		cout << "목표 소켓 접속중"<< endl;
-		Send(destsock, "NewFriend");//만약 상대가 접속중이라면 바로 친구를 추가해줌//친구 파일로 바로 전송
-		Alarm aram(destsock, recv_id);// 파일 전송
-		aram.NewFriends(destsock, recv_id);
+		string Smsg = "008 " + Id;
+		Send(destsock, Smsg);//만약 상대가 접속중이라면 바로 친구를 추가해줌//친구 파일로 바로 전송
 	}
 	socket_info.clear();
-	Send(client, "NewFriend");
-	Alarm clialarm(client, Id);
-	clialarm.NewFriends(client, Id);//client도 친구를 추가함
-	return 0;
+	string Cmsg = "008 " + recv_id;
+	Send(client, Cmsg);//client도 친구를 추가함
+	return 1;
 }

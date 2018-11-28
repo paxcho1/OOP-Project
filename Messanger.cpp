@@ -30,44 +30,27 @@ int Messanger::in(SOCKET client,string Id) {
 			tool::SocketToTxt("c:/server/Id_Socket_map.txt", socket_info);
 			return 0;
 		}
-		else if (strcmp(code.c_str(), "001") == 0) {//Alarm 입력받음
-			Send(client, "Alarm");
-			Alarm alam(client, Id);
-			alam.Chatin(client, Id);
-			//알람이 아니라 msg를 받을때까지 계속 반복
-		}
 		else if (strcmp(code.c_str(), "002") == 0) {//SendInvite 입력받음
 			cout << "Sending invite message" << endl;
-			char buf[MAX_BUFFER_SIZE];
-			string recv_id = MessangerRecv(client,Id, buf);
-			if (strcmp(recv_id.c_str(), "MessangerClose") == 0 || strcmp (recv_id.c_str(),"SocketError")==0)
-			{
-				cout << "id:" + Id + " is now logout" << endl;
-				return 0;
-			}
+			char* recv_id = strtok(msg, " ");
+			recv_id = strtok(NULL, " ");
 			AddFriends Add(client, Id , recv_id);
 			Add.Send_invite(client, Id, recv_id);
 		}
-		else if (strcmp(code.c_str(), "003") == 0) {
-			cout << "Accepting invite message" << endl;
-			char buf[MAX_BUFFER_SIZE];
-			string recv_id =MessangerRecv(client,Id, buf);
-			if (strcmp(recv_id.c_str(), "MessangerClose") == 0 || strcmp(recv_id.c_str(), "SocketError") ==0)
-			{
-				cout << "id:" + Id + " is now logout" << endl;
-				return 0;
-			}
+		else if (strcmp(code.c_str(), "003") == 0) {//AcceptInvite 입력받음
+			char* recv_id = strtok(msg, " ");
+			recv_id = strtok(NULL, " ");
 			AddFriends Add(client, Id, recv_id);
 			Add.Accept_invite(client, Id, recv_id);
 		}
 		else if (strcmp(code.c_str(), "004") == 0) {
 			cout << "Making Chating room" << endl;
 			MakeChat Make(client, Id);
-
 			Make.Make(client, Id ,msg);
 		}
 		else if (strcmp(code.c_str(),"005")==0) {//메세지를 입력받았다 //filename msg 형태로 받음
 			char* ptr = strtok(msg, " ");
+			ptr = strtok(NULL, " ");
 			string file = (strcpy,ptr);//file = filename
 			ptr = strtok(NULL, " ");
 			char Str[MAX_BUFFER_SIZE];
@@ -111,10 +94,9 @@ int Messanger::in(SOCKET client,string Id) {
 					if (iter == socket_info.end()) {}
 					else {
 						destsock = iter->second;
-						cout << "목표 소켓 접속중"<< endl;
-						Send(destsock, "Alarm");
-						Alarm alarm(destsock, iter -> first);
-						alarm.Chatin(destsock, iter -> first);
+						cout << "목표 소켓 접속중"<< endl;// 목표 소켓이 접속중 이므로 그 상대에게 msg를 send하여 alarm을 일으킴 code:006
+						string Clientmsg = "006 " + file +" "+ Id +": "+ tokmsg;
+						Send(destsock, Clientmsg);
 					}
 					socket_info.clear();
 					//if (ptrfind = 1) {//현재 해당 user가 접속중
@@ -123,6 +105,25 @@ int Messanger::in(SOCKET client,string Id) {
 				}
 				ptr = strtok(NULL, ",");
 			}
+		}
+		else if (strcmp(code.c_str(), "006")==0) {
+			strtok(msg, " ");
+			string filename= strtok(NULL, " ");
+			string chatfilepath = "c:/server/" + Id + "/" + filename + ".txt";
+			string alarmfilepath = "c:/server/" + Id + "/chat" + Id + "alarm/" + filename + ".txt";
+			ofstream Write(chatfilepath,ios::app);
+			ifstream Read(alarmfilepath);
+			if (Write.is_open() && Read.is_open()) {
+				string message;
+				getline(Read, message);
+				while (!Read.eof()) {
+					Write << message << endl;
+					getline(Read, message);
+				}
+				Write.close();
+				Read.close();
+			}
+			remove(alarmfilepath.c_str());
 		}
 		else if (Bytein <= 0) {
 			tool::TxtToSocket("c:/server/Id_Socket_map.txt", socket_info);

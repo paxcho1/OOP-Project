@@ -20,8 +20,9 @@ public:
 	int Chat(SOCKET server, string Id);
 	int Chatin(SOCKET server, string Id);
 	int NewInvite(SOCKET server, string Id);
-	int NewFriend(SOCKET server, string Id);
+	int NewFriends(SOCKET server, string Id);
 	int FriendsIndex(SOCKET server, string Id);
-	string Get(SOCKET server, string Id, char buf[]);
+	int Newmsg(SOCKET server,string Id, string file, string message);
+	string Get(SOCKET server, string Id, char* buf);
 };
 

@@ -20,15 +20,15 @@ void Sign(SOCKET client) {
 void Message(SOCKET client, string id) {
 	tool Tool(client);
 	Alarm alarm(client, id);
-	Tool.Send(client, "Chat");
+	Tool.Send(client, "001");//Chat
 	alarm.Chat(client,id);
-	Tool.Send(client, "Alarm");
+	Tool.Send(client, "002");
 	alarm.Chatin(client, id);
-	Tool.Send(client, "Friends");
+	Tool.Send(client, "003");
 	alarm.FriendsIndex(client, id);
-	Tool.Send(client, "NewInvite");
+	Tool.Send(client, "004");
 	alarm.FriendsInvite(client, id);
-	Tool.Send(client, "NewFriend");
+	Tool.Send(client, "005");
 	alarm.NewFriends(client, id);
 	Messanger messanger(client, id);
 	messanger.in(client, id);
