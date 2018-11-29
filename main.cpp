@@ -7,6 +7,7 @@
 #include <WS2tcpip.h>
 #include "Signin.h"
 #include "Alarm.h"
+#include "Login.h"
 #include "Messanger.h"
 #include "Tool.h"
 using namespace std;
@@ -17,18 +18,17 @@ void Sign(SOCKET client) {
 	Signin sign(client);
 	sign.in(client);
 }
+void Log(SOCKET client) {
+	Login login(client);
+	login.logging(client);
+}
 void Message(SOCKET client, string id) {
 	tool Tool(client);
 	Alarm alarm(client, id);
-	Tool.Send(client, "001");//Chat
 	alarm.Chat(client,id);
-	Tool.Send(client, "002");
 	alarm.Chatin(client, id);
-	Tool.Send(client, "003");
 	alarm.FriendsIndex(client, id);
-	Tool.Send(client, "004");
 	alarm.FriendsInvite(client, id);
-	Tool.Send(client, "005");
 	alarm.NewFriends(client, id);
 	Messanger messanger(client, id);
 	messanger.in(client, id);
@@ -55,7 +55,7 @@ int main() {
 		insocket.sin_family = AF_INET;
 		int port = 4296;
 		insocket.sin_port = htons(port);
-		string ip = "127.0.0.1";
+		string ip = "165.194.17.16";
 		inet_pton(AF_INET, ip.c_str(), &insocket.sin_addr);
 		::bind(listensocket, (sockaddr*)&insocket, sizeof(insocket));
 		listen(listensocket, SOMAXCONN);
@@ -90,7 +90,8 @@ int main() {
 							SIGN.detach();
 						}
 						else if (strcmp(buf, "Login") == 0) {
-						
+							thread LOGIN(&Log, sock);
+							LOGIN.detach();
 						}
 						else if (strcmp(buf, "Messanger") == 0) {
 							cout << "Messanger in" << endl;

@@ -15,7 +15,7 @@ int Receiver::Chat(SOCKET server, string Id) {
 	char msg[MAX_BUFFER_SIZE];
 	ZeroMemory(msg, MAX_BUFFER_SIZE);
 	string filepath = Get(server, Id, msg);//get filename.txt
-	//띄우기
+	//띄우기 asd,qwe
 	while (strcmp(msg, "endfile") != 0) {
 		cout << filepath << endl;//fd.name 출력
 		filepath = "c:/client/" + Id + "/" + filepath;
@@ -138,6 +138,7 @@ int Receiver::NewFriends(SOCKET server, string Id) {
 	string filepath = Get(server,Id, msg);//get filename.txt
 	while (strcmp(msg, "endfile") != 0) {
 		cout << filepath << endl;//fd.name 출력
+		//이 친구는 새친구입니다.
 		filepath = "c:/client/" + Id + "/FriendsIndex/" + filepath;
 		Get(server, Id, msg);//total byte size
 		int totalbytes = atoi(msg);
@@ -272,6 +273,7 @@ string Receiver::Get(SOCKET server, string Id, char* buf) {
 		strtok(buf, " ");
 		char* new_friend = strtok(NULL, " ");
 		string filepath = "c:/client/" + Id + "/FriendsIndex/" + new_friend + ".txt";//friends Alarm으로 가지않음.
+		//이 친구는 새친구입니다.
 		ofstream Write(filepath, ios::app);
 		if (Write.is_open()) {
 			cout << "writingfile:" + filepath << endl;
