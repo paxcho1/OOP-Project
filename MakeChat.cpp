@@ -46,7 +46,7 @@ int MakeChat::Make(SOCKET client, string Id, char* msg) {
 			else {
 				destsock = iter->second;
 				cout << "목표 소켓 접속중" << endl;
-				string Smsg = "006 " + file + " " + Id + "님이" + file + "을 초대하였습니다.";
+				string Smsg = "006 " + file + " " + Id + " 님이 " + file + " 을 초대하였습니다.";
 				Send(destsock, Smsg);
 			}
 			socket_info.clear();
@@ -56,7 +56,7 @@ int MakeChat::Make(SOCKET client, string Id, char* msg) {
 		}
 		ptr = strtok(NULL, ",");
 	}
-	string Cmsg = "006 " + file + " " + Id + "님이" + file + "을 초대하였습니다.";
+	string Cmsg = "006 " + file + " " + Id + " 님이 " + file + " 을 초대하였습니다.";
 	Send(client, Cmsg);
 	return 1;
 }

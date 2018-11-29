@@ -22,6 +22,7 @@ public:
 	int NewInvite(SOCKET server, string Id);
 	int NewFriends(SOCKET server, string Id);
 	int FriendsIndex(SOCKET server, string Id);
+	int ReadFriend(string filename);
 	int Newmsg(SOCKET server,string Id, string file, string message);
 	string Get(SOCKET server, string Id, char* buf);
 };

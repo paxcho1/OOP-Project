@@ -11,7 +11,6 @@
 #include <sstream>
 #include <iterator>
 
-#define MAX_BUFFER_SIZE 40910
 using namespace std;
 
 class Login :public tool
@@ -20,6 +19,5 @@ public:
 	Login(SOCKET client);
 	~Login();
 	int logging(SOCKET client);
-	
-};
 
+};
