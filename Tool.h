@@ -12,7 +12,7 @@
 #include "Alarm.h"
 #define MAX_BUFFER_SIZE 4092
 using namespace std;
-class tool// recv¿Í send¸¦ »ç¿ëÇÏ±â ½±°Ô ¸¸µé¾îÁÜ
+class tool// recvì™€ sendë¥¼ ì‚¬ìš©í•˜ê¸° ì‰½ê²Œ ë§Œë“¤ì–´ì¤Œ
 {
 public:
 	SOCKET client;
@@ -29,4 +29,6 @@ public:
 	void SocketToTxt(const char* fileName, map<string, SOCKET> &Map);
 	void TxtToSocket(const char* fileName, map<string, SOCKET> &Id_Socket);
 	string MessangerRecv(SOCKET client, string Id, char buf[]);
+	void ClassToFile(DailySchedule &Ds, string Id);
+	void FileToClass(DailySchedule &Ds, string Id);
 };
