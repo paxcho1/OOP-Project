@@ -11,206 +11,59 @@ Receiver::~Receiver()
 {
 }
 
-int Receiver::Chat(SOCKET server, string Id) {
-	char msg[MAX_BUFFER_SIZE];
-	ZeroMemory(msg, MAX_BUFFER_SIZE);
-	string filepath = Get(server, Id, msg);//get filename.txt
-	//띄우기 asd,qwe
-	while (strcmp(msg, "endfile") != 0) {
-		cout << filepath << endl;//fd.name 출력
-		filepath = "c:/client/" + Id + "/" + filepath;
-		Get(server, Id, msg);//total byte size
-		int totalbytes = atoi(msg);
-		FILE *fp = fopen(filepath.c_str(), "wb");
-		int left = totalbytes;
-		while (1) {
-			if (left <= MAX_BUFFER_SIZE) {//파일크기가 MAX_BUFFER_SIZE 보다 작을때
-				Get(server, Id, msg);
-				fwrite(msg, 1, left, fp);
-				left = 0;
+int Receiver::Messanger(SOCKET server, string Id) {
+	int cnt = 0;
+	do {
+		char msg[MAX_BUFFER_SIZE];
+		ZeroMemory(msg, MAX_BUFFER_SIZE);
+		Recv(server, msg);
+		string filepath = msg;//get filename.txt
+		//띄우기 asd,qwe
+		while (strcmp(msg, "endfile") != 0) {
+			cout << filepath << endl;//fd.name 출력
+			if(cnt ==0)
+			filepath = "c:/client/" + Id + "/" + filepath;
+			else if(cnt ==1)
+			filepath = "c:/client/" + Id + "/ChatAlarm/" + filepath;
+			else if(cnt ==2)
+			filepath = "c:/client/" + Id + "/InviteAlarm/" + filepath;
+			else if(cnt ==3)
+			filepath = "c:/client/" + Id + "/FriendsIndex/" + filepath;
+			else if (cnt == 4)
+			filepath = "c:/client/" + Id + "/FriendsIndex/" + filepath;// 새친구를 표현해줌
+			Recv(server, msg);//total byte size
+			int totalbytes = atoi(msg);
+			FILE *fp = fopen(filepath.c_str(), "wb");
+			int left = totalbytes;
+			while (1) {
+				if (left <= MAX_BUFFER_SIZE) {//파일크기가 MAX_BUFFER_SIZE 보다 작을때
+					Recv(server, msg);
+					fwrite(msg, 1, left, fp);
+					left = 0;
+				}
+				else if (left > MAX_BUFFER_SIZE) {
+					Recv(server, msg);
+					fwrite(msg, 1, MAX_BUFFER_SIZE, fp);
+					left -= MAX_BUFFER_SIZE;
+				}
+				if (left == 0) {
+					break;
+				}
 			}
-			else if (left > MAX_BUFFER_SIZE) {
-				Get(server, Id, msg);
-				fwrite(msg, 1, MAX_BUFFER_SIZE, fp);
-				left -= MAX_BUFFER_SIZE;
-			}
+			fclose(fp);
 			if (left == 0) {
-				break;
+				printf("filename %s 파일을 성공적으로 받았습니다.\r\n", msg);
 			}
-		}
-		fclose(fp);
-		if (left == 0) {
-			printf("filename %s 파일을 성공적으로 받았습니다.\r\n", msg);
-		}
-		else {
-			printf("파일을 제대로 받지 못했습니다.\r\n");
-		}
-		filepath = Get(server, Id, msg);//get filename.txt
-	}
-	if (strcmp(msg, "endfile") == 0) {
-		cout << "채팅 목록 불러오기 완료" << endl;
-	}
-	return 0;
-}
-int Receiver::Chatin(SOCKET server, string Id) {
-	char msg[MAX_BUFFER_SIZE];
-	ZeroMemory(msg, MAX_BUFFER_SIZE);
-	string filepath = Get(server,Id, msg);//get filename.txt
-	while (strcmp(msg, "endfile") != 0) {
-		cout << filepath << endl;//fd.name 출력
-		filepath = "c:/client/" + Id + "/ChatAlarm/" + filepath;
-		Get(server, Id , msg);//total byte size
-		int totalbytes = atoi(msg);
-		FILE *fp = fopen(filepath.c_str(), "wb");
-		int left = totalbytes;
-		while (1) {
-			if (left <= MAX_BUFFER_SIZE) {//파일크기가 MAX_BUFFER_SIZE 보다 작을때
-				Get(server,Id, msg);
-				fwrite(msg, 1, left, fp);
-				left = 0;
+			else {
+				printf("파일을 제대로 받지 못했습니다.\r\n");
 			}
-			else if (left > MAX_BUFFER_SIZE) {
-				Get(server, Id,msg);
-				fwrite(msg, 1, MAX_BUFFER_SIZE, fp);
-				left -= MAX_BUFFER_SIZE;
-			}
-			if (left == 0) {
-				break;
-			}
+			filepath = Recv(server, msg);//get filename.txt
 		}
-		fclose(fp);
-		if (left == 0) {
-			printf("filename %s 파일을 성공적으로 받았습니다.\r\n", msg);
+		if (strcmp(msg, "endfile") == 0) {
+			cout << "채팅 목록 불러오기 완료" << endl;
 		}
-		else {
-			printf("파일을 제대로 받지 못했습니다.\r\n");
-		}
-		filepath = Get(server,Id, msg);//get filename.txt
-	}
-	if (strcmp(msg, "endfile") == 0) {
-		cout << "채팅 알람 목록 불러오기 완료" << endl;
-	}
-	return 0;
-}
-int Receiver::NewInvite(SOCKET server, string Id) {
-	char msg[MAX_BUFFER_SIZE];
-	ZeroMemory(msg, MAX_BUFFER_SIZE);
-	string filepath = Get(server,Id, msg);//get filename.txt
-	while (strcmp(msg, "endfile") != 0) {
-		cout << filepath << endl;//fd.name 출력
-		filepath = "c:/client/" + Id + "/InviteAlarm/" + filepath;
-		Get(server, Id, msg);//total byte size
-		int totalbytes = atoi(msg);
-		FILE *fp = fopen(filepath.c_str(), "wb");
-		int left = totalbytes;
-		while (1) {
-			if (left <= MAX_BUFFER_SIZE) {//파일크기가 MAX_BUFFER_SIZE 보다 작을때
-				Get(server, Id,msg);
-				fwrite(msg, 1, left, fp);
-				left = 0;
-			}
-			else if (left > MAX_BUFFER_SIZE) {
-				Get(server,Id, msg);
-				fwrite(msg, 1, MAX_BUFFER_SIZE, fp);
-				left -= MAX_BUFFER_SIZE;
-			}
-			if (left == 0) {
-				break;
-			}
-		}
-		fclose(fp);
-		if (left == 0) {
-			printf("filename %s 파일을 성공적으로 받았습니다.\r\n", msg);
-		}
-		else {
-			printf("파일을 제대로 받지 못했습니다.");
-		}
-		filepath = Get(server,Id, msg);//get filename.txt
-	}
-	if (strcmp(msg, "endfile") == 0) {
-		cout << "friend 알람 목록 불러오기 완료" << endl;
-	}
-	return 0;
-}
-int Receiver::NewFriends(SOCKET server, string Id) {
-	char msg[MAX_BUFFER_SIZE];
-	ZeroMemory(msg, MAX_BUFFER_SIZE);
-	string filepath = Get(server,Id, msg);//get filename.txt
-	while (strcmp(msg, "endfile") != 0) {
-		cout << filepath << endl;//fd.name 출력
-		//이 친구는 새친구입니다.
-		filepath = "c:/client/" + Id + "/FriendsIndex/" + filepath;
-		Get(server, Id, msg);//total byte size
-		int totalbytes = atoi(msg);
-		FILE *fp = fopen(filepath.c_str(), "wb");
-		int left = totalbytes;
-		while (1) {
-			if (left <= MAX_BUFFER_SIZE) {//파일크기가 MAX_BUFFER_SIZE 보다 작을때
-				Get(server, Id,msg);
-				fwrite(msg, 1, left, fp);
-				left = 0;
-			}
-			else if (left > MAX_BUFFER_SIZE) {
-				Get(server, Id,msg);
-				fwrite(msg, 1, MAX_BUFFER_SIZE, fp);
-				left -= MAX_BUFFER_SIZE;
-			}
-			if (left == 0) {
-				break;
-			}
-		}
-		fclose(fp);
-		if (left == 0) {
-			printf("filename %s 파일을 성공적으로 받았습니다.\r\n", msg);
-		}
-		else {
-			printf("파일을 제대로 받지 못했습니다.");
-		}
-		filepath = Get(server,Id, msg);//get filename.txt
-	}
-	if (strcmp(msg, "endfile") == 0) {
-		cout << "새로운 friend 목록 불러오기 완료" << endl;
-	}
-	return 0;
-}
-int Receiver::FriendsIndex(SOCKET server, string Id) {
-	char msg[MAX_BUFFER_SIZE];
-	ZeroMemory(msg, MAX_BUFFER_SIZE);
-	string filepath = Get(server,Id, msg);//get filename.txt
-	while (strcmp(msg, "endfile") != 0) {
-		cout << filepath << endl;//fd.name 출력
-		filepath = "c:/client/" + Id + "/FriendsIndex/" + filepath;
-		Get(server, Id, msg);//total byte size
-		int totalbytes = atoi(msg);
-		FILE *fp = fopen(filepath.c_str(), "wb");
-		int left = totalbytes;
-		while (1) {
-			if (left <= MAX_BUFFER_SIZE) {//파일크기가 MAX_BUFFER_SIZE 보다 작을때
-				Get(server,Id, msg);
-				fwrite(msg, 1, left, fp);
-				left = 0;
-			}
-			else if (left > MAX_BUFFER_SIZE) {
-				Get(server,Id, msg);
-				fwrite(msg, 1, MAX_BUFFER_SIZE, fp);
-				left -= MAX_BUFFER_SIZE;
-			}
-			if (left == 0) {
-				break;
-			}
-		}
-		fclose(fp);
-		if (left == 0) {
-			printf("filename %s 파일을 성공적으로 받았습니다.\r\n", msg);
-		}
-		else {
-			printf("파일을 제대로 받지 못했습니다.");
-		}
-		filepath = Get(server,Id, msg);//get filename.txt
-	}
-	if (strcmp(msg, "endfile") == 0) {
-		cout << "friend 목록 불러오기 완료" << endl;
-	}
+		cnt++;
+	} while (cnt <= 4);
 	return 0;
 }
 int Receiver::Newmsg(SOCKET server, string Id, string file, string message) {
@@ -227,20 +80,9 @@ string Receiver::Get(SOCKET server, string Id, char* buf) {
 	int Bytein = recv(server, buf, MAX_BUFFER_SIZE, 0);
 	string code = buf;
 	code = code.substr(0, 3);
-	if (strcmp(code.c_str(), "001") == 0) {
-		Chat(server, Id); return buf;
-	}
-	else if (strcmp(code.c_str(), "002") == 0) {
-		Chatin(server, Id); return buf;
-	}
-	else if (strcmp(code.c_str(), "003") == 0) {
-		FriendsIndex(server, Id); return buf;
-	}
-	else if (strcmp(code.c_str(), "004")==0) {
-		NewInvite(server, Id); return buf;
-	}
-	else if (strcmp(code.c_str(), "005") == 0) {
-		NewFriends(server, Id); return buf;
+	if (strcmp(code.c_str(), "000")==0) {
+		Messanger(server, Id);
+		return "receive complete";
 	}
 	else if (strcmp(code.c_str(), "006") == 0) {//message 받음 //만약 현제 client가 해당 채팅창에 접속중
 		strtok(buf, " ");
@@ -287,5 +129,16 @@ string Receiver::Get(SOCKET server, string Id, char* buf) {
 	}
 	else {
 		return buf;
+	}
+}
+int Receiver::Recv(SOCKET client, char* buf) {
+
+	ZeroMemory(buf, MAX_BUFFER_SIZE);
+	int Bytein = recv(client, buf, MAX_BUFFER_SIZE, 0);//error handle
+	if (Bytein <= 0) {
+		return -1;
+	}
+	else {
+		return 1;
 	}
 }

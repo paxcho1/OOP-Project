@@ -17,13 +17,9 @@ private:
 public:
 	Receiver(SOCKET server, string Id);
 	~Receiver();
-	int Chat(SOCKET server, string Id);
-	int Chatin(SOCKET server, string Id);
-	int NewInvite(SOCKET server, string Id);
-	int NewFriends(SOCKET server, string Id);
-	int FriendsIndex(SOCKET server, string Id);
-	int ReadFriend(string filename);
+	int Messanger(SOCKET server, string Id);
 	int Newmsg(SOCKET server,string Id, string file, string message);
 	string Get(SOCKET server, string Id, char* buf);
+	int Recv(SOCKET client, char* buf);
 };
 

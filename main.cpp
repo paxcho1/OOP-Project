@@ -25,11 +25,8 @@ void Log(SOCKET client) {
 void Message(SOCKET client, string id) {
 	tool Tool(client);
 	Alarm alarm(client, id);
-	alarm.Chat(client,id);
-	alarm.Chatin(client, id);
-	alarm.FriendsIndex(client, id);
-	alarm.FriendsInvite(client, id);
-	alarm.NewFriends(client, id);
+	Tool.Send(client, "000");
+	alarm.Messanger(client,id);
 	Messanger messanger(client, id);
 	messanger.in(client, id);
 }
@@ -55,7 +52,7 @@ int main() {
 		insocket.sin_family = AF_INET;
 		int port = 4296;
 		insocket.sin_port = htons(port);
-		string ip = "165.194.17.16";
+		string ip = "127.0.0.1";
 		inet_pton(AF_INET, ip.c_str(), &insocket.sin_addr);
 		::bind(listensocket, (sockaddr*)&insocket, sizeof(insocket));
 		listen(listensocket, SOMAXCONN);

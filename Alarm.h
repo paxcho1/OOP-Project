@@ -20,10 +20,6 @@ private:
 public:
 	Alarm(SOCKET client,string Id);
 	~Alarm();
-	int Chat(SOCKET client, string Id);
-	int Chatin(SOCKET client,string Id);
-	int FriendsIndex(SOCKET client, string Id);
-	int FriendsInvite(SOCKET client, string Id);
-	int NewFriends(SOCKET client, string Id);
+	int Messanger(SOCKET client, string Id);
 };
 
