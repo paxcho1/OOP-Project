@@ -10,16 +10,16 @@
 #include "Tool.h"
 #include "Alarm.h"
 #include <stdlib.h>
-class AddFriends:public tool
+class AddFriends :public tool
 {
 private:
 	string Id;
 	SOCKET client;
 	string recv_id;
 public:
-	AddFriends(SOCKET client, string Id,string recv_id);
+	AddFriends(SOCKET client, string Id, string recv_id);
 	~AddFriends();
 	int Send_invite(SOCKET client, string Id, string recv_id);
 	int Accept_invite(SOCKET client, string Id, string recv_id);
+	int Delete_invite(SOCKET client, string Id, string recv_id);
 };
-

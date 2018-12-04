@@ -10,6 +10,7 @@
 #include "Login.h"
 #include "Messanger.h"
 #include "Tool.h"
+//#include "TimeTable.h"
 using namespace std;
 
 fd_set Fd;
@@ -23,12 +24,48 @@ void Log(SOCKET client) {
 	login.logging(client);
 }
 void Message(SOCKET client, string id) {
-	tool Tool(client);
 	Alarm alarm(client, id);
-	Tool.Send(client, "000");
-	alarm.Messanger(client,id);
+	alarm.Messanger(client, id);
 	Messanger messanger(client, id);
 	messanger.in(client, id);
+}
+int Table(SOCKET client, string id) {
+	//DailySchedule DailySchedule;
+
+	while (1) {
+
+		char buf[MAX_BUFFER_SIZE];
+		ZeroMemory(buf, MAX_BUFFER_SIZE);
+		int byteIn = recv(client, buf, MAX_BUFFER_SIZE, 0);
+		string code = buf;
+		code = code.substr(0, 3);
+
+		if (byteIn <= 0) {
+			return 0;
+		}
+		else {
+			if (strcmp(code.c_str(), "000") == 0) {
+				//저장
+
+			}
+			else if (strcmp(code.c_str(), "001") == 0) {
+				//MessangerIn
+				Alarm alarm(client, id);
+				alarm.Messanger(client, id);
+				Messanger messanger(client, id);
+				messanger.in(client, id);
+			}
+			else if (strcmp(code.c_str(), "002") == 0) {
+
+			}
+			else if (strcmp(code.c_str(), "003") == 0) {
+
+			}
+
+
+
+		}
+	}
 }
 int main() {
 	while (1) {
@@ -81,8 +118,8 @@ int main() {
 						FD_CLR(sock, &Fd);
 					}
 					else {
-						if (strcmp(buf,"Signin") == 0) {//client의 login 요청
-							//thread Signin
+						if (strcmp(buf, "Signin") == 0) {//client의 login 요청
+						   //thread Signin
 							thread SIGN(&Sign, sock);
 							SIGN.detach();
 						}
@@ -104,6 +141,10 @@ int main() {
 								Messange.detach();
 							}
 						}
+						else if (strcmp(buf, "TimeTable") == 0) {
+							thread TimeTable(&Table, sock, buf);
+							TimeTable.detach();
+						}
 						//메세지 수신
 						//event 수신
 						//recv 현재 client의 상태를 입력받고
@@ -111,20 +152,20 @@ int main() {
 
 						//thread 구분 detach
 						{
-								//case 구분
-								{
-									//login();
+							//case 구분
+							{
+								//login();
 
-									//sendmsg();
+								//sendmsg();
 
-									//plusfri();
+								//plusfri();
 
-									//makemultichat();
+								//makemultichat();
 
-									//msgread(currid,file);
+								//msgread(currid,file);
 							}
 						}
-						
+
 					}
 				}
 			}

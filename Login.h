@@ -19,5 +19,6 @@ public:
 	Login(SOCKET client);
 	~Login();
 	int logging(SOCKET client);
-
+	
 };
+

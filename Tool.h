@@ -1,5 +1,8 @@
 #pragma once
 #include <WinSock2.h>
+#include <WS2tcpip.h>
+#include <direct.h>
+#include <mutex>
 #include <string>
 #include <algorithm>
 #include <iostream>
@@ -12,7 +15,7 @@
 #include "Alarm.h"
 #define MAX_BUFFER_SIZE 4092
 using namespace std;
-class tool// recvì™€ sendë¥¼ ì‚¬ìš©í•˜ê¸° ì‰½ê²Œ ë§Œë“¤ì–´ì¤Œ
+class tool// recv¿Í send¸¦ »ç¿ëÇÏ±â ½±°Ô ¸¸µé¾îÁÜ
 {
 public:
 	SOCKET client;
@@ -29,6 +32,4 @@ public:
 	void SocketToTxt(const char* fileName, map<string, SOCKET> &Map);
 	void TxtToSocket(const char* fileName, map<string, SOCKET> &Id_Socket);
 	string MessangerRecv(SOCKET client, string Id, char buf[]);
-	void ClassToFile(DailySchedule &Ds, string Id);
-	void FileToClass(DailySchedule &Ds, string Id);
 };

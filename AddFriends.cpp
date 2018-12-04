@@ -1,11 +1,11 @@
 #include "AddFriends.h"
-AddFriends::AddFriends(SOCKET client,string Id,string recv_id):tool(client)
+AddFriends::AddFriends(SOCKET client, string Id, string recv_id) :tool(client)
 {
 }
 AddFriends::~AddFriends()
 {
 }
-int AddFriends::Send_invite(SOCKET client, string Id , string recv_id) {//id 는 초대자 recv id 는 초대 수신인
+int AddFriends::Send_invite(SOCKET client, string Id, string recv_id) {//id 는 초대자 recv id 는 초대 수신인
 	map<string, SOCKET>::iterator iter;
 	map<string, SOCKET>socket_info;
 	SOCKET destsock;
@@ -21,7 +21,7 @@ int AddFriends::Send_invite(SOCKET client, string Id , string recv_id) {//id 는 
 	if (iter == socket_info.end()) {}//상대가 접속중일때 알람을 보냄
 	else {
 		destsock = iter->second;
-		cout << "목표 소켓 접속중"<< endl;
+		cout << "목표 소켓 접속중" << endl;
 		string Smsg = "007 " + Id;
 		Send(destsock, Smsg);
 	}
@@ -60,7 +60,7 @@ int AddFriends::Accept_invite(SOCKET client, string Id, string recv_id) {//id는 
 	}
 	else {
 		destsock = iter->second;
-		cout << "목표 소켓 접속중"<< endl;
+		cout << "목표 소켓 접속중" << endl;
 		string Smsg = "008 " + Id;
 		Send(destsock, Smsg);//만약 상대가 접속중이라면 바로 친구를 추가해줌//친구 파일로 바로 전송
 	}
@@ -68,4 +68,10 @@ int AddFriends::Accept_invite(SOCKET client, string Id, string recv_id) {//id는 
 	string Cmsg = "008 " + recv_id;
 	Send(client, Cmsg);//client도 친구를 추가함
 	return 1;
+}
+int AddFriends::Delete_invite(SOCKET client, string Id, string recv_id)
+{
+	string filepath = "c:/server/" + Id + "/friends" + Id + "invite/" + recv_id + ".txt";
+	remove(filepath.c_str());
+
 }
