@@ -16,12 +16,12 @@ int Signin::in(SOCKET client)
 	char str[MAX_BUFFER_SIZE];
 	int Id_Bytein;
 	int Password_Bytein;
-	//id Áßº¹°Ë»ç
+	//id ì¤‘ë³µê²€ì‚¬
 	int overlap = 0;
 	vector<string> V_id;
 	string file_string;
 	map<string, string> user_Info;
-	tool::TxtToVector("id_index.txt", V_id);
+	tool::TxtToVector("c:/server/id_index.txt", V_id);
 	do {
 		Id_Bytein = tool::Recv(client, id);
 		if (strcmp(id, "SigninClose") == 0) {
@@ -31,10 +31,10 @@ int Signin::in(SOCKET client)
 			return -1;
 		}
 
-		//in_index ÆÄÀÏ ºÒ·¯¿À±â(txt)
+		//in_index íŒŒì¼ ë¶ˆëŸ¬ì˜¤ê¸°(txt)
 
 		if (find(V_id.begin(), V_id.end(), id) == V_id.end()) {
-			//id°¡ ¾øÀ»¶§
+			//idê°€ ì—†ì„ë•Œ
 			overlap = 1;
 			strcpy_s(str, sizeof(str), "Successfully finished signin");
 			send(client, str, MAX_BUFFER_SIZE, 0);
@@ -43,19 +43,19 @@ int Signin::in(SOCKET client)
 			return -1;
 			}
 			*/
-			//vector¿¡ Á¤º¸ Ãß°¡
+			//vectorì— ì •ë³´ ì¶”ê°€
 			V_id.push_back(id);
 			Password_Bytein = tool::Recv(client, password);
 
-			tool::VectorToTxt("id_index.txt", V_id);
+			tool::VectorToTxt("c:/server/id_index.txt", V_id);
 
-			//txtÆÄÀÏ ÀúÀå
+			//txtíŒŒì¼ ì €ì¥
 		}
 		else {
 			strcpy_s(str, sizeof(str), "overlap\nRe-enter your id\n");
 			send(client, str, MAX_BUFFER_SIZE, 0);
 		}
-		//id Áßº¹ ¸Ş¼¼Áö send
+		//id ì¤‘ë³µ ë©”ì„¸ì§€ send
 	} while (overlap == 0);
 
 	string file = id;
@@ -67,7 +67,7 @@ int Signin::in(SOCKET client)
 	_mkdir(path.c_str());
 	path = "c:/server/" + file + "/friends" + file;
 	_mkdir(path.c_str());
-	//txt¿¡¼­ mapÀ¸·Î
+	//txtì—ì„œ mapìœ¼ë¡œ
 	tool::TxtToMap("c:/server/Id_Ps_map.txt", user_Info);
 	user_Info.insert(pair<string, string>(id, password));
 
