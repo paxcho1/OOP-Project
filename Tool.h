@@ -13,6 +13,7 @@
 #include <map>
 #include <iterator>
 #include "Alarm.h"
+#include "DailySchedule.h"
 #define MAX_BUFFER_SIZE 4092
 using namespace std;
 class tool// recv와 send를 사용하기 쉽게 만들어줌

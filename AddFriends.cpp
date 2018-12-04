@@ -73,5 +73,6 @@ int AddFriends::Delete_invite(SOCKET client, string Id, string recv_id)
 {
 	string filepath = "c:/server/" + Id + "/friends" + Id + "invite/" + recv_id + ".txt";
 	remove(filepath.c_str());
+	return 0;
 
 }
