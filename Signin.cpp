@@ -69,23 +69,9 @@ int Signin::in(SOCKET client)
 	_mkdir(path.c_str());
 	path = "c:/server/" + file + "/friends" + file;
 	_mkdir(path.c_str());
-	path = "c:/server/schedule/daily" + file ;
+	path = "c:/server/" + file + "/schedule/daily";
 	_mkdir(path.c_str());
-	path = "c:/server/schedule/weekly" + file;
-	_mkdir(path.c_str());
-	path = "c:/server/schedule/weekly" + file + "/mon";
-	_mkdir(path.c_str());
-	path = "c:/server/schedule/weekly" + file + "/tue";
-	_mkdir(path.c_str());
-	path = "c:/server/schedule/weekly" + file + "/wed";
-	_mkdir(path.c_str());
-	path = "c:/server/schedule/weekly" + file + "/thu";
-	_mkdir(path.c_str());
-	path = "c:/server/schedule/weekly" + file + "/fri";
-	_mkdir(path.c_str());
-	path = "c:/server/schedule/weekly" + file + "/sat";
-	_mkdir(path.c_str());
-	path = "c:/server/schedule/weekly" + file + "/sun";
+	path = "c:/server/" + file + "/schedule/weekly";
 	_mkdir(path.c_str());
 	//txt에서 map으로
 	tool::TxtToMap("c:/server/Id_Ps_map.txt", user_Info);

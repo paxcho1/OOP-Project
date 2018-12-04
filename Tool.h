@@ -33,6 +33,8 @@ public:
 	void SocketToTxt(const char* fileName, map<string, SOCKET> &Map);
 	void TxtToSocket(const char* fileName, map<string, SOCKET> &Id_Socket);
 	string MessangerRecv(SOCKET client, string Id, char buf[]);
-	void ClassToFile(DailySchedule &Ds, string Id);
-	void FileToClass(DailySchedule &Ds, string Id);
+	void DailyScheduleToFile(DailySchedule &Ds, string Id, string day);
+	void WeeklyScheduleToFile(DailySchedule &Ds, string Id, string day);
+	void FileToDailyScheduleClass(DailySchedule &Ds, string Id ,string day);
+	void FileToWeeklyScheduleClass(DailySchedule &Ds, string Id, string day);
 };
