@@ -24,38 +24,43 @@ int Login::logging(SOCKET client) {
 	string str;
 	tool::TxtToMap("c:/server/Id_Ps_map.txt", user_Info);
 
-	//str = "enter your Id and Password";
+	str = "enter your Id and Password";
 
-	//send(client, str.c_str(), str.size(), 0);
+	send(client, str.c_str(), MAX_BUFFER_SIZE, 0);
 	//do {
-	Id_Bytein = tool::Recv(client, Id); //ÏïÑÏù¥Îîî Î∞õÍ∏∞
-	Password_Bytein = tool::Recv(client, Password);//ÎπÑÎ≤à Î∞õÍ∏∞
+		Id_Bytein = tool::Recv(client, Id); //æ∆¿Ãµ πﬁ±‚
 
-	CheckId = 0;
-	CheckPassword = 0;
+		str = "enter your Id and Password";
 
-	for (iter = user_Info.begin(); iter != user_Info.end(); (++iter)) {
-		if (iter->first == Id) {
-			CheckId = 1;//IdÍ∞Ä Îì±Î°ùÎêòÏñ¥ ÏûàÏùå
-			if (iter->second == Password) {
-				CheckPassword = 1;
+		send(client, str.c_str(), MAX_BUFFER_SIZE, 0);
+
+		Password_Bytein = tool::Recv(client, Password);//∫Òπ¯ πﬁ±‚
+
+		CheckId = 0;
+		CheckPassword = 0;
+		
+		for (iter = user_Info.begin(); iter != user_Info.end(); (++iter)) {
+			if (iter->first == Id) {
+				CheckId = 1;//Id∞° µÓ∑œµ«æÓ ¿÷¿Ω
+				if (iter->second == Password) {
+					CheckPassword = 1;
+				}
 			}
 		}
-	}
+		
+		if (CheckId == 1 && CheckPassword == 1) {
+			str = "Successfully Login";
+			send(client, str.c_str(), MAX_BUFFER_SIZE, 0);
 
-	if (CheckId == 1 && CheckPassword == 1) {
-		str = "Successfully Login";
-		send(client, str.c_str(), MAX_BUFFER_SIZE, 0);
-
-		tool::TxtToSocket("C:/server/Id_Socket_map.txt", IdSocketInfo);
-		IdSocketInfo.insert(pair<string, SOCKET>(Id, client));
-		tool::SocketToTxt("C:/server/Id_Socket_map.txt", IdSocketInfo);
-	}
-	//IdÍ∞Ä Îì±Î°ùÎêòÏñ¥ ÏûàÏßÄ ÏïäÏùå
-	else if (CheckId != 1 || CheckPassword != 1) {
-		str = "Ether your id or password is wrong";
-		send(client, str.c_str(), MAX_BUFFER_SIZE, 0);
-	}
+			tool::TxtToSocket("C:/server/Id_Socket_map.txt", IdSocketInfo);
+			IdSocketInfo.insert(pair<string, SOCKET>(Id, client));
+			tool::SocketToTxt("C:/server/Id_Socket_map.txt", IdSocketInfo);
+		}
+		//Id∞° µÓ∑œµ«æÓ ¿÷¡ˆ æ ¿Ω
+		else if (CheckId != 1 || CheckPassword != 1) {
+			str = "Ether your id or password is wrong";
+			send(client, str.c_str(), MAX_BUFFER_SIZE, 0);
+		}
 
 
 

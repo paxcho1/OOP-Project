@@ -1,9 +1,9 @@
 #include "MakeChat.h"
 
-MakeChat::MakeChat(SOCKET client, string Id) : tool(client) 
+MakeChat::MakeChat(SOCKET client, string Id) : tool(client)
 {
 }
-MakeChat::~MakeChat() 
+MakeChat::~MakeChat()
 {
 }
 int MakeChat::Make(SOCKET client, string Id, char* msg) {
@@ -28,7 +28,7 @@ int MakeChat::Make(SOCKET client, string Id, char* msg) {
 	while (ptr != NULL) {//ptr은 채팅방에 있는 다른 user_id이다.
 		if (ptr != Id) {
 			string str = ptr;// another_user_id
-			//string index_path = "c:/server/Socket_Id_Map.txt";
+							 //string index_path = "c:/server/Socket_Id_Map.txt";
 			pathstr = "c:/server/" + str + "/chat" + str + "alarm/" + file + ".txt";//filename은 같다 user/alarm/filename의 경로
 			strcpy(path, pathstr.c_str());
 			ofstream DWrite(path, ios::app);
@@ -46,7 +46,7 @@ int MakeChat::Make(SOCKET client, string Id, char* msg) {
 			else {
 				destsock = iter->second;
 				cout << "목표 소켓 접속중" << endl;
-				string Smsg = "006 " + file + " " + Id + " 님이 " + file + " 을 초대하였습니다.";
+				string Smsg = "006 " + file + " " + Id + "님이" + file + "을 초대하였습니다.";
 				Send(destsock, Smsg);
 			}
 			socket_info.clear();
@@ -56,7 +56,7 @@ int MakeChat::Make(SOCKET client, string Id, char* msg) {
 		}
 		ptr = strtok(NULL, ",");
 	}
-	string Cmsg = "006 " + file + " " + Id + " 님이 " + file + " 을 초대하였습니다.";
+	string Cmsg = "006 " + file + " " + Id + "님이" + file + "을 초대하였습니다.";
 	Send(client, Cmsg);
 	return 1;
 }

@@ -77,6 +77,9 @@
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
     </ClCompile>
+    <Link>
+      <AdditionalLibraryDirectories>C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Tools\MSVC\14.16.27023\lib\x86</AdditionalLibraryDirectories>
+    </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
@@ -117,7 +120,9 @@
   <ItemGroup>
     <ClCompile Include="AddFriends.cpp" />
     <ClCompile Include="Alarm.cpp" />
+    <ClCompile Include="Login.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="MakeChat.cpp" />
     <ClCompile Include="Messanger.cpp" />
     <ClCompile Include="Signin.cpp" />
     <ClCompile Include="Tool.cpp" />
@@ -125,6 +130,8 @@
   <ItemGroup>
     <ClInclude Include="AddFriends.h" />
     <ClInclude Include="Alarm.h" />
+    <ClInclude Include="Login.h" />
+    <ClInclude Include="MakeChat.h" />
     <ClInclude Include="Messanger.h" />
     <ClInclude Include="Signin.h" />
     <ClInclude Include="Tool.h" />

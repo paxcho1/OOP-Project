@@ -1,11 +1,11 @@
 #include "Messanger.h"
-Messanger::Messanger(SOCKET client,string Id):tool(client)
+Messanger::Messanger(SOCKET client, string Id) :tool(client)
 {
 }
 Messanger::~Messanger()
 {
 }
-int Messanger::in(SOCKET client,string Id) {
+int Messanger::in(SOCKET client, string Id) {
 	char path[255];
 	char msg[MAX_BUFFER_SIZE];
 	map<string, SOCKET>::iterator iter;
@@ -34,8 +34,16 @@ int Messanger::in(SOCKET client,string Id) {
 			cout << "Sending invite message" << endl;
 			char* recv_id = strtok(msg, " ");
 			recv_id = strtok(NULL, " ");
-			AddFriends Add(client, Id , recv_id);
-			Add.Send_invite(client, Id, recv_id);
+			vector<string> V_id;
+			tool::TxtToVector("c:/server/id_index.txt", V_id);
+			if (find(V_id.begin(), V_id.end(), recv_id) == V_id.end()) {
+				Send(client, "001");
+			}
+			else {
+				Send(client, "002");
+				AddFriends Add(client, Id, recv_id);
+				Add.Send_invite(client, Id, recv_id);
+			}
 		}
 		else if (strcmp(code.c_str(), "003") == 0) {//AcceptInvite 입력받음
 			char* recv_id = strtok(msg, " ");
@@ -43,22 +51,28 @@ int Messanger::in(SOCKET client,string Id) {
 			AddFriends Add(client, Id, recv_id);
 			Add.Accept_invite(client, Id, recv_id);
 		}
+		else if (strcmp(code.c_str(), "001") == 0) {
+			char* recv_id = strtok(msg, " ");
+			recv_id = strtok(NULL, " ");
+			AddFriends Add(client, Id, recv_id);
+			Add.Delete_invite(client, Id, recv_id);
+		}
 		else if (strcmp(code.c_str(), "004") == 0) {
 			cout << "Making Chating room" << endl;
 			MakeChat Make(client, Id);
-			Make.Make(client, Id ,msg);
+			Make.Make(client, Id, msg);
 		}
-		else if (strcmp(code.c_str(),"005")==0) {//메세지를 입력받았다 //filename msg 형태로 받음
+		else if (strcmp(code.c_str(), "005") == 0) {//메세지를 입력받았다 //filename msg 형태로 받음
 			char* ptr = strtok(msg, " ");
 			ptr = strtok(NULL, " ");
-			string file = (strcpy,ptr);//file = filename
+			string file = (strcpy, ptr);//file = filename
 			ptr = strtok(NULL, " ");
 			char Str[MAX_BUFFER_SIZE];
 			string tokmsg;
 			strcpy(Str, "");
 			while (ptr != NULL) {
 				strcat(Str, ptr);
-				tokmsg = strcat(Str," ");
+				tokmsg = strcat(Str, " ");
 				ptr = strtok(NULL, " ");
 			}
 			string message = tokmsg;
@@ -69,7 +83,7 @@ int Messanger::in(SOCKET client,string Id) {
 				cout << "writing file" << endl;
 				Write << Id + ": " + message << endl;//자신의 id folder에 message 저장
 			}
-			Write.close(); 
+			Write.close();
 			char filename[MAX_BUFFER_SIZE];
 			strcpy(filename, file.c_str());
 			ptr = strtok(filename, ",");//index 관련 전부 삭제
@@ -94,24 +108,24 @@ int Messanger::in(SOCKET client,string Id) {
 					if (iter == socket_info.end()) {}
 					else {
 						destsock = iter->second;
-						cout << "목표 소켓 접속중"<< endl;// 목표 소켓이 접속중 이므로 그 상대에게 msg를 send하여 alarm을 일으킴 code:006
-						string Clientmsg = "006 " + file +" "+ Id +": "+ tokmsg;
+						cout << "목표 소켓 접속중" << endl;// 목표 소켓이 접속중 이므로 그 상대에게 msg를 send하여 alarm을 일으킴 code:006
+						string Clientmsg = "006 " + file + " " + Id + ": " + tokmsg;
 						Send(destsock, Clientmsg);
 					}
 					socket_info.clear();
 					//if (ptrfind = 1) {//현재 해당 user가 접속중
-					//	//send alarm message
+					//   //send alarm message
 					//}+
 				}
 				ptr = strtok(NULL, ",");
 			}
 		}
-		else if (strcmp(code.c_str(), "006")==0) {
+		else if (strcmp(code.c_str(), "006") == 0) {
 			strtok(msg, " ");
-			string filename= strtok(NULL, " ");
+			string filename = strtok(NULL, " ");
 			string chatfilepath = "c:/server/" + Id + "/" + filename + ".txt";
 			string alarmfilepath = "c:/server/" + Id + "/chat" + Id + "alarm/" + filename + ".txt";
-			ofstream Write(chatfilepath,ios::app);
+			ofstream Write(chatfilepath, ios::app);
 			ifstream Read(alarmfilepath);
 			if (Write.is_open() && Read.is_open()) {
 				string message;

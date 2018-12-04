@@ -21,7 +21,7 @@ int Signin::in(SOCKET client)
 	vector<string> V_id;
 	string file_string;
 	map<string, string> user_Info;
-	tool::TxtToVector("c:/server/id_index.txt", V_id);
+	tool::TxtToVector("id_index.txt", V_id);
 	do {
 		Id_Bytein = tool::Recv(client, id);
 		if (strcmp(id, "SigninClose") == 0) {
@@ -47,7 +47,7 @@ int Signin::in(SOCKET client)
 			V_id.push_back(id);
 			Password_Bytein = tool::Recv(client, password);
 
-			tool::VectorToTxt("c:/server/id_index.txt", V_id);
+			tool::VectorToTxt("id_index.txt", V_id);
 
 			//txt파일 저장
 		}

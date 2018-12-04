@@ -2,7 +2,7 @@
 
 
 
-Alarm::Alarm(SOCKET client,string Id)
+Alarm::Alarm(SOCKET client, string Id)
 {
 }
 
@@ -19,11 +19,11 @@ int Alarm::Messanger(SOCKET client, string Id) {//client의 id를 이용해 alarm폴더
 			pathstr = "c:/server/" + Id + "/*.txt";
 		else if (cnt == 1)
 			pathstr = "c:/server/" + Id + "/chat" + Id + "alarm/*.txt";
-		else if (cnt ==2)
+		else if (cnt == 2)
 			pathstr = "c:/server/" + Id + "/friends" + Id + "/*.txt";
-		else if (cnt ==3)
+		else if (cnt == 3)
 			pathstr = "c:/server/" + Id + "/friends" + Id + "invite/*.txt";
-		else if (cnt ==4)
+		else if (cnt == 4)
 			pathstr = "c:/server/" + Id + "/friends" + Id + "alarm/*.txt";
 		strcpy(path, pathstr.c_str());
 		string Filepath;

@@ -18,8 +18,7 @@ private:
 	string Id;
 	SOCKET client;
 public:
-	Alarm(SOCKET client,string Id);
+	Alarm(SOCKET client, string Id);
 	~Alarm();
 	int Messanger(SOCKET client, string Id);
 };
-

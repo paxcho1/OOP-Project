@@ -1,5 +1,5 @@
 ﻿#include "Tool.h"
- #include "TimeTable.h"
+
 
 tool::tool(SOCKET client)
 {
@@ -128,16 +128,4 @@ void tool::TxtToSocket(const char* fileName, map<string, SOCKET> &Id_Socket) {
 			++iterator;
 		}
 	}
-}
-void tool::ClassToFile(DailySchedule &Ds, string Id) {
-	string filepath = "c:/schedule/Id/" + Id + "/" + Id + ".bin";
-	ofstream fout(filepath, ios_base::out | ios_base::binary);
-	fout.write((char*)Ds, sizeof(*Ds));
-	fout.close();
-}
-void tool::FileToClass(DailySchedule &Ds, string Id) {
-	string filepath = "c:/schedule/Id/" + Id + "/" + Id + ".bin";
-		ifstream fin(filepath, ios_base::in | ios_base::binary);
-	fin.read((char*)Ds, sizeof(*Ds));
-	fin.close();
 }

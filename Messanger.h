@@ -15,7 +15,7 @@
 #include <stdlib.h>
 #pragma comment(lib,"ws2_32")
 using namespace std;
-class Messanger:public tool
+class Messanger :public tool
 {
 private:
 	SOCKET client;
@@ -23,5 +23,5 @@ private:
 public:
 	Messanger(SOCKET client, string Id);
 	~Messanger();
-	int in(SOCKET client,string id);
+	int in(SOCKET client, string id);
 };
