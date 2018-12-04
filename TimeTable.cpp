@@ -19,6 +19,12 @@ int TimeTable::table(SOCKET client, string id) {
 		}
 		else {
 			if (strcmp(code.c_str(), "000") == 0) {//000 yymmdd 요일string recv client의 일일 시간표 확인 요청 해당 시간표를 보낸다
+				DailySchedule Daily;
+				strtok(buf, " ");
+				char* ptr = strtok(NULL, " ");
+				FileToDailyScheduleClass(Daily, id, ptr);
+
+				ptr = strtok(NULL, " ");
 				//주간 bin file 불러오기
 				//yymmdd.bin file 불러오기
 				//Send 주간class 일간class 붙이기
