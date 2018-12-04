@@ -9,6 +9,7 @@
 #include "Alarm.h"
 #include "Login.h"
 #include "Messanger.h"
+#include "TimeTable.h"
 #include "Tool.h"
 //#include "TimeTable.h"
 using namespace std;
@@ -29,43 +30,9 @@ void Message(SOCKET client, string id) {
 	Messanger messanger(client, id);
 	messanger.in(client, id);
 }
-int Table(SOCKET client, string id) {
-	//DailySchedule DailySchedule;
-
-	while (1) {
-
-		char buf[MAX_BUFFER_SIZE];
-		ZeroMemory(buf, MAX_BUFFER_SIZE);
-		int byteIn = recv(client, buf, MAX_BUFFER_SIZE, 0);
-		string code = buf;
-		code = code.substr(0, 3);
-
-		if (byteIn <= 0) {
-			return 0;
-		}
-		else {
-			if (strcmp(code.c_str(), "000") == 0) {
-				//저장
-
-			}
-			else if (strcmp(code.c_str(), "001") == 0) {
-				//MessangerIn
-				Alarm alarm(client, id);
-				alarm.Messanger(client, id);
-				Messanger messanger(client, id);
-				messanger.in(client, id);
-			}
-			else if (strcmp(code.c_str(), "002") == 0) {
-
-			}
-			else if (strcmp(code.c_str(), "003") == 0) {
-
-			}
-
-
-
-		}
-	}
+void Table(SOCKET client, string id) {
+	TimeTable table(client, id);
+	table.table(client, id);
 }
 int main() {
 	while (1) {
@@ -84,6 +51,8 @@ int main() {
 		}
 		cout << "윈속 초기화 성공" << endl;
 		_mkdir("c:/server");
+		_mkdir("c:/server/schedule/daily");
+		_mkdir("c:/server/schedule/weekly");
 		SOCKET listensocket = socket(AF_INET, SOCK_STREAM, 0);
 		sockaddr_in insocket;
 		insocket.sin_family = AF_INET;

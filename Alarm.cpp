@@ -20,9 +20,9 @@ int Alarm::Messanger(SOCKET client, string Id) {//client의 id를 이용해 alarm폴더
 		else if (cnt == 1)
 			pathstr = "c:/server/" + Id + "/chat" + Id + "alarm/*.txt";
 		else if (cnt == 2)
-			pathstr = "c:/server/" + Id + "/friends" + Id + "/*.txt";
-		else if (cnt == 3)
 			pathstr = "c:/server/" + Id + "/friends" + Id + "invite/*.txt";
+		else if (cnt == 3)
+			pathstr = "c:/server/" + Id + "/friends" + Id + "/*.txt";
 		else if (cnt == 4)
 			pathstr = "c:/server/" + Id + "/friends" + Id + "alarm/*.txt";
 		strcpy(path, pathstr.c_str());
@@ -46,9 +46,9 @@ int Alarm::Messanger(SOCKET client, string Id) {//client의 id를 이용해 alarm폴더
 				else if (cnt == 1)
 					Filepath = "c:/server/" + Id + "/chat" + Id + "alarm/" + FindData.cFileName;
 				else if (cnt == 2)
-					Filepath = "c:/server/" + Id + "/friends" + Id + "/" + FindData.cFileName;
-				else if (cnt == 3)
 					Filepath = "c:/server/" + Id + "/friends" + Id + "invite/" + FindData.cFileName;
+				else if (cnt == 3)
+					Filepath = "c:/server/" + Id + "/friends" + Id + "/" + FindData.cFileName;
 				else if (cnt == 4)
 					Filepath = "c:/server/" + Id + "/friends" + Id + "alarm/" + FindData.cFileName;
 				FILE *fp = fopen(Filepath.c_str(), "rb");
