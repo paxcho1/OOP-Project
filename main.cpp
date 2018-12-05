@@ -67,7 +67,6 @@ int main() {
 		cout << "listensock을 master에 추가" << endl;
 		while (1) {
 			fd_set copy = Fd;
-
 			int socketCount = select(0, &copy, nullptr, nullptr, nullptr);
 			cout << "select 실행" << socketCount << "에 이벤트 발생" << endl;
 			for (int i = 0; i < socketCount; i++) {
@@ -98,7 +97,7 @@ int main() {
 						}
 						else if (strcmp(buf, "Messanger") == 0) {
 							cout << "Messanger in" << endl;
-							char buf[MAX_BUFFER_SIZE];
+							buf[MAX_BUFFER_SIZE];
 							ZeroMemory(buf, MAX_BUFFER_SIZE);
 							int byteIn = recv(sock, buf, MAX_BUFFER_SIZE, 0);
 							if (byteIn <= 0) {
@@ -111,8 +110,18 @@ int main() {
 							}
 						}
 						else if (strcmp(buf, "TimeTable") == 0) {
-							thread TimeTable(&Table, sock, buf);
-							TimeTable.detach();
+							cout << "TimeTable in" << endl;
+							buf[MAX_BUFFER_SIZE];
+							ZeroMemory(buf, MAX_BUFFER_SIZE);
+							int byteIn = recv(sock, buf, MAX_BUFFER_SIZE, 0);
+							if (byteIn <= 0) {
+								closesocket(sock);
+								FD_CLR(sock, &Fd);
+							}
+							else {
+								thread TimeTable(&Table, sock, buf);
+								TimeTable.detach();
+							}
 						}
 						//메세지 수신
 						//event 수신

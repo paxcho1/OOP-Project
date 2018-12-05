@@ -25,20 +25,24 @@ int TimeTable::table(SOCKET client, string id) {
 				char* date = strtok(NULL, " ");
 				char* day = strtok(NULL, " ");
 				Schedule Daily;
-				FileToDailyScheduleClass(Daily, id, date,day);
-				schedule = Daily.ReturnSchedule();
-				for (iter = schedule.begin(); iter == schedule.end(); iter++) {
-					string msg;
-					msg = "001 "+iter->first + " " + iter->second;
-					Send(client, msg);
+				int result = FileToDailyScheduleClass(Daily, id, date,day);
+				if (result = 0) {
+					schedule = Daily.ReturnSchedule();
+					for (iter = schedule.begin(); iter == schedule.end(); iter++) {
+						string msg;
+						msg = "001 " + iter->first + " " + iter->second;
+						Send(client, msg);
+					}
 				}Send(client, "000");
 				Schedule Weekly;
-				FileToWeeklyScheduleClass(Weekly,id,day);
-				schedule = Weekly.ReturnSchedule();
-				for (iter = schedule.begin(); iter == schedule.end(); iter++) {
-					string msg;
-					msg = "003 " + iter->first + " " + iter->second;
-					Send(client, msg);
+				result = FileToWeeklyScheduleClass(Weekly,id,day);
+				if (result = 0) {
+					schedule = Weekly.ReturnSchedule();
+					for (iter = schedule.begin(); iter == schedule.end(); iter++) {
+						string msg;
+						msg = "003 " + iter->first + " " + iter->second;
+						Send(client, msg);
+					}
 				}Send(client, "002");
 			}
 			else if (strcmp(code.c_str(), "001") == 0) {
@@ -53,9 +57,9 @@ int TimeTable::table(SOCKET client, string id) {
 				map<string, string>::iterator iter;
 				strtok(buf, " ");
 				char* date = strtok(NULL, " ");
-				char* day = strtok(NULL, " ");
-				Schedule Daily;
 				char* timeline = strtok(NULL, " ");
+				Schedule Daily;
+				char* day = strtok(NULL, " ");
 				char* Dest_Sche = strtok(NULL, " ");
 				FileToDailyScheduleClass(Daily, id, date, day);
 				int D = Daily.CheckOverlap(timeline);
@@ -67,7 +71,7 @@ int TimeTable::table(SOCKET client, string id) {
 				//가능하면 004 + 일정추가 불가능하면 005
 				if ((D+W)==0)//성공
 				{
-					Daily.AddSchedule(buf);
+					Daily.AddSchedule(timeline,Dest_Sche);
 					DailyScheduleToFile(Daily, id, date, day);
 					Send(client, "004");
 				}
@@ -157,7 +161,7 @@ int TimeTable::table(SOCKET client, string id) {
 				if (error == 0) {
 					Schedule Weekly;
 					FileToWeeklyScheduleClass(Weekly, id, day);
-					Weekly.AddSchedule(buf);
+					Weekly.AddSchedule(Time,Dest_Sche);
 					Send(client, "006");
 				}
 				//while 해당 요일 앞으로 일정 폴더를 전부 검색 할 때까지{

@@ -1,10 +1,4 @@
 #include "DailySchedule.h"
-DailySchedule::DailySchedule()
-{
-}
-DailySchedule::~DailySchedule()
-{
-}
 int DailySchedule::AddSchedule(char* Schedule) {
 	string Date = Schedule;
 	date = Date.substr(4, 10);
