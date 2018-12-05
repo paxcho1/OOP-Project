@@ -28,24 +28,35 @@ SOURCES += \
         main.cpp \
         client.cpp \
     signin.cpp \
-    tool.cpp \
     timetable.cpp \
     chatting.cpp \
-    receiver.cpp
+    receiver.cpp \
+    list.cpp \
+    friendsearch.cpp \
+    friendalarm.cpp \
+    makechatroom.cpp
 
 HEADERS += \
         client.h \
     signin.h \
-    tool.h \
     timetable.h \
     chatting.h \
-    receiver.h
+    receiver.h \
+    list.h \
+    tool.h \
+    friendsearch.h \
+    friendalarm.h \
+    makechatroom.h
 
 FORMS += \
         client.ui \
     signin.ui \
     timetable.ui \
-    chatting.ui
+    chatting.ui \
+    list.ui \
+    friendsearch.ui \
+    friendalarm.ui \
+    makechatroom.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

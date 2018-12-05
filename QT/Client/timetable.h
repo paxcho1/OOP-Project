@@ -2,6 +2,7 @@
 #define TIMETABLE_H
 
 #include "tool.h"
+#include "receiver.h"
 
 namespace Ui {
 class Timetable;
@@ -18,6 +19,7 @@ public:
     SOCKET GetSocket();
     void SetId(string i);
     string GetId();
+    void get();
 
 private slots:
     void on_calendarWidget_clicked(const QDate &date);
@@ -28,6 +30,7 @@ private:
     Ui::Timetable *ui;
     SOCKET sock;
     string id;
+    Receiver* R = new Receiver(sock, id);
 };
 
 #endif // TIMETABLE_H

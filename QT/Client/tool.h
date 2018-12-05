@@ -12,6 +12,7 @@
 #include <QDebug>
 #include <QCloseEvent>
 #include <QDate>
+#include <QVector>
 #include <QListView>
 #include <QListWidget>
 #include <QFileDialog>
@@ -27,19 +28,15 @@
 #include <istream>
 #include <sstream>
 #include <vector>
+#include <list>
 #include <map>
 #include <iterator>
+#include <locale>
+#include <codecvt>
+#include <stdio.h>
+#include <stdlib.h>
 #define MAX_BUFFER_SIZE 4092
+
 using namespace std;
-class tool
-{
-public:
-    SOCKET client;
-    char buf[MAX_BUFFER_SIZE];
-    tool(SOCKET client);
-    ~tool();
-    int Recv(SOCKET client, char buf[]);
-    void Send(SOCKET client, string msg);
-};
 
 #endif // TOOL_H

@@ -35,6 +35,10 @@ void Client::on_Signin_btn_clicked()
 
 void Client::on_Login_btn_clicked()
 {
+    QString str = ui->Login_btn->text();
+    string msg = str.toUtf8().constData();
+    char buf[MAX_BUFFER_SIZE];
+
     QString Id = ui->ID_line->text().trimmed();
     QString Pw = ui->PW_line->text().trimmed();
     string id = Id.toUtf8().constData();
@@ -55,17 +59,21 @@ void Client::on_Login_btn_clicked()
         }
     }
     else {
-        QString str = ui->Login_btn->text();
-        string msg = str.toUtf8().constData();
         send(sock, msg.c_str(), MAX_BUFFER_SIZE, 0);
-
-        char buf[MAX_BUFFER_SIZE];
-
-        send(sock, id.c_str(), MAX_BUFFER_SIZE, 0);
-        send(sock, pw.c_str(), MAX_BUFFER_SIZE, 0);
         recv(sock, buf, MAX_BUFFER_SIZE, 0);
+
+        if (strcmp(buf, "enter your Id and Password") == 0) {
+            send(sock, id.c_str(), MAX_BUFFER_SIZE, 0);
+            recv(sock, buf, MAX_BUFFER_SIZE, 0);
+            if (strcmp(buf, "enter your Id and Password") == 0) {
+                send(sock, pw.c_str(), MAX_BUFFER_SIZE, 0);
+                recv(sock, buf, MAX_BUFFER_SIZE, 0);
+            }
+        }
+
         if (strcmp(buf, "Successfully Login") == 0) {
             Msgbox.setText(buf);
+
             Msgbox.exec();
 
             hide();
