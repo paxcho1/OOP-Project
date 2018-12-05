@@ -18,7 +18,7 @@ int TimeTable::table(SOCKET client, string id) {
 			break;
 		}
 		else {
-			if (strcmp(code.c_str(), "000") == 0) {//000 yymmdd 요일string recv client의 일일 시간표 확인 요청 해당 시간표를 보낸다
+			if (strcmp(code.c_str(), "000") == 0) {//000 yymmdd 요일 //string recv client의 일일 시간표 확인 요청 해당 시간표를 보낸다
 				map<string, string> schedule;
 				map<string, string>::iterator iter;
 				strtok(buf, " ");
@@ -67,12 +67,20 @@ int TimeTable::table(SOCKET client, string id) {
 				Schedule Weekly;
 				FileToWeeklyScheduleClass(Weekly, id, day);
 				int W = Weekly.CheckOverlap(timeline);
+				char* sh = strtok(timeline, ",");
+				char* sm = strtok(NULL, ",");
+				char* fh = strtok(NULL, ",");
+				char* fm = strtok(NULL, ",");
 				//중복검사
 				//가능하면 004 + 일정추가 불가능하면 005
 				if ((D+W)==0)//성공
 				{
-					Daily.AddSchedule(timeline,Dest_Sche);
-					DailyScheduleToFile(Daily, id, date, day);
+					Daily.AddSchedule(sh,sm,fh,fm,Dest_Sche);
+
+					if (DailyScheduleToFile(Daily, id, date, day) == -1) {
+						cout << "file didn't open";
+						exit(1);
+					}
 					Send(client, "004");
 				}
 				else
@@ -88,7 +96,10 @@ int TimeTable::table(SOCKET client, string id) {
 				char* day = strtok(NULL, " ");
 				char* Dele_Dest = strtok(NULL, " ");
 				Schedule Daily;
-				FileToDailyScheduleClass(Daily, id, date, day);
+				if (FileToDailyScheduleClass(Daily, id, date, day) == -1) {
+					cout << "file didn't open";
+					exit(1);
+				}
 				Daily.DeleteSchedule(buf);
 				//토큰분활
 				//해당 일정 삭제
@@ -99,7 +110,10 @@ int TimeTable::table(SOCKET client, string id) {
 				strtok(NULL, " ");
 				char* day = strtok(NULL, " ");
 				Schedule Weekly;
-				FileToWeeklyScheduleClass(Weekly, id, day);
+				if (FileToWeeklyScheduleClass(Weekly, id, day) == -1) {
+					cout << "file didn't open";
+					exit(1);
+				}
 				Weekly.DeleteSchedule(buf);
 				// 해당 일정 삭제
 			}
@@ -131,7 +145,10 @@ int TimeTable::table(SOCKET client, string id) {
 						Schedule Find_File;
 						string File_Date = FindData.cFileName;
 						File_Date = File_Date.substr(0, 6);
-						FileToDailyScheduleClass(Find_File, id, File_Date , day);
+						if (FileToDailyScheduleClass(Find_File, id, File_Date, day) == -1) {
+							cout << "file didn't open";
+							
+						}
 						int result = Find_File.CheckOverlap(Time);
 						if (result == -1) {
 							string msg = "008 " + File_Date;
@@ -148,7 +165,10 @@ int TimeTable::table(SOCKET client, string id) {
 						Schedule Find_File;
 						string File_Date = FindData.cFileName;
 						File_Date = File_Date.substr(0, 6);
-						FileToDailyScheduleClass(Find_File, id, File_Date, day);
+						if (FileToDailyScheduleClass(Find_File, id, File_Date, day) == -1) {
+							cout << "file didn't open";
+							
+						}
 						int result = Find_File.CheckCurOverlap(Time, curr_tm->tm_hour,curr_tm->tm_min);
 						if (result == -1) {
 							string msg = "008 " + File_Date;
@@ -160,8 +180,18 @@ int TimeTable::table(SOCKET client, string id) {
 				Send(client, "007");
 				if (error == 0) {
 					Schedule Weekly;
-					FileToWeeklyScheduleClass(Weekly, id, day);
-					Weekly.AddSchedule(Time,Dest_Sche);
+					if (FileToWeeklyScheduleClass(Weekly, id, day) == -1) {
+						cout << "file didn't open";
+						
+					}
+					char* sh = strtok(Time, ",");
+					char* sm = strtok(NULL, ",");
+					char* fh = strtok(NULL, ",");
+					char* fm = strtok(NULL, ",");
+					Weekly.AddSchedule(sh,sm,fh,fm,Dest_Sche);
+					if (WeeklyScheduleToFile(Weekly, id, day) == -1) {
+						cout << "file didn't open";
+					}
 					Send(client, "006");
 				}
 				//while 해당 요일 앞으로 일정 폴더를 전부 검색 할 때까지{

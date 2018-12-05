@@ -6,7 +6,7 @@
 #include <WS2tcpip.h>
 #include <mutex>
 #pragma comment(lib,"ws2_32.lib")
-#define MAX_BUFFER_SIZE (49152)
+#define MAX_BUFFER_SIZE (4092)
 using namespace std;
 mutex mtx;
 void Get(SOCKET server, char msg[])
@@ -14,17 +14,17 @@ void Get(SOCKET server, char msg[])
 	while (1)
 	{
 		mtx.lock();
-		ZeroMemory(msg, 4096);
-		recv(server, msg, 4096, 0);
+		ZeroMemory(msg, MAX_BUFFER_SIZE);
+		recv(server, msg, MAX_BUFFER_SIZE, 0);
 		cout << msg << endl;
 		mtx.unlock();
 	}
 }
 void Send(SOCKET server)
 {
-	char buffer[4096];
+	char buffer[MAX_BUFFER_SIZE];
 	cin.getline(buffer,sizeof(buffer));
-	send(server, buffer, 4096, 0);
+	send(server, buffer, MAX_BUFFER_SIZE, 0);
 }
 int main()
 {

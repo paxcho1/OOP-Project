@@ -13,11 +13,11 @@ private:
 public:
 	Schedule();
 	~Schedule();
-	int AddSchedule(string time, string Schedule);
+	int AddSchedule(string sh,string sm, string fh, string fm, string Schedule);
 	int DeleteSchedule(string time);
 	map<string, string> ReturnSchedule();
 	int* ReturnTimeLine(); 
-	int CheckOverlap(string time); 
-	int CheckCurOverlap(string time, int Starthour, int Startminute);
+	int CheckOverlap(char* time); 
+	int CheckCurOverlap(char* time, int Starthour, int Startminute);
 
 };
