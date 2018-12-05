@@ -13,7 +13,7 @@
 #include <map>
 #include <iterator>
 #include "Alarm.h"
-#include "DailySchedule.h"
+#include "Schedule.h"
 #define MAX_BUFFER_SIZE 4092
 using namespace std;
 class tool// recv와 send를 사용하기 쉽게 만들어줌
@@ -33,8 +33,8 @@ public:
 	void SocketToTxt(const char* fileName, map<string, SOCKET> &Map);
 	void TxtToSocket(const char* fileName, map<string, SOCKET> &Id_Socket);
 	string MessangerRecv(SOCKET client, string Id, char buf[]);
-	void DailyScheduleToFile(DailySchedule &Ds, string Id, string day);
-	void WeeklyScheduleToFile(DailySchedule &Ds, string Id, string day);
-	void FileToDailyScheduleClass(DailySchedule &Ds, string Id ,string day);
-	void FileToWeeklyScheduleClass(DailySchedule &Ds, string Id, string day);
+	void DailyScheduleToFile(Schedule &Ds, string Id, string date, string day);
+	void WeeklyScheduleToFile(Schedule &Ds, string Id, string day);
+	void FileToDailyScheduleClass(Schedule &Ds, string Id, string date,string day);
+	void FileToWeeklyScheduleClass(Schedule &Ds, string Id, string day);
 };

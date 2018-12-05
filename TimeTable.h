@@ -2,6 +2,7 @@
 #define _CRT_SECURE_NO_WARNINGS
 #include <WinSock2.h>
 #include <string>
+#include <ctime>
 #include <iostream>
 #include <fstream>
 #include <windows.h>
