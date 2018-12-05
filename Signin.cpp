@@ -36,8 +36,7 @@ int Signin::in(SOCKET client)
 		if (find(V_id.begin(), V_id.end(), id) == V_id.end()) {
 			//id가 없을때
 			overlap = 1;
-			strcpy_s(str, sizeof(str), "Successfully finished signin");
-			send(client, str, MAX_BUFFER_SIZE, 0);
+			
 			/*Id_Bytein = tool::Recv(client, id);
 			if (Id_Bytein <= 0) {
 			return -1;
@@ -48,7 +47,8 @@ int Signin::in(SOCKET client)
 			Password_Bytein = tool::Recv(client, password);
 
 			tool::VectorToTxt("id_index.txt", V_id);
-
+			strcpy_s(str, sizeof(str), "Successfully finished signin");
+			send(client, str, MAX_BUFFER_SIZE, 0);
 			//txt파일 저장
 		}
 		else {
@@ -70,6 +70,20 @@ int Signin::in(SOCKET client)
 	path = "c:/server/" + file + "/friends" + file;
 	_mkdir(path.c_str());
 	path = "c:/server/" + file + "/schedule/daily";
+	_mkdir(path.c_str());
+	path = "c:/server/" + file + "/schedule/daily/mon";
+	_mkdir(path.c_str());
+	path = "c:/server/" + file + "/schedule/daily/tue";
+	_mkdir(path.c_str());
+	path = "c:/server/" + file + "/schedule/daily/wed";
+	_mkdir(path.c_str());
+	path = "c:/server/" + file + "/schedule/daily/thr";
+	_mkdir(path.c_str());
+	path = "c:/server/" + file + "/schedule/daily/fri";
+	_mkdir(path.c_str());
+	path = "c:/server/" + file + "/schedule/daily/sat";
+	_mkdir(path.c_str());
+	path = "c:/server/" + file + "/schedule/daily/sun";
 	_mkdir(path.c_str());
 	path = "c:/server/" + file + "/schedule/weekly";
 	_mkdir(path.c_str());
