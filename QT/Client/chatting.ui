@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1071</width>
+    <width>790</width>
     <height>627</height>
    </rect>
   </property>
@@ -18,50 +18,11 @@
     <rect>
      <x>9</x>
      <y>9</y>
-     <width>1051</width>
+     <width>771</width>
      <height>611</height>
     </rect>
    </property>
    <layout class="QHBoxLayout" name="TotalLayout">
-    <item>
-     <layout class="QVBoxLayout" name="Friend_Layout">
-      <property name="rightMargin">
-       <number>0</number>
-      </property>
-      <item>
-       <widget class="QListWidget" name="Friend_List">
-        <property name="font">
-         <font>
-          <pointsize>14</pointsize>
-         </font>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QPushButton" name="Friendsearch_btn">
-        <property name="text">
-         <string>친구 검색</string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QPushButton" name="Friendalarm_btn">
-        <property name="text">
-         <string>친구 알람</string>
-        </property>
-       </widget>
-      </item>
-     </layout>
-    </item>
-    <item>
-     <widget class="QListWidget" name="Chatroom_List">
-      <property name="font">
-       <font>
-        <pointsize>14</pointsize>
-       </font>
-      </property>
-     </widget>
-    </item>
     <item>
      <layout class="QVBoxLayout" name="Chatting_Layout">
       <property name="rightMargin">
@@ -98,6 +59,16 @@
          </widget>
         </item>
        </layout>
+      </item>
+     </layout>
+    </item>
+    <item>
+     <layout class="QVBoxLayout" name="verticalLayout">
+      <property name="rightMargin">
+       <number>0</number>
+      </property>
+      <item>
+       <widget class="QListWidget" name="listWidget"/>
       </item>
      </layout>
     </item>

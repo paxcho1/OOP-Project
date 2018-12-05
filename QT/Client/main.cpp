@@ -1,11 +1,11 @@
 #include "client.h"
 #include <QApplication>
 #include <QObject>
+#include <QTextCodec>
 
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
-
     // 윈속 초기화
         string ip = "127.0.0.1";
         int port = 4296;
