@@ -13,8 +13,8 @@ int Schedule::AddSchedule(string sh,string sm, string fh, string fm,string Sched
 	string Dest_Sche = Schedule;
 	int hour;
 	int minute;
-	for (hour = Starthour, minute = Startminute; (hour == Finalhour) && (minute > Finalminute);) {
-		if (minute != 59) {
+	for (hour = Starthour, minute = Startminute; (hour != Finalhour) || (minute <= Finalminute);) {
+		if (minute != 60) {
 			TimeLine[hour][minute] = 1;
 				
 			minute++;
@@ -41,8 +41,8 @@ int Schedule::DeleteSchedule(string time) {
 	else {
 		int hour;
 		int minute;
-		for (hour = Starthour, minute = Startminute; (hour == Finalhour) && (minute > Finalminute);) {
-			if (minute != 59) {
+		for (hour = Starthour, minute = Startminute; (hour != Finalhour) && (minute <= Finalminute);) {
+			if (minute != 60) {
 				TimeLine[hour][minute] = 0;
 
 				minute++;

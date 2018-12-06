@@ -19,29 +19,28 @@ int TimeTable::table(SOCKET client, string id) {
 		}
 		else {
 			if (strcmp(code.c_str(), "000") == 0) {//000 yymmdd 요일 //string recv client의 일일 시간표 확인 요청 해당 시간표를 보낸다
-				map<string, string> schedule;
 				map<string, string>::iterator iter;
 				strtok(buf, " ");
 				char* date = strtok(NULL, " ");
 				char* day = strtok(NULL, " ");
 				Schedule Daily;
 				int result = FileToDailyScheduleClass(Daily, id, date,day);
-				if (result = 0) {
-					schedule = Daily.ReturnSchedule();
-					for (iter = schedule.begin(); iter == schedule.end(); iter++) {
+				if (result == 0) {
+					for (iter = Daily.ReturnSchedule().begin(); iter == Daily.ReturnSchedule().end(); iter++) {
 						string msg;
 						msg = "001 " + iter->first + " " + iter->second;
 						Send(client, msg);
+						Daily.~Schedule();
 					}
 				}Send(client, "000");
 				Schedule Weekly;
 				result = FileToWeeklyScheduleClass(Weekly,id,day);
-				if (result = 0) {
-					schedule = Weekly.ReturnSchedule();
-					for (iter = schedule.begin(); iter == schedule.end(); iter++) {
+				if (result == 0) {
+					for (iter = Weekly.ReturnSchedule().begin(); iter == Weekly.ReturnSchedule().end(); iter++) {
 						string msg;
 						msg = "003 " + iter->first + " " + iter->second;
 						Send(client, msg);
+						Weekly.~Schedule();
 					}
 				}Send(client, "002");
 			}
@@ -61,12 +60,28 @@ int TimeTable::table(SOCKET client, string id) {
 				Schedule Daily;
 				char* day = strtok(NULL, " ");
 				char* Dest_Sche = strtok(NULL, " ");
-				FileToDailyScheduleClass(Daily, id, date, day);
-				int D = Daily.CheckOverlap(timeline);
-				//중복검사
+
+				int D = 0, W = 0;
+				if (FileToDailyScheduleClass(Daily, id, date, day) == -1) {
+					cout << "no file or fail to open";
+				}
+				else {
+					//파일이 열렸으면, 있으면
+					D = Daily.CheckOverlap(timeline);
+					//중복검사
+				}
+				
 				Schedule Weekly;
-				FileToWeeklyScheduleClass(Weekly, id, day);
-				int W = Weekly.CheckOverlap(timeline);
+
+				if (FileToWeeklyScheduleClass(Weekly, id, day) == -1) {
+					cout << "no file or fail to open";
+				}
+				else {
+					//파일이 열렸으면, 있으면
+					W = Weekly.CheckOverlap(timeline);
+					//중복검사
+				}
+				
 				char* sh = strtok(timeline, ",");
 				char* sm = strtok(NULL, ",");
 				char* fh = strtok(NULL, ",");
