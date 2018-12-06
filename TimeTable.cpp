@@ -26,7 +26,7 @@ int TimeTable::table(SOCKET client, string id) {
 				Schedule Daily;
 				int result = FileToDailyScheduleClass(Daily, id, date,day);
 				if (result == 0) {
-					for (iter = Daily.ReturnSchedule().begin(); iter == Daily.ReturnSchedule().end(); iter++) {
+					for (iter = Daily.Map_Schedule.begin(); iter == Daily.Map_Schedule.end(); iter++) {
 						string msg;
 						msg = "001 " + iter->first + " " + iter->second;
 						Send(client, msg);
@@ -36,7 +36,7 @@ int TimeTable::table(SOCKET client, string id) {
 				Schedule Weekly;
 				result = FileToWeeklyScheduleClass(Weekly,id,day);
 				if (result == 0) {
-					for (iter = Weekly.ReturnSchedule().begin(); iter == Weekly.ReturnSchedule().end(); iter++) {
+					for (iter = Weekly.Map_Schedule.begin(); iter == Weekly.Map_Schedule.end(); iter++) {
 						string msg;
 						msg = "003 " + iter->first + " " + iter->second;
 						Send(client, msg);

@@ -8,9 +8,10 @@ using namespace std;
 class Schedule {
 private:
 	int TimeLine[24][60] = { 0, };
-	map<string, string> Map_Schedule;
+	
 	string date;
 public:
+	map<string, string> Map_Schedule;
 	Schedule();
 	~Schedule();
 	int AddSchedule(string sh,string sm, string fh, string fm, string Schedule);
