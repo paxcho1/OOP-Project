@@ -19,28 +19,35 @@ int TimeTable::table(SOCKET client, string id) {
 		}
 		else {
 			if (strcmp(code.c_str(), "000") == 0) {//000 yymmdd 요일 //string recv client의 일일 시간표 확인 요청 해당 시간표를 보낸다
+				map<string, string> Sche;
 				map<string, string>::iterator iter;
 				strtok(buf, " ");
 				char* date = strtok(NULL, " ");
 				char* day = strtok(NULL, " ");
+				string file = "c:/server/" + id + "/schedule/daily/" + day + "/" + date + ".txt";
+				tool::TxtToMap(file.c_str(),Sche);
 				Schedule Daily;
-				int result = FileToDailyScheduleClass(Daily, id, date,day);
-				if (result == 0) {
-					for (iter = Daily.Map_Schedule.begin(); iter == Daily.Map_Schedule.end(); iter++) {
+				if (Sche.size() != 0) {
+					for (iter = Sche.begin(); iter != Sche.end(); ++iter) {
+						Daily.Addmap((*iter).first, (*iter).second);
+					}
+					for (iter = Daily.Map_Schedule.begin(); iter != Daily.Map_Schedule.end(); ++iter) {
 						string msg;
 						msg = "001 " + iter->first + " " + iter->second;
 						Send(client, msg);
-						Daily.~Schedule();
 					}
 				}Send(client, "000");
+				Sche.clear();
+				file = "c:/server/" + id + "/schedule/weekly/" + day + ".txt";
+				tool::TxtToMap(file.c_str(), Sche);
 				Schedule Weekly;
-				result = FileToWeeklyScheduleClass(Weekly,id,day);
-				if (result == 0) {
-					for (iter = Weekly.Map_Schedule.begin(); iter == Weekly.Map_Schedule.end(); iter++) {
+				if (Sche.size() != 0) {
+					for (iter = Sche.begin(); iter != Sche.end(); ++iter)
+						Weekly.Addmap(iter->first, iter->second);
+					for (iter = Weekly.Map_Schedule.begin(); iter == Weekly.Map_Schedule.end(); ++iter) {
 						string msg;
 						msg = "003 " + iter->first + " " + iter->second;
 						Send(client, msg);
-						Weekly.~Schedule();
 					}
 				}Send(client, "002");
 			}
@@ -51,51 +58,48 @@ int TimeTable::table(SOCKET client, string id) {
 				Messanger messanger(client, id);
 				messanger.in(client, id);
 			}
-			else if (strcmp(code.c_str(), "002") == 0) {//002 yymmdd 00000000 요일 일정 recv /client의 일정 추가 요청 자신의 일정을 확인하고 추가 가능 불가 여부를 보낸다.
+			else if (strcmp(code.c_str(), "002") == 0) {//002 yymmdd 00,00,00,00 요일 일정 recv /client의 daily 일정 추가 요청 자신의 일정을 확인하고 추가 가능 불가 여부를 보낸다.
 				map<string, string> schedule;
 				map<string, string>::iterator iter;
 				strtok(buf, " ");
 				char* date = strtok(NULL, " ");
 				char* timeline = strtok(NULL, " ");
-				Schedule Daily;
 				char* day = strtok(NULL, " ");
 				char* Dest_Sche = strtok(NULL, " ");
-
+				string file = "c:/server/" + id + "/schedule/daily/" + day + "/" + date + ".txt";
+				tool::TxtToMap(file.c_str(), schedule);
+				Schedule Daily;
 				int D = 0, W = 0;
-				if (FileToDailyScheduleClass(Daily, id, date, day) == -1) {
-					cout << "no file or fail to open";
+				for (iter = schedule.begin(); iter != schedule.end(); ++iter) {
+					Daily.Addmap(iter->first, iter->second);
+					Daily.AddTimeLine(iter->first);
 				}
-				else {
-					//파일이 열렸으면, 있으면
-					D = Daily.CheckOverlap(timeline);
-					//중복검사
-				}
-				
+				char* duptime = _strdup(timeline);
+				//파일이 열렸으면, 있으면
+				D = Daily.CheckOverlap(duptime);
+				//중복검사
+				schedule.clear();
+				file = "c:/server/" + id + "/schedule/weekly/" + day + ".txt";
+				tool::TxtToMap(file.c_str(), schedule);
 				Schedule Weekly;
-
-				if (FileToWeeklyScheduleClass(Weekly, id, day) == -1) {
-					cout << "no file or fail to open";
+				for (iter = schedule.begin(); iter != schedule.end(); ++iter) {
+					Weekly.Addmap(iter->first, iter->second);
+					Weekly.AddTimeLine(iter->first);
 				}
-				else {
+				duptime = _strdup(timeline);
 					//파일이 열렸으면, 있으면
-					W = Weekly.CheckOverlap(timeline);
+				W = Weekly.CheckOverlap(duptime); 
+				duptime = _strdup(timeline);
 					//중복검사
-				}
-				
-				char* sh = strtok(timeline, ",");
-				char* sm = strtok(NULL, ",");
-				char* fh = strtok(NULL, ",");
-				char* fm = strtok(NULL, ",");
 				//중복검사
 				//가능하면 004 + 일정추가 불가능하면 005
 				if ((D+W)==0)//성공
 				{
-					Daily.AddSchedule(sh,sm,fh,fm,Dest_Sche);
-
-					if (DailyScheduleToFile(Daily, id, date, day) == -1) {
-						cout << "file didn't open";
-						exit(1);
-					}
+					file = "c:/server/" + id + "/schedule/daily/" + day + "/" + date + ".txt";
+					string AddT = duptime;
+					string AddS = Dest_Sche;
+					Daily.Addmap(AddT, Dest_Sche);
+					tool::MapToTxt(file.c_str(), Daily.Map_Schedule);
 					Send(client, "004");
 				}
 				else

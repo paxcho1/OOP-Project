@@ -29,11 +29,17 @@ int Schedule::AddSchedule(string sh,string sm, string fh, string fm,string Sched
 	//추가 timeline에 추가
 	return 0;
 }
-int Schedule::DeleteSchedule(string time) {
-	int Starthour = atoi(time.substr(0, 2).c_str());
-	int Startminute = atoi(time.substr(2, 4).c_str());
-	int Finalhour = atoi(time.substr(4, 6).c_str());
-	int Finalminute = atoi(time.substr(6, 8).c_str());
+int Schedule::DeleteSchedule(string Time) {
+	char* time = _strdup(Time.c_str());
+	char* sh = strtok(time, ",");
+	char* sm = strtok(NULL, ",");
+	char* fh = strtok(NULL, ",");
+	char* fm = strtok(NULL, ",");
+	free(time);
+	int Starthour = atoi(sh);
+	int Startminute = atoi(sm);
+	int Finalhour = atoi(fh);
+	int Finalminute = atoi(fm);
 	if (Map_Schedule.find(time) == Map_Schedule.end()) {
 		cout << "there is no such Schedule";
 		return -1;
@@ -59,8 +65,34 @@ int Schedule::DeleteSchedule(string time) {
 map<string, string> Schedule::ReturnSchedule() {
 	return Map_Schedule;
 }
-int* Schedule::ReturnTimeLine() {
+int* Schedule::AddTimeLine(string Time) {
+	char* time = _strdup(Time.c_str());
+	char* sh = strtok(time, ",");
+	char* sm = strtok(NULL, ",");
+	char* fh = strtok(NULL, ",");
+	char* fm = strtok(NULL, ",");
+	free(time);
+	int hour; int minute;
+	int Starthour = atoi(sh);
+	int Startminute = atoi(sm);
+	int Finalhour = atoi(fh);
+	int Finalminute = atoi(fm);
+	for (hour = Starthour, minute = Startminute; (hour == Finalhour) && (minute > Finalminute);) {
+		if (minute != 59) {
+			TimeLine[hour][minute] = 1;
+			minute++;
+		}
+		else {
+			TimeLine[hour][minute] = 1;
+			hour++;
+			minute = 0;
+		}
+	}
 	return &TimeLine[0][0];
+}
+void Schedule::Addmap(string time, string sche)
+{
+	Map_Schedule[time] = sche;
 }
 int Schedule::CheckOverlap(char* time) {
 	char* sh = strtok(time, ",");

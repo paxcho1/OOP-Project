@@ -130,10 +130,10 @@ void tool::TxtToSocket(const char* fileName, map<string, SOCKET> &Id_Socket) {
 	}
 }
 int tool::DailyScheduleToFile(Schedule &Ds, string Id ,string date ,string day) {//day == 해당요일
-	string filepath = "c:/server/" + Id + "/schedule/daily/"+ day  + "/" + date + ".txt";
-	ofstream fout(filepath, ios::out);
+	string filepath = "c:/server/" + Id + "/schedule/daily/"+ day  + "/" + date + ".bin";
+	ofstream fout(filepath, ios::out | ios::binary);
 	if (fout.is_open() ) {
-		fout << Ds;
+		fout.write((char*)&Ds, sizeof(Ds));
 		fout.close();
 		return 0;
 	}
@@ -141,18 +141,19 @@ int tool::DailyScheduleToFile(Schedule &Ds, string Id ,string date ,string day) 
 }
 int tool::WeeklyScheduleToFile(Schedule &Ds, string Id, string day) {//day == 해당일자 yymmdd
 	string filepath = "c:/server/" + Id + "/schedule/weekly/" + day + ".bin";
-	ofstream fout(filepath, ios_base::out);
+	ofstream fout(filepath, ios_base::out | ios_base::binary);
 	if (fout.is_open()) {
-		fout << Ds;
+		fout.write((char*)&Ds, sizeof(Ds));
+		fout.close();
 		return 0;
 	}
 	else { return 1; }
 }
 int tool::FileToDailyScheduleClass(Schedule &Ds, string Id, string date, string day) {
 	string filepath = "c:/server/" + Id + "/schedule/daily/" + day + "/" + date + ".bin";
-	ifstream fin(filepath, ios_base::in);
+	ifstream fin(filepath, ios_base::in | ios_base::binary);
 	if (fin.is_open()) {
-		fin >> Ds;
+		fin.read((char*)&Ds, sizeof(Ds));
 		fin.close();
 		return 0;
 	}
@@ -160,9 +161,9 @@ int tool::FileToDailyScheduleClass(Schedule &Ds, string Id, string date, string 
 }
 int tool::FileToWeeklyScheduleClass(Schedule &Ds, string Id, string day) {
 	string filepath = "c:/server/" + Id + "/schedule/weekly/" + day + ".bin";
-	ifstream fin(filepath, ios_base::in);
+	ifstream fin(filepath, ios_base::in | ios_base::binary);
 	if (fin.is_open()) {
-		fin >> Ds;
+		fin.read((char*)&Ds, sizeof(Ds));
 		fin.close();
 		return 0;
 	}
