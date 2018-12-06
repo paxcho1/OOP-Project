@@ -34,7 +34,9 @@ SOURCES += \
     list.cpp \
     friendsearch.cpp \
     friendalarm.cpp \
-    makechatroom.cpp
+    makechatroom.cpp \
+    schedule.cpp \
+    thread.cpp
 
 HEADERS += \
         client.h \
@@ -46,7 +48,9 @@ HEADERS += \
     tool.h \
     friendsearch.h \
     friendalarm.h \
-    makechatroom.h
+    makechatroom.h \
+    schedule.h \
+    thread.h
 
 FORMS += \
         client.ui \
@@ -56,7 +60,8 @@ FORMS += \
     list.ui \
     friendsearch.ui \
     friendalarm.ui \
-    makechatroom.ui
+    makechatroom.ui \
+    schedule.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

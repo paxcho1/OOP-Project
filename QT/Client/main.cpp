@@ -1,7 +1,10 @@
 #include "client.h"
+#include "tool.h"
 #include <QApplication>
 #include <QObject>
 #include <QTextCodec>
+
+
 
 int main(int argc, char *argv[])
 {

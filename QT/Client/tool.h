@@ -18,6 +18,7 @@
 #include <QFileDialog>
 #include <QDir>
 #include <QObject>
+#include <QThread>
 #include <thread>
 #include <WinSock2.h>
 #include <WS2tcpip.h>

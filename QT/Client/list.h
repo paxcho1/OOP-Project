@@ -2,6 +2,7 @@
 #define LIST_H
 
 #include "tool.h"
+#include "thread.h"
 
 namespace Ui {
 class List;
@@ -20,6 +21,7 @@ public:
     string GetId();
     void SetList();
     void Receive();
+    void Thre();
 
 private slots:
 
@@ -40,6 +42,7 @@ private:
     QDir dir;
     QFile file;
     string id;
+    Thread* thread;
 };
 
 #endif // LIST_H

@@ -33,11 +33,14 @@ string Timetable::GetId() {
 
 void Timetable::on_calendarWidget_clicked(const QDate &date)
 {
-    QDate Date = ui->calendarWidget->selectedDate();
-    QString str = Date.toString();
-    string msg = str.toUtf8().constData();
 
-    qDebug(msg.c_str());
+    QDate Date = ui->calendarWidget->selectedDate();
+    QString str = Date.toString("yyMMdd ddd");
+    string da = str.toUtf8().constData();
+    string msg = "000 " +da;
+    char buf[MAX_BUFFER_SIZE];
+
+    send(sock, msg.c_str(), MAX_BUFFER_SIZE, 0);
 }
 
 void Timetable::on_Messanger_btn_clicked()
@@ -45,13 +48,14 @@ void Timetable::on_Messanger_btn_clicked()
     string msg = "Messanger";
     send(sock, msg.c_str(), MAX_BUFFER_SIZE, 0);
     send(sock, GetId().c_str(), MAX_BUFFER_SIZE, 0);
-    hide();
+
     List list;
     list.setWindowTitle("Friend&Chatting room List");
     list.SetSocket(GetSocket());
     list.SetId(GetId());
     list.setModal(false);
     list.Receive();
+    list.Thre();
     list.exec();
 }
 void Timetable::get(){

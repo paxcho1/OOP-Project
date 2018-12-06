@@ -11,11 +11,15 @@ List::List(QWidget *parent) :
     ui(new Ui::List)
 {
     ui->setupUi(this);
+    thread = new Thread(this);
 }
 
 List::~List()
 {
     delete ui;
+    thread->terminate();
+    thread->quit();
+    delete thread;
 }
 
 void List::SetSocket(SOCKET s) {
@@ -43,6 +47,11 @@ void List::Receive() {
     receiver.Messanger(server, Id);
 
     SetList();
+}
+
+void List::Thre() {
+    thread->start();
+
 }
 
 void List::SetList() {

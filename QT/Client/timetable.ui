@@ -42,7 +42,11 @@
        </widget>
       </item>
       <item>
-       <widget class="QCalendarWidget" name="calendarWidget"/>
+       <widget class="QCalendarWidget" name="calendarWidget">
+        <property name="locale">
+         <locale language="Korean" country="SouthKorea"/>
+        </property>
+       </widget>
       </item>
       <item>
        <layout class="QHBoxLayout" name="horizontalLayout_2">
@@ -50,23 +54,16 @@
          <number>0</number>
         </property>
         <item>
-         <widget class="QPushButton" name="pushButton">
+         <widget class="QPushButton" name="WeekSCheduleAdd_btn">
           <property name="text">
            <string>주간 일정 추가</string>
           </property>
          </widget>
         </item>
         <item>
-         <widget class="QPushButton" name="pushButton_2">
+         <widget class="QPushButton" name="WeekSCheduleDelete_btn">
           <property name="text">
-           <string>일일 일정 추가</string>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QPushButton" name="pushButton_3">
-          <property name="text">
-           <string>일정 삭제</string>
+           <string>주간 일정 삭제</string>
           </property>
          </widget>
         </item>
@@ -75,7 +72,14 @@
      </layout>
     </item>
     <item>
-     <widget class="QListWidget" name="listWidget"/>
+     <layout class="QVBoxLayout" name="verticalLayout">
+      <property name="rightMargin">
+       <number>0</number>
+      </property>
+      <item>
+       <widget class="QListWidget" name="Alarm_list"/>
+      </item>
+     </layout>
     </item>
    </layout>
   </widget>
