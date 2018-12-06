@@ -20,5 +20,16 @@ public:
 	int* ReturnTimeLine(); 
 	int CheckOverlap(char* time); 
 	int CheckCurOverlap(char* time, int Starthour, int Startminute);
-
+	friend std::ostream & operator << (std::ostream &out, const Schedule & obj)
+	{
+		out << obj.TimeLine << "\n" << obj.Map_Schedule << "\n" << obj.date << std::endl;
+		return out;
+	}
+	friend std::istream & operator >> (std::istream &in, Schedule &obj)
+	{
+		in >> obj.TimeLine;
+		in >> obj.Map_Schedule;
+		in >> obj.date;
+		return in;
+	}
 };
