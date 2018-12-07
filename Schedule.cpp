@@ -13,8 +13,8 @@ int Schedule::AddSchedule(string sh,string sm, string fh, string fm,string Sched
 	string Dest_Sche = Schedule;
 	int hour;
 	int minute;
-	for (hour = Starthour, minute = Startminute; (hour != Finalhour) || (minute <= Finalminute);) {
-		if (minute != 60) {
+	for (hour = Starthour, minute = Startminute; (hour != Finalhour) || (minute != Finalminute);) {
+		if (minute != 59) {
 			TimeLine[hour][minute] = 1;
 				
 			minute++;
@@ -35,30 +35,18 @@ int Schedule::DeleteSchedule(string Time) {
 	char* sm = strtok(NULL, ",");
 	char* fh = strtok(NULL, ",");
 	char* fm = strtok(NULL, ",");
-	free(time);
 	int Starthour = atoi(sh);
 	int Startminute = atoi(sm);
 	int Finalhour = atoi(fh);
 	int Finalminute = atoi(fm);
-	if (Map_Schedule.find(time) == Map_Schedule.end()) {
+	if (Map_Schedule.find(Time) == Map_Schedule.end()) {
 		cout << "there is no such Schedule";
 		return -1;
 	}
 	else {
 		int hour;
 		int minute;
-		for (hour = Starthour, minute = Startminute; (hour != Finalhour) || (minute <= Finalminute);) {
-			if (minute != 60) {
-				TimeLine[hour][minute] = 0;
-
-				minute++;
-			}
-			else {
-				hour++;
-				minute = 0;
-			}
-		}
-		Map_Schedule.erase(time);
+		Map_Schedule.erase(Time);
 	}
 	return 0;
 }
@@ -71,13 +59,12 @@ int* Schedule::AddTimeLine(string Time) {
 	char* sm = strtok(NULL, ",");
 	char* fh = strtok(NULL, ",");
 	char* fm = strtok(NULL, ",");
-	free(time);
 	int hour; int minute;
 	int Starthour = atoi(sh);
 	int Startminute = atoi(sm);
 	int Finalhour = atoi(fh);
 	int Finalminute = atoi(fm);
-	for (hour = Starthour, minute = Startminute; (hour == Finalhour) && (minute > Finalminute);) {
+	for (hour = Starthour, minute = Startminute; (hour != Finalhour) || (minute != Finalminute);) {
 		if (minute != 59) {
 			TimeLine[hour][minute] = 1;
 			minute++;
@@ -104,7 +91,7 @@ int Schedule::CheckOverlap(char* time) {
 	int Startminute = atoi(sm);
 	int Finalhour = atoi(fh);
 	int Finalminute = atoi(fm);
-	for ( hour = Starthour, minute = Startminute; (hour == Finalhour) && (minute > Finalminute);) {
+	for (hour = Starthour, minute = Startminute; (hour != Finalhour) || (minute != Finalminute);) {
 		if (minute != 59) {
 			if (TimeLine[hour][minute] == 1) {
 				return -1; //overlap exist
@@ -119,14 +106,16 @@ int Schedule::CheckOverlap(char* time) {
 	return 0; //no overlap
 }
 int Schedule::CheckCurOverlap(char* time, int Starthour, int Startminute) {
-	char* sh = strtok(time, ",");
-	char* sm = strtok(NULL, ",");
+	strtok(time, ",");
+	strtok(NULL, ",");
 	char* fh = strtok(NULL, ",");
 	char* fm = strtok(NULL, ",");
 	int Finalhour = atoi(fh);
 	int Finalminute = atoi(fm);
 	int hour; int minute;
-	for (hour = Starthour, minute = Startminute; (hour == Finalhour) && (minute > Finalminute);) {
+	if (Starthour >= Finalhour&&Startminute >= Finalminute)
+		return 0;
+	for (hour = Starthour, minute = Startminute; (hour != Finalhour) || (minute != Finalminute);) {
 		if (minute != 59) {
 			if (TimeLine[hour][minute] == 1) {
 				return -1; //overlap exist

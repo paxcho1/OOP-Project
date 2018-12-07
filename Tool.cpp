@@ -129,6 +129,7 @@ void tool::TxtToSocket(const char* fileName, map<string, SOCKET> &Id_Socket) {
 		}
 	}
 }
+/*
 int tool::DailyScheduleToFile(Schedule &Ds, string Id ,string date ,string day) {//day == 해당요일
 	string filepath = "c:/server/" + Id + "/schedule/daily/"+ day  + "/" + date + ".bin";
 	ofstream fout(filepath, ios::out | ios::binary);
@@ -169,6 +170,4 @@ int tool::FileToWeeklyScheduleClass(Schedule &Ds, string Id, string day) {
 	}
 	else { return -1; }
 }
-int tool::TokenizingString() {
-
-}
+*/

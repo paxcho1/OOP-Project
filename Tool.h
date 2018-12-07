@@ -33,9 +33,8 @@ public:
 	void SocketToTxt(const char* fileName, map<string, SOCKET> &Map);
 	void TxtToSocket(const char* fileName, map<string, SOCKET> &Id_Socket);
 	string MessangerRecv(SOCKET client, string Id, char buf[]);
-	int DailyScheduleToFile(Schedule &Ds, string Id, string date, string day);
+	/*int DailyScheduleToFile(Schedule &Ds, string Id, string date, string day);
 	int WeeklyScheduleToFile(Schedule &Ds, string Id, string day);
 	int FileToDailyScheduleClass(Schedule &Ds, string Id, string date,string day);
-	int FileToWeeklyScheduleClass(Schedule &Ds, string Id, string day);
-	int TokenizingString();
+	int FileToWeeklyScheduleClass(Schedule &Ds, string Id, string day);*/
 };

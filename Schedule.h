@@ -8,7 +8,7 @@
 using namespace std;
 class Schedule {
 private:
-	int TimeLine[24][60] = { 0, };
+	int TimeLine[24][60];
 	string date;
 public:
 	map<string, string> Map_Schedule;

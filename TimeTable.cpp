@@ -43,7 +43,7 @@ int TimeTable::table(SOCKET client, string id) {
 				Schedule Weekly;
 				if (Sche.size() != 0) {
 					for (iter = Sche.begin(); iter != Sche.end(); ++iter)
-						Weekly.Addmap(iter->first, iter->second);
+						Weekly.Addmap((*iter).first, (*iter).second);
 					for (iter = Weekly.Map_Schedule.begin(); iter == Weekly.Map_Schedule.end(); ++iter) {
 						string msg;
 						msg = "003 " + iter->first + " " + iter->second;
@@ -70,9 +70,11 @@ int TimeTable::table(SOCKET client, string id) {
 				tool::TxtToMap(file.c_str(), schedule);
 				Schedule Daily;
 				int D = 0, W = 0;
-				for (iter = schedule.begin(); iter != schedule.end(); ++iter) {
-					Daily.Addmap(iter->first, iter->second);
-					Daily.AddTimeLine(iter->first);
+				if (schedule.size() != 0) {
+					for (iter = schedule.begin(); iter != schedule.end(); ++iter) {
+						Daily.Addmap(iter->first, iter->second);
+						Daily.AddTimeLine(iter->first);
+					}
 				}
 				char* duptime = _strdup(timeline);
 				//파일이 열렸으면, 있으면
@@ -82,9 +84,11 @@ int TimeTable::table(SOCKET client, string id) {
 				file = "c:/server/" + id + "/schedule/weekly/" + day + ".txt";
 				tool::TxtToMap(file.c_str(), schedule);
 				Schedule Weekly;
-				for (iter = schedule.begin(); iter != schedule.end(); ++iter) {
-					Weekly.Addmap(iter->first, iter->second);
-					Weekly.AddTimeLine(iter->first);
+				if (schedule.size() != 0) {
+					for (iter = schedule.begin(); iter != schedule.end(); ++iter) {
+						Weekly.Addmap(iter->first, iter->second);
+						Weekly.AddTimeLine(iter->first);
+					}
 				}
 				duptime = _strdup(timeline);
 					//파일이 열렸으면, 있으면
@@ -108,43 +112,74 @@ int TimeTable::table(SOCKET client, string id) {
 				}
 			}
 			else if (strcmp(code.c_str(), "003") == 0) {//003 yymmdd 00000000 요일 일정 // 해당 날짜의 일정 삭제
-
+				map<string, string> Sche;
+				map<string, string>::iterator iter;
 				strtok(buf, " ");
 				char* date = strtok(NULL, " "); 
-				strtok(buf, " ");
+				char* time = strtok(NULL, " ");
 				char* day = strtok(NULL, " ");
-				char* Dele_Dest = strtok(NULL, " ");
+				string file = "c:/server/" + id + "/schedule/daily/" + day + "/" + date + ".txt";
 				Schedule Daily;
-				if (FileToDailyScheduleClass(Daily, id, date, day) == -1) {
-					cout << "file didn't open";
-					exit(1);
+				tool::TxtToMap(file.c_str(), Sche);
+				if (Sche.size() != 0) {
+					for (iter = Sche.begin(); iter != Sche.end(); ++iter) {
+						Daily.Addmap((*iter).first, (*iter).second);
+					}
 				}
-				Daily.DeleteSchedule(buf);
+				Daily.DeleteSchedule(time);
+				tool::MapToTxt(file.c_str(), Daily.Map_Schedule);
 				//토큰분활
 				//해당 일정 삭제
 			}
 			else if (strcmp(code.c_str(), "004") == 0) {//004 yymmdd 00000000 요일 일정 // 해당 요일의 일정 삭제
+				map<string, string> Sche;
+				map<string, string>::iterator iter; 
 				strtok(buf, " ");
 				strtok(NULL, " ");
-				strtok(NULL, " ");
+				char* time = strtok(NULL, " ");
 				char* day = strtok(NULL, " ");
+				string file = "c:/server/" + id + "/schedule/weekly/" + day + ".txt";
 				Schedule Weekly;
-				if (FileToWeeklyScheduleClass(Weekly, id, day) == -1) {
-					cout << "file didn't open";
-					exit(1);
+				tool::TxtToMap(file.c_str(), Sche);
+				if (Sche.size() != 0) {
+					for (iter = Sche.begin(); iter != Sche.end(); ++iter) {
+						Weekly.Addmap((*iter).first, (*iter).second);
+					}
 				}
-				Weekly.DeleteSchedule(buf);
+				Weekly.DeleteSchedule(time);
+				tool::MapToTxt(file.c_str(), Weekly.Map_Schedule);
 				// 해당 일정 삭제
 			}
 			else if (strcmp(code.c_str(), "005") == 0) {//005 yymmdd 00000000 요일 일정 시간표 추가 
+				map<string, string> schedule;
+				map<string, string>::iterator iter; 
 				int error = 0;
+				int result;
+				string msg;
 				strtok(buf, " ");
-				strtok(NULL, " ");
+				int Cur_Date = atoi(strtok(NULL, " "));
 				char* Time = strtok(NULL, " ");
+				char* Dup_Time = _strdup(Time);
 				char* day = strtok(NULL, " ");
 				char* Dest_Sche = strtok(NULL, " ");
-				int Cur_Date = atoi(Dest_Sche);
-				string pathstr = "c:/server/" + id + "/schedule/daily/" + day + "/*.txt"; string Filepath;
+				Schedule Weekly;
+				string Filepath = "c:/server/" + id + "/schedule/weekly/" + day + ".txt";
+				tool::TxtToMap(Filepath.c_str(), schedule);
+				if (schedule.size() != 0){
+					for (iter = schedule.begin(); iter != schedule.end(); ++iter) {
+						Weekly.Addmap((*iter).first, (*iter).second);
+						Weekly.AddTimeLine((*iter).first);
+					}
+				}
+				result = Weekly.CheckOverlap(Dup_Time);
+				if (result == -1){
+					msg = "009";
+					Send(client, msg);
+					error++;
+				}
+				else{
+					string pathstr = "c:/server/" + id + "/schedule/daily/" + day + "/*.txt"; 
+					string Filepath = "c:/server/" + id + "/schedule/weekly/" + day + ".txt";
 				char path[255];
 				strcpy(path, pathstr.c_str());
 				WIN32_FIND_DATA FindData;
@@ -156,62 +191,70 @@ int TimeTable::table(SOCKET client, string id) {
 					send(client, "endfile", MAX_BUFFER_SIZE, 0);
 				}
 				else {
-					cout << FindData.cFileName << endl;
-					int File_Date = atoi(FindData.cFileName);
-					if (Cur_Date>File_Date) {}
-					else if(Cur_Date<File_Date) {
-						//현재 날짜 이후 파일들
-						Schedule Find_File;
-						string File_Date = FindData.cFileName;
-						File_Date = File_Date.substr(0, 6);
-						if (FileToDailyScheduleClass(Find_File, id, File_Date, day) == -1) {
-							cout << "file didn't open";
-							
+					do{
+						cout << FindData.cFileName << endl;
+						int File_Date = atoi(FindData.cFileName);
+						if (Cur_Date > File_Date) {}
+						else if (Cur_Date < File_Date) {
+							//현재 날짜 이후 파일들
+							Schedule Find_File;
+							string File_Date = FindData.cFileName;
+							File_Date = File_Date.substr(0, 6);
+							string Filepath = "c:/server/" + id + "/schedule/daily/" + day + "/" + FindData.cFileName;
+							tool::TxtToMap(Filepath.c_str(), schedule);
+							if (schedule.size() != 0) {
+								for (iter = schedule.begin(); iter != schedule.end(); ++iter) {
+									Find_File.Addmap((*iter).first, (*iter).second);
+									Find_File.AddTimeLine((*iter).first);
+								}
+							}
+							Dup_Time = _strdup(Time);
+							result = Find_File.CheckOverlap(Dup_Time);
+							if (result == -1) {
+								msg = "008 " + File_Date;
+								Send(client, msg);
+								error++;
+							}
 						}
-						int result = Find_File.CheckOverlap(Time);
-						if (result == -1) {
-							string msg = "008 " + File_Date;
-							Send(client, msg);
-							error++;
+						else {
+							//현재날짜로 파일 검색됨 심층분석
+							time_t curr_time;
+							struct tm *curr_tm;
+							curr_time = time(NULL);
+							curr_tm = localtime(&curr_time);
+							Schedule Find_File;
+							string File_Date = FindData.cFileName;
+							File_Date = File_Date.substr(0, 6);
+							string Filepath = "c:/server/" + id + "/schedule/daily/" + day + "/" + FindData.cFileName;
+							tool::TxtToMap(Filepath.c_str(), schedule);
+							if (schedule.size() != 0) {
+								for (iter = schedule.begin(); iter != schedule.end(); ++iter) {
+									Find_File.Addmap((*iter).first, (*iter).second);
+									Find_File.AddTimeLine((*iter).first);
+								}
+							}
+							Dup_Time = _strdup(Time);
+							result = Find_File.CheckCurOverlap(Dup_Time, curr_tm->tm_hour, curr_tm->tm_min);
+							if (result == -1) {
+								msg = "008 " + File_Date;
+								Send(client, msg);
+								error++;
+							}
 						}
-					}
-					else {
-						//현재날짜로 파일 검색됨 심층분석
-						time_t curr_time;
-						struct tm *curr_tm;
-						curr_time = time(NULL);
-						curr_tm = localtime(&curr_time);
-						Schedule Find_File;
-						string File_Date = FindData.cFileName;
-						File_Date = File_Date.substr(0, 6);
-						if (FileToDailyScheduleClass(Find_File, id, File_Date, day) == -1) {
-							cout << "file didn't open";
-							
-						}
-						int result = Find_File.CheckCurOverlap(Time, curr_tm->tm_hour,curr_tm->tm_min);
-						if (result == -1) {
-							string msg = "008 " + File_Date;
-							Send(client, msg);
-							error++;
-						}
-					}
+						schedule.clear();
+					} while (FindNextFile(hFind, &FindData));
 				}
-				Send(client, "007");
-				if (error == 0) {
-					Schedule Weekly;
-					if (FileToWeeklyScheduleClass(Weekly, id, day) == -1) {
-						cout << "file didn't open";
-						
+					if (error == 0) {
+						Send(client, "006");
+						tool::TxtToMap(Filepath.c_str(), Weekly.Map_Schedule);
+						Dup_Time = _strdup(Time);
+						Weekly.Addmap(Dup_Time, Dest_Sche);
+						tool::MapToTxt(Filepath.c_str(), Weekly.Map_Schedule);
+						schedule.clear();
 					}
-					char* sh = strtok(Time, ",");
-					char* sm = strtok(NULL, ",");
-					char* fh = strtok(NULL, ",");
-					char* fm = strtok(NULL, ",");
-					Weekly.AddSchedule(sh,sm,fh,fm,Dest_Sche);
-					if (WeeklyScheduleToFile(Weekly, id, day) == -1) {
-						cout << "file didn't open";
+					else{
+						Send(client, "007");
 					}
-					Send(client, "006");
 				}
 				//while 해당 요일 앞으로 일정 폴더를 전부 검색 할 때까지{
 				//중복검사후 중복이면 불가 날짜;
