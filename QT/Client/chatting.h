@@ -2,6 +2,7 @@
 #define CHATTING_H
 
 #include "tool.h"
+#include <QTextCodec>
 
 namespace Ui {
 class Chatting;
@@ -20,14 +21,14 @@ public:
     string GetId();
     void SetRoomName(string s);
     void SetFilePath(QString q);
+    void SetThread(QThread* t);
     void FileRead();
     void FileMove();
 
 
 private slots:
     void on_MessageSend_btn_clicked();
-
-    void on_Message_Line_returnPressed();
+    void Msg_Handle();
 
 private:
     Ui::Chatting *ui;
@@ -35,6 +36,7 @@ private:
     string id;
     string R_Name;
     QString filepath;
+    QThread* thr;
 };
 
 #endif // CHATTING_H

@@ -3,6 +3,11 @@
 
 #include "tool.h"
 #include "thread.h"
+#include "receiver.h"
+#include "friendsearch.h"
+#include "friendalarm.h"
+#include "makechatroom.h"
+#include "chatting.h"
 
 namespace Ui {
 class List;
@@ -33,16 +38,21 @@ private slots:
 
     void on_MakeChatroom_btn_clicked();
 
+    void MsgHandle(string str);
+    void Alarm(string str);
+
 private:
     void closeEvent(QCloseEvent *bar);
     Ui::List *ui;
     SOCKET sock;
     QFileInfoList Friend_list;
     QFileInfoList Chat_list;
+    QFileInfoList Already_Chat;
     QDir dir;
     QFile file;
     string id;
-    Thread* thread;
+    Thread* thr;
+    Chatting* chat;
 };
 
 #endif // LIST_H

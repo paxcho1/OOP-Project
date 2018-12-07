@@ -30,6 +30,11 @@ string FriendAlarm::GetId() {
     return id;
 }
 
+
+void FriendAlarm::SetThread(QThread* t) {
+    thr = t;
+}
+
 void FriendAlarm::SetList() {
 
     string path = "c:/client/" + id + "/InviteAlarm";

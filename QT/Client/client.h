@@ -1,6 +1,8 @@
 #ifndef CLIENT_H
 #define CLIENT_H
 #include "tool.h"
+#include "signin.h"
+#include "timetable.h"
 
 namespace Ui {
 class Client;
@@ -15,7 +17,7 @@ public:
     ~Client();
     void SetSocket(SOCKET s);
     SOCKET GetSocket();
-
+    Signin* psign;
 
 private slots:
     void on_Signin_btn_clicked();

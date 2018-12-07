@@ -2,6 +2,7 @@
 #define MAKECHATROOM_H
 
 #include "tool.h"
+#include <QStringList>
 
 namespace Ui {
 class MakeChatRoom;
@@ -20,9 +21,12 @@ public:
     void SetId(string i);
     string GetId();
     void SetList();
+    void SetThread(QThread* t);
+    void SetFileList(QFileInfoList q);
 
 private slots:
     void on_MakingChatroom_btn_clicked();
+    void MsgHandle(QString str);
 
 private:
     Ui::MakeChatRoom *ui;
@@ -31,6 +35,8 @@ private:
     QFileInfoList Friend_list;
     QDir dir;
     QFile file;
+    QThread* thr;
+    QFileInfoList filelist;
 };
 
 #endif // MAKECHATROOM_H

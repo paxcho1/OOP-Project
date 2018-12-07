@@ -1,8 +1,7 @@
 #include "client.h"
 #include "ui_client.h"
 #include "tool.h"
-#include "signin.h"
-#include "timetable.h"
+
 
 Client::Client(QWidget *parent) :
     QMainWindow(parent),
@@ -10,7 +9,6 @@ Client::Client(QWidget *parent) :
 {
     ui->setupUi(this);
     setWindowTitle("cau-talk");
-
 }
 
 Client::~Client()
@@ -28,7 +26,6 @@ void Client::on_Signin_btn_clicked()
     Signin sign;
     sign.setWindowTitle("Sign in");
     sign.SetSocket(GetSocket());
-    sign.setModal(true);
     sign.exec();
     show();
 }
@@ -43,6 +40,8 @@ void Client::on_Login_btn_clicked()
     QString Pw = ui->PW_line->text().trimmed();
     string id = Id.toUtf8().constData();
     string pw = Pw.toUtf8().constData();
+    ui->ID_line->clear();
+    ui->PW_line->clear();
     QMessageBox Msgbox;
     if (Id.isEmpty() || Pw.isEmpty()) {
         if(Id.isEmpty() && !Pw.isEmpty()) {
@@ -93,7 +92,6 @@ void Client::on_Login_btn_clicked()
             time.setWindowTitle("Time Table");
             time.SetId(id);
             time.SetSocket(GetSocket());
-            time.setModal(false);
             time.exec();
 
         }

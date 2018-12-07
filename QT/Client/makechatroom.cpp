@@ -31,7 +31,6 @@ string MakeChatRoom::GetId() {
 }
 
 void MakeChatRoom::SetList() {
-
     string path = "c:/client/" + id + "/FriendsIndex";
     QString friendFilePath = QString::fromStdString(path);
     dir = friendFilePath;
@@ -44,8 +43,18 @@ void MakeChatRoom::SetList() {
     }
 }
 
+void MakeChatRoom::SetFileList(QFileInfoList q) {
+    filelist = q;
+}
+
+
+void MakeChatRoom::SetThread(QThread* t) {
+    thr = t;
+}
+
 void MakeChatRoom::on_MakingChatroom_btn_clicked()
 {
+    qRegisterMetaType<std::string>("string");
     QStringList stringList;
     QString ID = QString::fromUtf8(id.c_str());
     stringList.push_front(ID);
@@ -53,15 +62,34 @@ void MakeChatRoom::on_MakingChatroom_btn_clicked()
         stringList << item->text();
     qSort(stringList.begin(), stringList.end());
     QString str = stringList.join(",");
-    string ids = str.toUtf8().constData();
-    qDebug(ids.c_str());
-    string msg = "004 " + ids;
+    QString cmp;
+    QMessageBox Msgbox;
+    for (int i = 0; i < filelist.size(); i++) {
+        QFileInfo root = filelist.at(i);
+        cmp = root.fileName();
+        cmp.truncate(cmp.lastIndexOf('.'));
+        if (cmp == str)
+            break;
+    }
 
-    send(sock, msg.c_str(), MAX_BUFFER_SIZE, 0);
+    if (cmp != str) {
+        string ids = str.toUtf8().constData();
+        string msg = "004 " + ids;
 
+        send(sock, msg.c_str(), MAX_BUFFER_SIZE, 0);
+
+        QObject::connect(thr, SIGNAL(Send_Message(QString)), this, SLOT(MsgHandle(QString)));
+    }
+    else {
+        Msgbox.setText("Room already exists");
+        Msgbox.exec();
+    }
+    this->close();
+}
+
+void MakeChatRoom::MsgHandle(QString str) {
+    qDebug(str.toUtf8().constData());
     QMessageBox Msgbox;
     Msgbox.setText("Room make succeed");
     Msgbox.exec();
-
-    this->close();
 }

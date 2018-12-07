@@ -1,6 +1,5 @@
 #include "chatting.h"
 #include "ui_chatting.h"
-#include <QTextCodec>
 
 Chatting::Chatting(QWidget *parent) :
     QDialog(parent),
@@ -38,26 +37,36 @@ void Chatting::SetFilePath(QString q) {
     filepath = q;
 }
 
+void Chatting::SetThread(QThread *t) {
+    thr = t;
+}
+
 void Chatting::on_MessageSend_btn_clicked()
 {
-    QString str = ui->Message_Line->text();
-    string contents = str.toUtf8().constData();
-    ui->Message_Line->clear();
-
-    string msg = "005 " + R_Name + " " + contents;
-    send(sock, msg.c_str(), MAX_BUFFER_SIZE, 0);
-}
-
-void Chatting::on_Message_Line_returnPressed()
-{
-    QString str = ui->Message_Line->text();
-    string contents = str.toUtf8().constData();
+    QString str = ui->Message_Line->text().toUtf8();
+    string contents = str.toLocal8Bit().constData();
     ui->Message_Line->clear();
 
     string msg = "005 " + R_Name + " " + contents;
     send(sock, msg.c_str(), MAX_BUFFER_SIZE, 0);
 
+    QString mess = QString::fromUtf8(id.c_str());
+    mess.append(": ");
+    mess.append(str);
+
+    QTextCodec *codec = QTextCodec::codecForLocale();
+    QString strUnicodeLine = codec->toUnicode(mess.toLocal8Bit());
+    ui->Chatting_Text->append(strUnicodeLine);
+
+    ui->Chatting_Text->verticalScrollBar()->setValue(ui->Chatting_Text->verticalScrollBar()->maximum());
+
+    QFile file(filepath);
+    file.open(QIODevice::WriteOnly | QIODevice::Append);
+    QTextStream stream(&file);
+    stream << strUnicodeLine << endl;
+    file.close();
 }
+
 
 void Chatting::FileRead() {
 //    ifstream Read(filepath.toLocal8Bit().constData());
@@ -101,5 +110,11 @@ void Chatting::FileMove() {
         Read.close();
     }
     remove(alarmfilepath.c_str());
+}
+
+void Chatting::Msg_Handle() {
+    QMessageBox Msgbox;
+    Msgbox.setText("Send invite Message");
+    Msgbox.exec();
 }
 

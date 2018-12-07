@@ -1,7 +1,5 @@
 #include "timetable.h"
 #include "ui_timetable.h"
-#include "chatting.h"
-#include "list.h"
 
 Timetable::Timetable(QWidget *parent) :
     QDialog(parent),
@@ -38,6 +36,7 @@ void Timetable::on_calendarWidget_clicked(const QDate &date)
     QString str = Date.toString("yyMMdd ddd");
     string da = str.toUtf8().constData();
     string msg = "000 " +da;
+
     char buf[MAX_BUFFER_SIZE];
 
     send(sock, msg.c_str(), MAX_BUFFER_SIZE, 0);
@@ -53,14 +52,7 @@ void Timetable::on_Messanger_btn_clicked()
     list.setWindowTitle("Friend&Chatting room List");
     list.SetSocket(GetSocket());
     list.SetId(GetId());
-    list.setModal(false);
     list.Receive();
     list.Thre();
     list.exec();
-}
-void Timetable::get(){
-    char buf[MAX_BUFFER_SIZE];
-    while(1){
-    R->Get(sock,id,buf);
-    }
 }

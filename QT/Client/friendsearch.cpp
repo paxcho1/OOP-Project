@@ -5,7 +5,7 @@ FriendSearch::FriendSearch(QWidget *parent) :
     QDialog(parent),
     ui(new Ui::FriendSearch)
 {
-    ui->setupUi(this);
+    ui->setupUi(this);    
 }
 
 FriendSearch::~FriendSearch()
@@ -29,8 +29,14 @@ string FriendSearch::GetId() {
     return id;
 }
 
+void FriendSearch::SetThread(QThread* t) {
+    thr = t;
+}
+
 void FriendSearch::on_pushButton_clicked()
-{
+{    
+    QObject::disconnect(thr, SIGNAL(NoUser()), this, SLOT(No_user()));
+    QObject::disconnect(thr, SIGNAL(FindUser()), this, SLOT(Send_message()));
     QString str = ui->lineEdit->text();
     string str2 = str.toUtf8().constData();
     string msg = "002 " + str2;
@@ -51,18 +57,22 @@ void FriendSearch::on_pushButton_clicked()
     }
     else {
         send(sock, msg.c_str(), MAX_BUFFER_SIZE, 0);
-
-        recv(sock, buf, MAX_BUFFER_SIZE, 0);
-
-        if(strcmp(buf, "001") == 0){
-            Msgbox.setText("Can't find friend");
-            Msgbox.exec();
-            ui->lineEdit->clear();
-        }
-        else if(strcmp(buf, "002") == 0) {
-            Msgbox.setText("Sending message friend request");
-            Msgbox.exec();
-            ui->lineEdit->clear();
-        }
+        ui->lineEdit->clear();
     }
+
+    QObject::connect(thr, SIGNAL(NoUser()),this, SLOT(No_user()));
+    QObject::connect(thr, SIGNAL(FindUser()),this, SLOT(Send_message()));
+
+}
+
+void FriendSearch::No_user() {
+    QMessageBox Msgbox;
+    Msgbox.setText("There are no users");
+    Msgbox.exec();
+}
+
+void FriendSearch::Send_message() {
+    QMessageBox Msgbox;
+    Msgbox.setText("Send invite Message");
+    Msgbox.exec();
 }

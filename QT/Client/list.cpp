@@ -1,25 +1,23 @@
 #include "list.h"
 #include "ui_list.h"
-#include "receiver.h"
-#include "friendsearch.h"
-#include "friendalarm.h"
-#include "makechatroom.h"
-#include "chatting.h"
+
 
 List::List(QWidget *parent) :
     QDialog(parent),
     ui(new Ui::List)
 {
     ui->setupUi(this);
-    thread = new Thread(this);
+    thr = new Thread(this);
+
+    //chat = new Chatting(this);
 }
 
 List::~List()
 {
     delete ui;
-    thread->terminate();
-    thread->quit();
-    delete thread;
+    thr->terminate();
+    thr->quit();
+    delete thr;
 }
 
 void List::SetSocket(SOCKET s) {
@@ -50,8 +48,9 @@ void List::Receive() {
 }
 
 void List::Thre() {
-    thread->start();
-
+    thr->SetId(id);
+    thr->SetSocket(sock);
+    thr->start();
 }
 
 void List::SetList() {
@@ -59,6 +58,7 @@ void List::SetList() {
     ui->Friend_List->clear();
     ui->Chatroom_List->clear();
 
+    Friend_list.clear();
     QString friendFilePath = "C:/client/";
     friendFilePath.append(QString::fromStdString(id));
     friendFilePath.append("/FriendsIndex");
@@ -70,6 +70,7 @@ void List::SetList() {
     ui->Friend_List->addItem(QString("%1").arg(root.fileName()).replace(".txt", ""));
     }
 
+    Chat_list.clear();
     QString chatFilePath = "C:/client/";
     chatFilePath.append(QString::fromStdString(id));
     chatFilePath.append("/ChatAlarm");
@@ -88,7 +89,20 @@ void List::SetList() {
     Chat_list.append(dir.entryInfoList());
     for (int i = size; i < Chat_list.size(); i++) {
     QFileInfo root = Chat_list.at(i);
-    ui->Chatroom_List->addItem(QString("%1").arg(root.fileName()).replace(".txt", ""));
+    Already_Chat.append(Chat_list.at(i));
+        if (size) {
+            for(int j = 0; j < size; j++) {
+                if (Chat_list.at(j).fileName() == root.fileName()) {
+                    continue;
+                }
+                else {
+                    ui->Chatroom_List->addItem(QString("%1").arg(root.fileName()).replace(".txt", ""));
+                }
+            }
+        }
+        else {
+            ui->Chatroom_List->addItem(QString("%1").arg(root.fileName()).replace(".txt", ""));
+        }
     }
 }
 
@@ -110,17 +124,24 @@ void List::on_Chatroom_List_itemDoubleClicked(QListWidgetItem *item)
 
     Chatting chat;
     chat.setWindowTitle(r_name);
-    chat.SetSocket(GetSocket());
-    chat.SetId(GetId());
+    chat.SetSocket(sock);
+    chat.SetId(id);
+    chat.SetThread(thr);
     chat.SetFilePath(filepath);
     chat.SetRoomName(str);
     chat.FileRead();
     filepath.truncate(filepath.lastIndexOf(QChar('/')));
     if (strcmp(filepath.toUtf8().constData(), path.c_str()) == 0) {
         chat.FileMove();
+        filepath.truncate(filepath.lastIndexOf(QChar('/')));
+        filepath.append("/");
+        filepath.append(r_name);
+        filepath.append(".txt");
+        chat.SetFilePath(filepath);
+        chat.FileRead();
+        SetList();
         send(sock, msg.c_str(), MAX_BUFFER_SIZE, 0);
     }
-    chat.setModal(false);
     chat.exec();
 
 }
@@ -132,7 +153,7 @@ void List::on_Friendsearch_btn_clicked()
     search.setWindowTitle("Friend Search");
     search.SetSocket(GetSocket());
     search.SetId(GetId());
-    search.setModal(false);
+    search.SetThread(thr);
     search.exec();
 }
 
@@ -143,7 +164,6 @@ void List::on_Friendalarm_btn_clicked()
     alarm.SetSocket(GetSocket());
     alarm.SetId(GetId());
     alarm.SetList();
-    alarm.setModal(false);
     alarm.exec();
 }
 
@@ -153,7 +173,16 @@ void List::on_MakeChatroom_btn_clicked()
     make.setWindowTitle("Make Chat Room");
     make.SetSocket(GetSocket());
     make.SetId(GetId());
+    make.SetFileList(Already_Chat);
+    make.SetThread(thr);
     make.SetList();
-    make.setModal(false);
     make.exec();
 }
+
+void List::MsgHandle(string str) {
+    qDebug(str.c_str());
+}
+
+void List::Alarm(string str) {
+    qDebug(str.c_str());
+};

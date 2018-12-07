@@ -52,15 +52,18 @@ int Receiver::Messanger(SOCKET server, string Id) {
             }
             fclose(fp);
             if (left == 0) {
-                printf("filename %s 파일을 성공적으로 받았습니다.\r\n", msg);
+
+                printf("filename %s file receive succeed.\n", msg);
             }
             else {
-                printf("파일을 제대로 받지 못했습니다.\r\n");
+                cout << QString::fromUtf8("파일을 제대로 받지 못했습니다.").toLocal8Bit().constData() << endl;
             }
-            filepath = Recv(server, msg);//get filename.txt
+            Recv(server, msg);//get filename.txt
+            filepath = msg;
         }
         if (strcmp(msg, "endfile") == 0) {
-            cout << "채팅 목록 불러오기 완료" << endl;
+
+            cout << QString::fromUtf8("채팅 목록 불러오기 완료").toLocal8Bit().constData() << endl;
         }
         cnt++;
     } while (cnt <= 4);

@@ -20,6 +20,7 @@ public:
     void SetId(string i);
     string GetId();
     void SetList();
+    void SetThread(QThread* t);
 
 private slots:
 
@@ -34,6 +35,7 @@ private:
     QFileInfoList NewFriend_list;
     QDir dir;
     QFile file;
+    QThread* thr;
 };
 
 #endif // FRIENDALARM_H
