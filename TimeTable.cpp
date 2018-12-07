@@ -64,7 +64,8 @@ int TimeTable::table(SOCKET client, string id) {
 				char* date = strtok(NULL, " ");
 				char* timeline = strtok(NULL, " ");
 				char* day = strtok(NULL, " ");
-				char* Dest_Sche = strtok(NULL, " ");
+				char* Dest_Sche = strtok(NULL, " "); 
+				char* duptime;
 				string file = "c:/server/" + id + "/schedule/daily/" + day + "/" + date + ".txt";
 				tool::TxtToMap(file.c_str(), schedule);
 				Schedule Daily;
@@ -74,12 +75,12 @@ int TimeTable::table(SOCKET client, string id) {
 						Daily.Addmap(iter->first, iter->second);
 						Daily.AddTimeLine(iter->first);
 					}
+					duptime = _strdup(timeline);
+					//파일이 열렸으면, 있으면
+					D = Daily.CheckOverlap(duptime);
+					//중복검사
+					schedule.clear();
 				}
-				char* duptime = _strdup(timeline);
-				//파일이 열렸으면, 있으면
-				D = Daily.CheckOverlap(duptime);
-				//중복검사
-				schedule.clear();
 				file = "c:/server/" + id + "/schedule/weekly/" + day + ".txt";
 				tool::TxtToMap(file.c_str(), schedule);
 				Schedule Weekly;
@@ -88,11 +89,11 @@ int TimeTable::table(SOCKET client, string id) {
 						Weekly.Addmap(iter->first, iter->second);
 						Weekly.AddTimeLine(iter->first);
 					}
-				}
-				duptime = _strdup(timeline);
+					duptime = _strdup(timeline);
 					//파일이 열렸으면, 있으면
-				W = Weekly.CheckOverlap(duptime); 
-				duptime = _strdup(timeline);
+					W = Weekly.CheckOverlap(duptime);
+					duptime = _strdup(timeline);
+				}
 					//중복검사
 				//중복검사
 				//가능하면 004 + 일정추가 불가능하면 005
@@ -124,8 +125,8 @@ int TimeTable::table(SOCKET client, string id) {
 					for (iter = Sche.begin(); iter != Sche.end(); ++iter) {
 						Daily.Addmap((*iter).first, (*iter).second);
 					}
+					Daily.DeleteSchedule(time);
 				}
-				Daily.DeleteSchedule(time);
 				tool::MapToTxt(file.c_str(), Daily.Map_Schedule);
 				//토큰분활
 				//해당 일정 삭제

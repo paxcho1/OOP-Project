@@ -7,6 +7,7 @@
 #include <windows.h>
 #include <stdio.h>
 #include <map>
+#include <vector>
 #include <algorithm>
 #include "Tool.h"
 #include "Alarm.h"

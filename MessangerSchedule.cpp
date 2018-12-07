@@ -182,15 +182,16 @@ void MessangerSchedule::Accept_schedule(char* msg) {
 			schedule.clear();
 		}
 	}
-		if (G == 0) {
-		else {
+	if (G == 0) {
+	}
+	else {
 			Send(client, "004");
+	}
+	}
+else {
+Send(client, "004");
 		}
-	}
-	else
-	{
-		Send(client, "004");
-	}
+}
 
 
 }

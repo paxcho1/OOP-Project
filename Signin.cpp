@@ -90,6 +90,8 @@ int Signin::in(SOCKET client)
 	_mkdir(path.c_str());
 	path = "c:/server/" + file + "/schedule/weekly";
 	_mkdir(path.c_str());
+	path = "c:/server/" + file + "/schedule/group";
+	_mkdir(path.c_str());
 	//txt에서 map으로
 	tool::TxtToMap("c:/server/Id_Ps_map.txt", user_Info);
 	user_Info.insert(pair<string, string>(id, password));
