@@ -24,4 +24,5 @@ public:
 	Messanger(SOCKET client, string Id);
 	~Messanger();
 	int in(SOCKET client, string id);
+	
 };

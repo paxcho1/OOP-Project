@@ -169,3 +169,6 @@ int tool::FileToWeeklyScheduleClass(Schedule &Ds, string Id, string day) {
 	}
 	else { return -1; }
 }
+int tool::TokenizingString() {
+
+}

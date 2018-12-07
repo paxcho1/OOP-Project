@@ -37,4 +37,5 @@ public:
 	int WeeklyScheduleToFile(Schedule &Ds, string Id, string day);
 	int FileToDailyScheduleClass(Schedule &Ds, string Id, string date,string day);
 	int FileToWeeklyScheduleClass(Schedule &Ds, string Id, string day);
+	int TokenizingString();
 };

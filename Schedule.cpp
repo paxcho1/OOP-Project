@@ -47,7 +47,7 @@ int Schedule::DeleteSchedule(string Time) {
 	else {
 		int hour;
 		int minute;
-		for (hour = Starthour, minute = Startminute; (hour != Finalhour) && (minute <= Finalminute);) {
+		for (hour = Starthour, minute = Startminute; (hour != Finalhour) || (minute <= Finalminute);) {
 			if (minute != 60) {
 				TimeLine[hour][minute] = 0;
 
