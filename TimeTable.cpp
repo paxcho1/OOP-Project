@@ -51,8 +51,7 @@ int TimeTable::table(SOCKET client, string id) {
 					}
 				}Send(client, "002");
 			}
-			else if (strcmp(code.c_str(), "001") == 0) {
-				//MessangerIn
+			else if (strcmp(code.c_str(), "001") == 0) {//MessangerIn
 				Alarm alarm(client, id);
 				alarm.Messanger(client, id);
 				Messanger messanger(client, id);
@@ -145,8 +144,8 @@ int TimeTable::table(SOCKET client, string id) {
 					for (iter = Sche.begin(); iter != Sche.end(); ++iter) {
 						Weekly.Addmap((*iter).first, (*iter).second);
 					}
+					Weekly.DeleteSchedule(time);
 				}
-				Weekly.DeleteSchedule(time);
 				tool::MapToTxt(file.c_str(), Weekly.Map_Schedule);
 				// 해당 일정 삭제
 			}
@@ -154,7 +153,7 @@ int TimeTable::table(SOCKET client, string id) {
 				map<string, string> schedule;
 				map<string, string>::iterator iter; 
 				int error = 0;
-				int result;
+				int result = 0;
 				string msg;
 				strtok(buf, " ");
 				int Cur_Date = atoi(strtok(NULL, " "));
@@ -170,8 +169,8 @@ int TimeTable::table(SOCKET client, string id) {
 						Weekly.Addmap((*iter).first, (*iter).second);
 						Weekly.AddTimeLine((*iter).first);
 					}
+					result = Weekly.CheckOverlap(Dup_Time);
 				}
-				result = Weekly.CheckOverlap(Dup_Time);
 				if (result == -1){
 					msg = "009";
 					Send(client, msg);
@@ -207,9 +206,10 @@ int TimeTable::table(SOCKET client, string id) {
 									Find_File.Addmap((*iter).first, (*iter).second);
 									Find_File.AddTimeLine((*iter).first);
 								}
+
+								Dup_Time = _strdup(Time);
+								result = Find_File.CheckOverlap(Dup_Time);
 							}
-							Dup_Time = _strdup(Time);
-							result = Find_File.CheckOverlap(Dup_Time);
 							if (result == -1) {
 								msg = "008 " + File_Date;
 								Send(client, msg);
@@ -232,9 +232,9 @@ int TimeTable::table(SOCKET client, string id) {
 									Find_File.Addmap((*iter).first, (*iter).second);
 									Find_File.AddTimeLine((*iter).first);
 								}
+								Dup_Time = _strdup(Time);
+								result = Find_File.CheckCurOverlap(Dup_Time, curr_tm->tm_hour, curr_tm->tm_min);
 							}
-							Dup_Time = _strdup(Time);
-							result = Find_File.CheckCurOverlap(Dup_Time, curr_tm->tm_hour, curr_tm->tm_min);
 							if (result == -1) {
 								msg = "008 " + File_Date;
 								Send(client, msg);

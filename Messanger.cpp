@@ -30,6 +30,19 @@ int Messanger::in(SOCKET client, string Id) {
 			tool::SocketToTxt("c:/server/Id_Socket_map.txt", socket_info);
 			return 0;
 		}
+		else if (strcmp(code.c_str(), "001") == 0) {
+			cout << "Send Schedule invite to Chat" << endl;
+			MessangerSchedule MS(client, Id);
+			MS.Schedule_invite(msg);
+
+
+
+
+
+
+
+
+		}
 		else if (strcmp(code.c_str(), "002") == 0) {//SendInvite 입력받음
 			cout << "Sending invite message" << endl;
 			char* recv_id = strtok(msg, " ");

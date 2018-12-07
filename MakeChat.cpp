@@ -8,12 +8,15 @@ MakeChat::~MakeChat()
 }
 int MakeChat::Make(SOCKET client, string Id, char* msg) {
 	map<string, SOCKET>::iterator iter;
-	map<string, SOCKET>socket_info;
+	map<string, SOCKET>socket_info; 
+	string fpath;
 	char path[MAX_BUFFER_SIZE];
 	char* ptr = strtok(msg, " ");
 	ptr = strtok(NULL, " ");
 	string file = (strcpy, ptr);//file = filename
 	string pathstr = "c:/server/" + Id + "/" + file + ".txt";// message sender의 chatfile에서 채팅방 참가자의 목록을 받아옴
+	fpath = "c:/server/" + Id + "/schedule/group/" + file;
+	_mkdir(fpath.c_str());
 	strcpy(path, pathstr.c_str());
 	ofstream Write(path, ios::app);
 	if (Write.is_open()) {
@@ -31,6 +34,8 @@ int MakeChat::Make(SOCKET client, string Id, char* msg) {
 							 //string index_path = "c:/server/Socket_Id_Map.txt";
 			pathstr = "c:/server/" + str + "/chat" + str + "alarm/" + file + ".txt";//filename은 같다 user/alarm/filename의 경로
 			strcpy(path, pathstr.c_str());
+			fpath = "c:/server/" + str + "/schedule/group/" + filename;
+			_mkdir(fpath.c_str());
 			ofstream DWrite(path, ios::app);
 			if (DWrite.is_open()) {
 				cout << "writing file" << endl;
