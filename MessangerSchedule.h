@@ -27,4 +27,5 @@ public:
 	~MessangerSchedule();
 	void Schedule_invite(char* msg);
 	void Accept_schedule(char* msg);
+	void Cancel_schedule(char* msg);
 };

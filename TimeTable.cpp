@@ -64,8 +64,16 @@ int TimeTable::table(SOCKET client, string id) {
 				char* date = strtok(NULL, " ");
 				char* timeline = strtok(NULL, " ");
 				char* day = strtok(NULL, " ");
-				char* Dest_Sche = strtok(NULL, " "); 
+				char* Dest_Sche = strtok(NULL, " ");
+				char Str[MAX_BUFFER_SIZE];
+				strcpy(Str, "");
+				while (Dest_Sche != NULL) {
+					strcat(Str, Dest_Sche);
+					Dest_Sche = strcat(Str, " ");
+					Dest_Sche = strtok(NULL, " ");
+				}
 				char* duptime;
+				duptime = _strdup(timeline);
 				string file = "c:/server/" + id + "/schedule/daily/" + day + "/" + date + ".txt";
 				tool::TxtToMap(file.c_str(), schedule);
 				Schedule Daily;
@@ -75,7 +83,6 @@ int TimeTable::table(SOCKET client, string id) {
 						Daily.Addmap(iter->first, iter->second);
 						Daily.AddTimeLine(iter->first);
 					}
-					duptime = _strdup(timeline);
 					//파일이 열렸으면, 있으면
 					D = Daily.CheckOverlap(duptime);
 					//중복검사
@@ -111,7 +118,7 @@ int TimeTable::table(SOCKET client, string id) {
 					Send(client, "005");
 				}
 			}
-			else if (strcmp(code.c_str(), "003") == 0) {//003 yymmdd 00000000 요일 일정 // 해당 날짜의 일정 삭제
+			else if (strcmp(code.c_str(), "003") == 0) {//003 yymmdd 00000000 요일 // 해당 날짜의 일정 삭제
 				map<string, string> Sche;
 				map<string, string>::iterator iter;
 				strtok(buf, " ");
@@ -131,11 +138,10 @@ int TimeTable::table(SOCKET client, string id) {
 				//토큰분활
 				//해당 일정 삭제
 			}
-			else if (strcmp(code.c_str(), "004") == 0) {//004 yymmdd 00000000 요일 일정 // 해당 요일의 일정 삭제
+			else if (strcmp(code.c_str(), "004") == 0) {//004 00000000 요일 // 해당 요일의 일정 삭제
 				map<string, string> Sche;
 				map<string, string>::iterator iter; 
 				strtok(buf, " ");
-				strtok(NULL, " ");
 				char* time = strtok(NULL, " ");
 				char* day = strtok(NULL, " ");
 				string file = "c:/server/" + id + "/schedule/weekly/" + day + ".txt";
@@ -150,7 +156,7 @@ int TimeTable::table(SOCKET client, string id) {
 				tool::MapToTxt(file.c_str(), Weekly.Map_Schedule);
 				// 해당 일정 삭제
 			}
-			else if (strcmp(code.c_str(), "005") == 0) {//005 yymmdd 00000000 요일 일정 시간표 추가 
+			else if (strcmp(code.c_str(), "005") == 0) {//005 yymmdd 00,00,00,00 요일 일정 시간표 추가 
 				map<string, string> schedule;
 				map<string, string>::iterator iter; 
 				int error = 0;
@@ -162,6 +168,13 @@ int TimeTable::table(SOCKET client, string id) {
 				char* Dup_Time = _strdup(Time);
 				char* day = strtok(NULL, " ");
 				char* Dest_Sche = strtok(NULL, " ");
+				char Str[MAX_BUFFER_SIZE];
+				strcpy(Str, "");
+				while (Dest_Sche != NULL) {
+					strcat(Str, Dest_Sche);
+					Dest_Sche = strcat(Str, " ");
+					Dest_Sche = strtok(NULL, " ");
+				}
 				Schedule Weekly;
 				string Filepath = "c:/server/" + id + "/schedule/weekly/" + day + ".txt";
 				tool::TxtToMap(Filepath.c_str(), schedule);

@@ -88,7 +88,7 @@ void tool::TxtToVector(const char* fileName, vector<string> &Vector) {
 void tool::MapToTxt(const char* fileName, map<string, string> &Map) {
 	ofstream wFile(fileName);
 	for (map<string, string>::const_iterator iterator = Map.begin(); iterator != Map.end(); ++iterator) {
-		wFile << iterator->first << "|" << iterator->second;
+		wFile << iterator->first << "|" << iterator->second;  
 		wFile << "\n";
 	}
 	wFile.close();
