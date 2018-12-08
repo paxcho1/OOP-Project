@@ -57,12 +57,12 @@ int Alarm::Messanger(SOCKET client, string Id) {//client의 id를 이용해 alarm폴더
 				fseek(fp, 0, SEEK_END);
 				int totalbytes = ftell(fp);
 
-				char* buf;
-				recv(client, buf, MAX_BUFFER_SIZE, 0);
-				if (buf == "000") {
+				char* buff;
+				recv(client, buff, MAX_BUFFER_SIZE, 0);
+				if (buff == "000") {
 					send(client, to_string(totalbytes).c_str(), MAX_BUFFER_SIZE, 0);
 				}
-				else if (buf == "001") {
+				else if (buff == "001") {
 					cout << "파일 전송 실패";
 				}
 				char buf[MAX_BUFFER_SIZE];
@@ -74,20 +74,13 @@ int Alarm::Messanger(SOCKET client, string Id) {//client의 id를 이용해 alarm폴더
 					numread = fread(buf, 1, MAX_BUFFER_SIZE, fp);
 					if (numread > 0) {
 						if (MAX_BUFFER_SIZE >= totalbytes) {
-							char* buf;
-							recv(client, buf, MAX_BUFFER_SIZE, 0);
-							if (buf == "000") {
-								send(client, buf, MAX_BUFFER_SIZE, 0);
-								totalbytes = 0;
-							}
+							send(client, buf, MAX_BUFFER_SIZE, 0);
+							totalbytes = 0;
+							
 						}
 						else if (MAX_BUFFER_SIZE < totalbytes) {
-							char* buf;
-							recv(client, buf, MAX_BUFFER_SIZE, 0);
-							if (buf == "000") {
-								send(client, buf, MAX_BUFFER_SIZE, 0);
-								totalbytes -= MAX_BUFFER_SIZE;
-							}
+							send(client, buf, MAX_BUFFER_SIZE, 0);
+							totalbytes -= MAX_BUFFER_SIZE;
 						}
 					}
 					else if (numread == 0 && 0 == totalbytes) {
