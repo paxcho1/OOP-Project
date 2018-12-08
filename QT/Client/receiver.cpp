@@ -17,7 +17,7 @@ int Receiver::Messanger(SOCKET server, string Id) {
         char msg[MAX_BUFFER_SIZE];
         ZeroMemory(msg, MAX_BUFFER_SIZE);
 		if (Recv(server, msg) == 1) {
-			//성공
+			send(server, "000", MAX_BUFFER_SIZE, 0);//성공
 		}
 		string filepath = msg;//get filename.txt
         //띄우기 asd,qwe
@@ -38,37 +38,29 @@ int Receiver::Messanger(SOCKET server, string Id) {
 			else if (cnt == 4) {
 				filepath = "c:/client/" + Id + "/FriendsIndex/" + filepath;// 새친구를 표현해줌
 			}
-			(Recv(server, msg)//total byte size
+			Recv(server, msg);//total byte size
 			int totalbytes = atoi(msg);
 			FILE *fp = fopen(filepath.c_str(), "wb");
 			int left = totalbytes;
 				
 			while (1) {
                 if (left <= MAX_BUFFER_SIZE) {//파일크기가 MAX_BUFFER_SIZE 보다 작을때
-					if (Recv(server, msg) == 1) {
-						fwrite(msg, 1, left, fp);
-						left = 0;
-						send(server, "000", MAX_BUFFER_SIZE, 0);
-					}
-					else {
-						send(server, "001", MAX_BUFFER_SIZE, 0)// 실패
-					}
-                }
+					Recv(server, msg);
+					fwrite(msg, 1, left, fp);
+					left = 0;
+					
+				}
                 else if (left > MAX_BUFFER_SIZE) {
-					if (Recv(server, msg) == 1) {
-						fwrite(msg, 1, MAX_BUFFER_SIZE, fp);
-						left -= MAX_BUFFER_SIZE;
-						send(server, "000", MAX_BUFFER_SIZE, 0);
-					}
-					else {
-						send(server, "001", MAX_BUFFER_SIZE, 0)// 실패
-					}
-                }
+					Recv(server, msg);
+					fwrite(msg, 1, MAX_BUFFER_SIZE, fp);
+					left -= MAX_BUFFER_SIZE;
+				}
                 else if (left == 0) {
                     break;
                 }
             }
-            fclose(fp);
+			fclose(fp);
+			send(server, "000", MAX_BUFFER_SIZE, 0);//파일 입출력 완료
             if (left == 0) {
 
                 printf("filename %s file receive succeed.\n", msg);
