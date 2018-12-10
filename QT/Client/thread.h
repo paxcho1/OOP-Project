@@ -18,12 +18,13 @@ private:
     void run();
 
 signals:
-    void Close();           //000
-    void NoUser();          //001
-    void FindUser();        //002
-    void AcceptInvite();    //003
-    void Send_Message(QString str);     //006
-    void ReceiveMessage();  //006
+    void Close();                   //000
+    void NoUser();                  //001
+    void FindUser();                //002
+    void AcceptInvite();            //003
+    void Send_Message(QString);     //006
+    void ReceiveInvite(QString);           //007
+    void AccceptFriend(QString);           //008
     void FinishCount(const int value);
 
 

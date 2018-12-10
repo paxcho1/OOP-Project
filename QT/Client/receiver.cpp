@@ -16,51 +16,41 @@ int Receiver::Messanger(SOCKET server, string Id) {
     do {
         char msg[MAX_BUFFER_SIZE];
         ZeroMemory(msg, MAX_BUFFER_SIZE);
-		if (Recv(server, msg) == 1) {
-			send(server, "000", MAX_BUFFER_SIZE, 0);//성공
-		}
-		string filepath = msg;//get filename.txt
+        Recv(server, msg);
+        string filepath = msg;//get filename.txt
         //띄우기 asd,qwe
         while (strcmp(msg, "endfile") != 0) {
             cout << filepath << endl;//fd.name 출력
-			if (cnt == 0) {
-				filepath = "c:/client/" + Id + "/" + filepath;
-			}
-			else if (cnt == 1) {
-				filepath = "c:/client/" + Id + "/ChatAlarm/" + filepath;
-			}
-			else if (cnt == 2) {
-				filepath = "c:/client/" + Id + "/InviteAlarm/" + filepath;
-			}
-			else if (cnt == 3) {
-				filepath = "c:/client/" + Id + "/FriendsIndex/" + filepath;
-			}
-			else if (cnt == 4) {
-				filepath = "c:/client/" + Id + "/FriendsIndex/" + filepath;// 새친구를 표현해줌
-			}
-			Recv(server, msg);//total byte size
-			int totalbytes = atoi(msg);
-			FILE *fp = fopen(filepath.c_str(), "wb");
-			int left = totalbytes;
-				
-			while (1) {
+            if(cnt ==0)
+            filepath = "c:/client/" + Id + "/" + filepath;
+            else if(cnt == 1)
+            filepath = "c:/client/" + Id + "/ChatAlarm/" + filepath;
+            else if(cnt == 2)
+            filepath = "c:/client/" + Id + "/InviteAlarm/" + filepath;
+            else if(cnt == 3)
+            filepath = "c:/client/" + Id + "/FriendsIndex/" + filepath;
+            else if(cnt == 4)
+            filepath = "c:/client/" + Id + "/FriendsIndex/" + filepath;// 새친구를 표현해줌
+            Recv(server, msg);//total byte size
+            int totalbytes = atoi(msg);
+            FILE *fp = fopen(filepath.c_str(), "wb");
+            int left = totalbytes;
+            while (1) {
                 if (left <= MAX_BUFFER_SIZE) {//파일크기가 MAX_BUFFER_SIZE 보다 작을때
-					Recv(server, msg);
-					fwrite(msg, 1, left, fp);
-					left = 0;
-					
-				}
+                    Recv(server, msg);
+                    fwrite(msg, 1, left, fp);
+                    left = 0;
+                }
                 else if (left > MAX_BUFFER_SIZE) {
-					Recv(server, msg);
-					fwrite(msg, 1, MAX_BUFFER_SIZE, fp);
-					left -= MAX_BUFFER_SIZE;
-				}
-                else if (left == 0) {
+                    Recv(server, msg);
+                    fwrite(msg, 1, MAX_BUFFER_SIZE, fp);
+                    left -= MAX_BUFFER_SIZE;
+                }
+                if (left == 0) {
                     break;
                 }
             }
-			fclose(fp);
-			send(server, "000", MAX_BUFFER_SIZE, 0);//파일 입출력 완료
+            fclose(fp);
             if (left == 0) {
 
                 printf("filename %s file receive succeed.\n", msg);
@@ -68,9 +58,9 @@ int Receiver::Messanger(SOCKET server, string Id) {
             else {
                 cout << QString::fromUtf8("파일을 제대로 받지 못했습니다.").toLocal8Bit().constData() << endl;
             }
-			Recv(server, msg)//get filename.txt
-			filepath = msg;
-		}
+            Recv(server, msg);//get filename.txt
+            filepath = msg;
+        }
         if (strcmp(msg, "endfile") == 0) {
 
             cout << QString::fromUtf8("채팅 목록 불러오기 완료").toLocal8Bit().constData() << endl;
@@ -85,11 +75,8 @@ int Receiver::Newmsg(SOCKET server, string Id, string file, string message) {
     if (Write.is_open()) {
         cout << "writing file" << endl;
         Write << message << endl;
-		Write.close();
     }
-	else {
-		return -1;//file didn't open
-	}
+    Write.close();
     return 0;
 }
 string Receiver::Get(SOCKET server, string Id, char* buf) {
@@ -114,9 +101,7 @@ string Receiver::Get(SOCKET server, string Id, char* buf) {
             tokmsg = strcat(Str, " ");
             ptr = strtok(NULL, " ");
         }
-        Newmsg(server, Id, file, tokmsg);
-		
-		return buf;
+        Newmsg(server, Id, file, tokmsg); return buf;
     }
     else if (strcmp(code.c_str(), "007") == 0) {//Invite 받음
         strtok(buf, " ");
@@ -126,9 +111,8 @@ string Receiver::Get(SOCKET server, string Id, char* buf) {
         if (Write.is_open()) {
             cout << "writingfile:" + filepath << endl;
             Write << Invite_id <<endl;
-			Write.close();
         }
-		
+        Write.close();
     }
     else if (strcmp(code.c_str(), "008") == 0) {//새친구의 알람
         strtok(buf, " ");
@@ -139,9 +123,8 @@ string Receiver::Get(SOCKET server, string Id, char* buf) {
         if (Write.is_open()) {
             cout << "writingfile:" + filepath << endl;
             Write << new_friend << endl;
-			Write.close();
         }
-		
+        Write.close();
     }
     else if (Bytein <= 0) {
         exit(0);

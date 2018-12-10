@@ -77,19 +77,10 @@ void MakeChatRoom::on_MakingChatroom_btn_clicked()
         string msg = "004 " + ids;
 
         send(sock, msg.c_str(), MAX_BUFFER_SIZE, 0);
-
-        QObject::connect(thr, SIGNAL(Send_Message(QString)), this, SLOT(MsgHandle(QString)));
     }
     else {
         Msgbox.setText("Room already exists");
         Msgbox.exec();
     }
     this->close();
-}
-
-void MakeChatRoom::MsgHandle(QString str) {
-    qDebug(str.toUtf8().constData());
-    QMessageBox Msgbox;
-    Msgbox.setText("Room make succeed");
-    Msgbox.exec();
 }

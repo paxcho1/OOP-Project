@@ -4,6 +4,10 @@
 #include "tool.h"
 #include "receiver.h"
 #include "list.h"
+#include "schedule.h"
+#include "weeklyscheduleadd.h"
+#include "dailyscheduleadd.h"
+#include "timethread.h"
 
 namespace Ui {
 class Timetable;
@@ -20,16 +24,27 @@ public:
     SOCKET GetSocket();
     void SetId(string i);
     string GetId();
+    void Send000();
+    void Thre();
 
 private slots:
     void on_calendarWidget_clicked(const QDate &date);
-
     void on_Messanger_btn_clicked();
+    void on_WeekSCheduleAdd_btn_clicked();
+    void on_WeekSCheduleDelete_btn_clicked();
+    void updateTime();
+    void UpdateToday(QString);
+    void TodayEnd();
+    void on_DaySCheduleAdd_btn_clicked();
+    void on_DaySCheduleDelete_btn_clicked();
 
 private:
     Ui::Timetable *ui;
     SOCKET sock;
     string id;
+    WeeklyScheduleAdd* week;
+    DailyScheduleAdd* day;
+    TimeThread* thr;
 };
 
 #endif // TIMETABLE_H

@@ -20,6 +20,7 @@ public:
     void SetId(string i);
     string GetId();
     void SetRoomName(string s);
+    string GetRoomName();
     void SetFilePath(QString q);
     void SetThread(QThread* t);
     void FileRead();

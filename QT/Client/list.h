@@ -29,17 +29,15 @@ public:
     void Thre();
 
 private slots:
-
     void on_Chatroom_List_itemDoubleClicked(QListWidgetItem *item);
-
     void on_Friendsearch_btn_clicked();
-
     void on_Friendalarm_btn_clicked();
-
     void on_MakeChatroom_btn_clicked();
-
     void MsgHandle(string str);
-    void Alarm(string str);
+    void Alarm(QString);
+    void ResetList(QString);
+    void InviteAlarm(QString);
+    void FileMove(string name);
 
 private:
     void closeEvent(QCloseEvent *bar);
@@ -53,6 +51,7 @@ private:
     string id;
     Thread* thr;
     Chatting* chat;
+    FriendAlarm* alarm;
 };
 
 #endif // LIST_H

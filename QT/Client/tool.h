@@ -14,13 +14,13 @@
 #include <QTextCodec>
 #include <QDate>
 #include <QVector>
-#include <QListView>
 #include <QListWidget>
 #include <QFileDialog>
 #include <QScrollBar>
 #include <QDir>
 #include <QObject>
 #include <QThread>
+#include <QFile>
 #include <thread>
 #include <WinSock2.h>
 #include <WS2tcpip.h>
@@ -39,7 +39,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <QMutex>
-Q_DECLARE_METATYPE(std::string)
 #define MAX_BUFFER_SIZE 4092
 
 using namespace std;

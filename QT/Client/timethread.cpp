@@ -1,26 +1,28 @@
-#include "thread.h"
+#include "timethread.h"
 
-Thread::Thread(QObject *parent) :
+TimeThread::TimeThread(QObject *parent) :
     QThread(parent)
 {
 
 }
 
-Thread::~Thread() {
+TimeThread::~TimeThread() {
 
 }
 
-void Thread::SetId(string i) {Id = i;}
-void Thread::SetSocket(SOCKET s) {Server = s;}
+void TimeThread::SetId(string i) {Id = i;}
+void TimeThread::SetSocket(SOCKET s) {Server = s;}
 
-void Thread::run()
-{
+void TimeThread::run() {
+
     qRegisterMetaType<std::string>("string");
     QString strLine;
     QTextCodec *codec = QTextCodec::codecForLocale();
     QString strUnicodeLine;
     QString mess;
     while(1) {
+        qDebug("hi");
+        sleep(1000);
         recv(Server, buf, MAX_BUFFER_SIZE, 0);
         strLine = buf;
         strUnicodeLine = codec->toUnicode( strLine.toLocal8Bit() );
@@ -28,16 +30,18 @@ void Thread::run()
         string code = buf;
         code = code.substr(0,3);
         if(strcmp(code.c_str(),"000")==0){
-
+            emit TodayEnd();
         }
         else if(strcmp(code.c_str(),"001")==0){
-            emit NoUser();
+            strLine.remove(0,4);
+            emit SchedulSend(strLine);
         }
         else if(strcmp(code.c_str(),"002")==0){
-            emit FindUser();
+
         }
         else if(strcmp(code.c_str(),"003")==0){
-
+            strLine.remove(0,4);
+            emit SchedulSend(strLine);
         }
         else if(strcmp(code.c_str(),"004")==0){
 
@@ -64,15 +68,16 @@ void Thread::run()
                     stream << strUnicodeLine << endl;
                     file.close();
 
-            emit Send_Message(mess.split(" ").at(0));
+
+
         }
         else if(strcmp(code.c_str(),"007")==0){
-            strLine.remove(0,4);
-            emit ReceiveInvite(strLine);
+
+
         }
         else if(strcmp(code.c_str(),"008")==0){
-            strLine.remove(0,4);
-            emit AccceptFriend(strLine);
+
+
         }
 
 

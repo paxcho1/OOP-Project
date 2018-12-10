@@ -53,12 +53,30 @@ void FriendAlarm::on_Accept_btn_clicked() {
     QString str = ui->NewFriend_list->currentItem()->text();
     string f_id = str.toUtf8().constData();
     string msg = "003 " + f_id;
-    send(sock, msg.c_str(), MAX_BUFFER_SIZE, 0);
 
     string filepath = "C:/client/" + id +"/InviteAlarm/" + f_id + ".txt";
+    string Friendfilepath =  "C:/client/" + id +"/FriendsIndex/" + f_id + ".txt";
+
+    ofstream Write(Friendfilepath, ios::app);
+    ifstream Read(filepath);
+    if (Write.is_open() && Read.is_open()) {
+        string message;
+        getline(Read, message);
+        while (!Read.eof()) {
+            Write << message << endl;
+            getline(Read, message);
+        }
+        Write.close();
+        Read.close();
+    }
+
     remove(filepath.c_str());
 
     SetList();
+
+    send(sock, msg.c_str(), MAX_BUFFER_SIZE, 0);
+
+ //   emit reset();
 }
 
 void FriendAlarm::on_Reject_btn_clicked() {

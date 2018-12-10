@@ -33,6 +33,10 @@ void Chatting::SetRoomName(string s) {
     R_Name = s;
 }
 
+string Chatting::GetRoomName() {
+    return R_Name;
+}
+
 void Chatting::SetFilePath(QString q) {
     filepath = q;
 }
@@ -49,7 +53,7 @@ void Chatting::on_MessageSend_btn_clicked()
 
     string msg = "005 " + R_Name + " " + contents;
     send(sock, msg.c_str(), MAX_BUFFER_SIZE, 0);
-
+    qDebug(msg.c_str());
     QString mess = QString::fromUtf8(id.c_str());
     mess.append(": ");
     mess.append(str);

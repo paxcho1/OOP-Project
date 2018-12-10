@@ -24,7 +24,11 @@
    </property>
    <layout class="QVBoxLayout" name="verticalLayout">
     <item>
-     <widget class="QListWidget" name="Friends_List"/>
+     <widget class="QListWidget" name="Friends_List">
+      <property name="selectionMode">
+       <enum>QAbstractItemView::ContiguousSelection</enum>
+      </property>
+     </widget>
     </item>
     <item>
      <widget class="QPushButton" name="MakingChatroom_btn">

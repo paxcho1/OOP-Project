@@ -22,10 +22,11 @@ public:
     void SetList();
     void SetThread(QThread* t);
 
+signals:
+    void reset();
+
 private slots:
-
     void on_Accept_btn_clicked();
-
     void on_Reject_btn_clicked();
 
 private:

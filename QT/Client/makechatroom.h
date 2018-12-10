@@ -26,7 +26,6 @@ public:
 
 private slots:
     void on_MakingChatroom_btn_clicked();
-    void MsgHandle(QString str);
 
 private:
     Ui::MakeChatRoom *ui;

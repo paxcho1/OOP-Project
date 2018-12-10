@@ -1,4 +1,4 @@
-#include "client.h"
+    #include "client.h"
 #include "ui_client.h"
 #include "tool.h"
 
@@ -92,6 +92,8 @@ void Client::on_Login_btn_clicked()
             time.setWindowTitle("Time Table");
             time.SetId(id);
             time.SetSocket(GetSocket());
+            time.Thre();
+            time.Send000();
             time.exec();
 
         }
