@@ -1,4 +1,4 @@
-#include <winsock2.h>
+#include <Winsock2.h>
 #include <iostream>
 #include <WS2tcpip.h>
 #include <sstream>
@@ -120,6 +120,7 @@ int main() {
 							}
 							else {
 								thread TimeTable(&Table, sock, buf);
+								cout << "Á¢¼Ó:" << buf << endl;
 								TimeTable.detach();
 							}
 						}

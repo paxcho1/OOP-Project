@@ -88,6 +88,9 @@
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
     </ClCompile>
+    <Link>
+      <AdditionalLibraryDirectories>C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Tools\MSVC\14.16.27023\lib\x64;C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Tools\MSVC\14.16.27023\lib\x86</AdditionalLibraryDirectories>
+    </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -124,7 +127,10 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MakeChat.cpp" />
     <ClCompile Include="Messanger.cpp" />
+    <ClCompile Include="MessangerSchedule.cpp" />
+    <ClCompile Include="Schedule.cpp" />
     <ClCompile Include="Signin.cpp" />
+    <ClCompile Include="TimeTable.cpp" />
     <ClCompile Include="Tool.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -133,7 +139,10 @@
     <ClInclude Include="Login.h" />
     <ClInclude Include="MakeChat.h" />
     <ClInclude Include="Messanger.h" />
+    <ClInclude Include="MessangerSchedule.h" />
+    <ClInclude Include="Schedule.h" />
     <ClInclude Include="Signin.h" />
+    <ClInclude Include="TimeTable.h" />
     <ClInclude Include="Tool.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
