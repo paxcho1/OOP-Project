@@ -37,6 +37,7 @@ void DailyScheduleAdd::on_Add_btn_clicked()
     qDebug(StartTime.toUtf8().constData());
     qDebug(EndTime.toUtf8().constData());
 
+
     QString str = "002 ";
     str = str.append(Date.append(" "));
     str = str.append(StartTime);
@@ -45,11 +46,14 @@ void DailyScheduleAdd::on_Add_btn_clicked()
     str = str.append(" ");
     str = str.append(DOW);
     str = str.append(" ");
-    str = str.append(Contents);
 
-    qDebug(str.toUtf8().constData());
+    string ss = Contents.toUtf8().constData();
 
     string msg = str.toUtf8().constData();
+
+    msg = msg + ss;
+
+        qDebug(msg.c_str());
 
     QMessageBox Msgbox;
     Msgbox.setText(QString::fromLocal8Bit("Schedule added"));

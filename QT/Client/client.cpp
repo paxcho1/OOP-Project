@@ -88,11 +88,16 @@ void Client::on_Login_btn_clicked()
            filepath = "c:/client/" + id + "/InviteAlarm";//로그인하면 파일생성
            _mkdir(filepath.c_str());
 
+
+
             Timetable time;
             time.setWindowTitle("Time Table");
             time.SetId(id);
             time.SetSocket(GetSocket());
             time.Thre();
+            string msg = "TimeTable";
+            send(sock, msg.c_str(), MAX_BUFFER_SIZE, 0);
+            send(sock, id.c_str(), MAX_BUFFER_SIZE, 0);
             time.Send000();
             time.exec();
 

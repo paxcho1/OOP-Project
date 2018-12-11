@@ -11,7 +11,6 @@ Timetable::Timetable(QWidget *parent) :
     ui->CurrentTime->setDateTime(QDateTime::currentDateTime());
 
     ui->Schedule_list->addItem("Today's Schedule");
-    ui->Schedule_list->addItem("17:00 ~ 18:00 going home");
 
     QTimer *timer = new QTimer(this);
     connect(timer, SIGNAL(timeout()), this, SLOT(updateTime()));
@@ -55,7 +54,7 @@ string Timetable::GetId() {
 
 void Timetable::Send000() {
     QDate Date = ui->CurrentTime->date();
-    QString str = QLocale{QLocale::English}.toString(Date, "yy/MM/dd ddd").toLower();
+    QString str = QLocale{QLocale::English}.toString(Date, "yy.MM.dd ddd").toLower();
     string da = str.toUtf8().constData();
     string msg = "000 " + da;
     qDebug(msg.c_str());
@@ -71,7 +70,7 @@ void Timetable::Thre() {
 void Timetable::on_calendarWidget_clicked(const QDate &date)
 {
     QDate Date = ui->calendarWidget->selectedDate();
-    QString str = QLocale{QLocale::English}.toString(date, "yy/MM/dd ddd").toLower();
+    QString str = QLocale{QLocale::English}.toString(date, "yy.MM.dd ddd").toLower();
     string da = str.toUtf8().constData();
     qDebug(da.c_str());
 //005 yy/mm/dd ss,se,es,ee dow eff    주간일정추가
@@ -155,7 +154,7 @@ void Timetable::TodayEnd() {
 void Timetable::on_DaySCheduleAdd_btn_clicked()
 {
     QDate Date = ui->CurrentTime->date();
-    QString str = QLocale{QLocale::English}.toString(Date, "yy/MM/dd ddd").toLower();
+    QString str = QLocale{QLocale::English}.toString(Date, "yy.MM.dd ddd").toLower();
     QString dow = str;
     QString Dat = str;
     day->SetDayofWeek(dow.remove(0, 9));
@@ -172,7 +171,7 @@ void Timetable::on_DaySCheduleAdd_btn_clicked()
 void Timetable::on_DaySCheduleDelete_btn_clicked()
 {
     QDate Date = ui->CurrentTime->date();
-    QString str = QLocale{QLocale::English}.toString(Date, "yy/MM/dd ddd").toLower();
+    QString str = QLocale{QLocale::English}.toString(Date, "yy.MM.dd ddd").toLower();
     QString dow = str;
     QString Dat = str;
     dow.remove(0, 9);

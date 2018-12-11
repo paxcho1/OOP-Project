@@ -10,7 +10,6 @@ Schedule::Schedule(QWidget *parent) :
     day = new DailyScheduleAdd(this);
 
     ui->Schedule_list->addItem("Today's Schedule");
-    ui->Schedule_list->addItem("17:00 ~ 18:00 going home");
 
     QObject::connect(thr, SIGNAL(SchedulSend(QString)), this, SLOT(UpdateToday(QString)));
     QObject::connect(thr, SIGNAL(TodayEnd()), this, SLOT(TodayEnd()));
