@@ -1,4 +1,5 @@
 #pragma once
+#define _CRT_SECURE_NO_WARNINGS
 #include <WinSock2.h>
 #include <WS2tcpip.h>
 #include <direct.h>
@@ -12,8 +13,7 @@
 #include <vector>
 #include <map>
 #include <iterator>
-#include "Alarm.h"
-#include "DailySchedule.h"
+#include "Schedule.h"
 #define MAX_BUFFER_SIZE 4092
 using namespace std;
 class tool// recv와 send를 사용하기 쉽게 만들어줌
@@ -32,9 +32,18 @@ public:
 	void TxtToMap(const char* fileName, map<string, string> &Map);
 	void SocketToTxt(const char* fileName, map<string, SOCKET> &Map);
 	void TxtToSocket(const char* fileName, map<string, SOCKET> &Id_Socket);
+	void GScheToTxt(const char* fileName,map<string, string>&Map);
+	void TxtToGSche(const char* fileName,map<string, string>&Map);
 	string MessangerRecv(SOCKET client, string Id, char buf[]);
-	void DailyScheduleToFile(DailySchedule &Ds, string Id, string day);
-	void WeeklyScheduleToFile(DailySchedule &Ds, string Id, string day);
-	void FileToDailyScheduleClass(DailySchedule &Ds, string Id ,string day);
-	void FileToWeeklyScheduleClass(DailySchedule &Ds, string Id, string day);
+	/*int DailyScheduleToFile(Schedule &Ds, string Id, string date, string day);
+	int WeeklyScheduleToFile(Schedule &Ds, string Id, string day);
+	int FileToDailyScheduleClass(Schedule &Ds, string Id, string date,string day);
+	int FileToWeeklyScheduleClass(Schedule &Ds, string Id, string day);*/
 };
+static void mux(SOCKET client, string msg) {
+	mutex mtx;
+	mtx.lock();
+	Sleep(10);
+	send(client, msg.c_str(), MAX_BUFFER_SIZE, 0);
+	mtx.unlock();
+}

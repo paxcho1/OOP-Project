@@ -21,7 +21,6 @@ int Signin::in(SOCKET client)
 	vector<string> V_id;
 	string file_string;
 	map<string, string> user_Info;
-	tool::TxtToVector("id_index.txt", V_id);
 	do {
 		Id_Bytein = tool::Recv(client, id);
 		if (strcmp(id, "SigninClose") == 0) {
@@ -33,22 +32,34 @@ int Signin::in(SOCKET client)
 
 		//in_index 파일 불러오기(txt)
 
+		mutex mtx;
+		mtx.lock();
+		tool::TxtToVector("c:/server/id_index.txt", V_id);
+		mtx.unlock();
 		if (find(V_id.begin(), V_id.end(), id) == V_id.end()) {
 			//id가 없을때
 			overlap = 1;
-			strcpy_s(str, sizeof(str), "Successfully finished signin");
-			send(client, str, MAX_BUFFER_SIZE, 0);
 			/*Id_Bytein = tool::Recv(client, id);
 			if (Id_Bytein <= 0) {
 			return -1;
 			}
 			*/
 			//vector에 정보 추가
-			V_id.push_back(id);
+			V_id.clear();
 			Password_Bytein = tool::Recv(client, password);
-
-			tool::VectorToTxt("id_index.txt", V_id);
-
+			mtx.lock();
+			tool::TxtToVector("c:/server/id_index.txt", V_id);
+			if (find(V_id.begin(), V_id.end(), id) == V_id.end()) {
+				V_id.push_back(id);
+				tool::VectorToTxt("c:/server/id_index.txt", V_id);
+				strcpy_s(str, sizeof(str), "Successfully finished signin");
+				send(client, str, MAX_BUFFER_SIZE, 0);
+			}
+			else{
+				strcpy_s(str, sizeof(str), "overlap\nRe-enter your id\n");
+				send(client, str, MAX_BUFFER_SIZE, 0);
+			}
+			mtx.unlock();
 			//txt파일 저장
 		}
 		else {
@@ -69,9 +80,27 @@ int Signin::in(SOCKET client)
 	_mkdir(path.c_str());
 	path = "c:/server/" + file + "/friends" + file;
 	_mkdir(path.c_str());
+	path = "c:/server/" + file + "/schedule";
+	_mkdir(path.c_str());
 	path = "c:/server/" + file + "/schedule/daily";
 	_mkdir(path.c_str());
+	path = "c:/server/" + file + "/schedule/daily/mon";
+	_mkdir(path.c_str());
+	path = "c:/server/" + file + "/schedule/daily/tue";
+	_mkdir(path.c_str());
+	path = "c:/server/" + file + "/schedule/daily/wed";
+	_mkdir(path.c_str());
+	path = "c:/server/" + file + "/schedule/daily/thr";
+	_mkdir(path.c_str());
+	path = "c:/server/" + file + "/schedule/daily/fri";
+	_mkdir(path.c_str());
+	path = "c:/server/" + file + "/schedule/daily/sat";
+	_mkdir(path.c_str());
+	path = "c:/server/" + file + "/schedule/daily/sun";
+	_mkdir(path.c_str());
 	path = "c:/server/" + file + "/schedule/weekly";
+	_mkdir(path.c_str());
+	path = "c:/server/" + file + "/schedule/group";
 	_mkdir(path.c_str());
 	//txt에서 map으로
 	tool::TxtToMap("c:/server/Id_Ps_map.txt", user_Info);
