@@ -30,6 +30,12 @@ int Messanger::in(SOCKET client, string Id) {
 			tool::SocketToTxt("c:/server/Id_Socket_map.txt", socket_info);
 			return 0;
 		}
+		else if (strcmp(code.c_str(), "001") == 0) {
+			char* recv_id = strtok(msg, " ");
+			recv_id = strtok(NULL, " ");
+			AddFriends Add(client, Id, recv_id);
+			Add.Delete_invite(client, Id, recv_id);
+		}
 		else if (strcmp(code.c_str(), "002") == 0) {//SendInvite 입력받음
 			cout << "Sending invite message" << endl;
 			char* recv_id = strtok(msg, " ");
@@ -50,12 +56,6 @@ int Messanger::in(SOCKET client, string Id) {
 			recv_id = strtok(NULL, " ");
 			AddFriends Add(client, Id, recv_id);
 			Add.Accept_invite(client, Id, recv_id);
-		}
-		else if (strcmp(code.c_str(), "001") == 0) {
-			char* recv_id = strtok(msg, " ");
-			recv_id = strtok(NULL, " ");
-			AddFriends Add(client, Id, recv_id);
-			Add.Delete_invite(client, Id, recv_id);
 		}
 		else if (strcmp(code.c_str(), "004") == 0) {
 			cout << "Making Chating room" << endl;
@@ -138,6 +138,16 @@ int Messanger::in(SOCKET client, string Id) {
 				Read.close();
 			}
 			remove(alarmfilepath.c_str());
+		}
+		else if (strcmp(code.c_str(), "007") == 0) {
+		cout << "Send Schedule invite to Chat" << endl;
+		MessangerSchedule MS(client, Id);
+		MS.Schedule_invite(msg,client,Id);
+		}
+		else if (strcmp(code.c_str(), "008") == 0) {
+		cout << " Accept invite" << endl;
+		MessangerSchedule Ms(client, Id);
+		Ms.Accept_schedule(msg,client,Id);
 		}
 		else if (Bytein <= 0) {
 			tool::TxtToSocket("c:/server/Id_Socket_map.txt", socket_info);

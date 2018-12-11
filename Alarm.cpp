@@ -2,7 +2,7 @@
 
 
 
-Alarm::Alarm(SOCKET client, string Id)
+Alarm::Alarm(SOCKET client, string Id) :tool(client)
 {
 }
 
@@ -33,14 +33,15 @@ int Alarm::Messanger(SOCKET client, string Id) {//client의 id를 이용해 alarm폴더
 		if (hFind == INVALID_HANDLE_VALUE)//file에 아무것도 없을때
 		{
 			cout << "No file in directory!" << endl;//
-			send(client, "endfile", MAX_BUFFER_SIZE, 0);
+			char* msg = _strdup("endfile");
+			Send(client, "endfile");
 		}
 		else {
 			do
 			{
 				cout << FindData.cFileName << endl;
 				//Send(client, "File");
-				send(client, FindData.cFileName, MAX_BUFFER_SIZE, 0);
+				Send(client, FindData.cFileName);
 				if (cnt == 0)
 					Filepath = "c:/server/" + Id + "/" + FindData.cFileName;
 				else if (cnt == 1)
@@ -56,7 +57,7 @@ int Alarm::Messanger(SOCKET client, string Id) {//client의 id를 이용해 alarm폴더
 					cout << "file error" << endl;
 				fseek(fp, 0, SEEK_END);
 				int totalbytes = ftell(fp);
-				send(client, to_string(totalbytes).c_str(), MAX_BUFFER_SIZE, 0);
+				Send(client, (char*)to_string(totalbytes).c_str());
 				char buf[MAX_BUFFER_SIZE];
 				ZeroMemory(buf, MAX_BUFFER_SIZE);
 				int numread;
@@ -66,11 +67,11 @@ int Alarm::Messanger(SOCKET client, string Id) {//client의 id를 이용해 alarm폴더
 					numread = fread(buf, 1, MAX_BUFFER_SIZE, fp);
 					if (numread > 0) {
 						if (MAX_BUFFER_SIZE >= totalbytes) {
-							send(client, buf, MAX_BUFFER_SIZE, 0);
+							Send(client, buf);
 							totalbytes = 0;
 						}
 						else if (MAX_BUFFER_SIZE < totalbytes) {
-							send(client, buf, MAX_BUFFER_SIZE, 0);
+							Send(client, buf);
 							totalbytes -= MAX_BUFFER_SIZE;
 						}
 					}
@@ -91,7 +92,7 @@ int Alarm::Messanger(SOCKET client, string Id) {//client의 id를 이용해 alarm폴더
 					remove(Filepath.c_str());
 			} while (FindNextFile(hFind, &FindData));//handler을 통한 file 검색
 			cout << "endfile" << endl;
-			send(client, "endfile", MAX_BUFFER_SIZE, 0);
+			Send(client, "endfile");
 		}
 		FindClose(hFind);
 		cnt++;

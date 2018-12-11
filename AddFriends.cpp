@@ -7,7 +7,7 @@ AddFriends::~AddFriends()
 }
 int AddFriends::Send_invite(SOCKET client, string Id, string recv_id) {//id 는 초대자 recv id 는 초대 수신인
 	map<string, SOCKET>::iterator iter;
-	map<string, SOCKET>socket_info;
+	map<string, SOCKET>socket_info; 
 	SOCKET destsock;
 	string filepath = "c:/server/" + recv_id + "/" + "friends" + recv_id + "invite/" + Id + ".txt";//초대장은 friendsrecv_idinvite에 저장
 	ofstream Write(filepath, ios::app);

@@ -2,12 +2,14 @@
 #define _CRT_SECURE_NO_WARNINGS
 #include <WinSock2.h>
 #include <string>
+#include <ctime>
 #include <iostream>
 #include <fstream>
 #include <windows.h>
 #include <stdio.h>
 #include <algorithm>
 #include "Tool.h"
+#include "Alarm.h"
 #include <stdlib.h>
 #include "Messanger.h"
 #define MAX_BUFFER_SIZE 4092
