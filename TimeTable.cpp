@@ -108,8 +108,8 @@ int TimeTable::table(SOCKET client, string id) {
 				{
 					file = "c:/server/" + id + "/schedule/daily/" + day + "/" + date + ".txt";
 					string AddT = duptime;
-					string AddS = Dest_Sche;
-					Daily.Addmap(AddT, Dest_Sche);
+					string AddS = Str;
+					Daily.Addmap(AddT, Str);
 					tool::MapToTxt(file.c_str(), Daily.Map_Schedule);
 					Send(client, "004");
 				}
@@ -201,7 +201,6 @@ int TimeTable::table(SOCKET client, string id) {
 				if (hFind == INVALID_HANDLE_VALUE)//file에 아무것도 없을때
 				{
 					cout << "No file in directory!" << endl;//
-					send(client, "endfile", MAX_BUFFER_SIZE, 0);
 				}
 				else {
 					do{
@@ -212,7 +211,7 @@ int TimeTable::table(SOCKET client, string id) {
 							//현재 날짜 이후 파일들
 							Schedule Find_File;
 							string File_Date = FindData.cFileName;
-							File_Date = File_Date.substr(0, 6);
+							File_Date = File_Date.substr(0, 8);
 							string Filepath = "c:/server/" + id + "/schedule/daily/" + day + "/" + FindData.cFileName;
 							tool::TxtToMap(Filepath.c_str(), schedule);
 							if (schedule.size() != 0) {
@@ -238,7 +237,7 @@ int TimeTable::table(SOCKET client, string id) {
 							curr_tm = localtime(&curr_time);
 							Schedule Find_File;
 							string File_Date = FindData.cFileName;
-							File_Date = File_Date.substr(0, 6);
+							File_Date = File_Date.substr(0, 8);
 							string Filepath = "c:/server/" + id + "/schedule/daily/" + day + "/" + FindData.cFileName;
 							tool::TxtToMap(Filepath.c_str(), schedule);
 							if (schedule.size() != 0) {
@@ -262,7 +261,7 @@ int TimeTable::table(SOCKET client, string id) {
 						Send(client, "006");
 						tool::TxtToMap(Filepath.c_str(), Weekly.Map_Schedule);
 						Dup_Time = _strdup(Time);
-						Weekly.Addmap(Dup_Time, Dest_Sche);
+						Weekly.Addmap(Dup_Time, Str);
 						tool::MapToTxt(Filepath.c_str(), Weekly.Map_Schedule);
 						schedule.clear();
 					}

@@ -21,7 +21,6 @@ int Signin::in(SOCKET client)
 	vector<string> V_id;
 	string file_string;
 	map<string, string> user_Info;
-	tool::TxtToVector("c:/server/id_index.txt", V_id);
 	do {
 		Id_Bytein = tool::Recv(client, id);
 		if (strcmp(id, "SigninClose") == 0) {
@@ -33,6 +32,7 @@ int Signin::in(SOCKET client)
 
 		//in_index 파일 불러오기(txt)
 
+		tool::TxtToVector("c:/server/id_index.txt", V_id);
 		if (find(V_id.begin(), V_id.end(), id) == V_id.end()) {
 			//id가 없을때
 			overlap = 1;
@@ -42,10 +42,14 @@ int Signin::in(SOCKET client)
 			}
 			*/
 			//vector에 정보 추가
-			V_id.push_back(id);
-			Password_Bytein = tool::Recv(client, password);
-			
+			V_id.clear();
+			strcpy_s(str, sizeof(str), "Successfully finished signin");
+			send(client, str, MAX_BUFFER_SIZE, 0);
 
+			Password_Bytein = tool::Recv(client, password);
+
+			tool::TxtToVector("c:/server/id_index.txt", V_id);
+			V_id.push_back(id);
 			tool::VectorToTxt("c:/server/id_index.txt", V_id);
 
 			//txt파일 저장

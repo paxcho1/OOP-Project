@@ -105,16 +105,22 @@ int Schedule::CheckOverlap(char* time) {
 	}
 	return 0; //no overlap
 }
-int Schedule::CheckCurOverlap(char* time, int Starthour, int Startminute) {
-	strtok(time, ",");
-	strtok(NULL, ",");
+int Schedule::CheckCurOverlap(char* time, int CStarthour, int CStartminute) {
+	char* sh = strtok(time, ",");
+	char* sm = strtok(NULL, ",");
 	char* fh = strtok(NULL, ",");
 	char* fm = strtok(NULL, ",");
+	int Starthour = atoi(sh);
+	int Startminute = atoi(sm);
 	int Finalhour = atoi(fh);
 	int Finalminute = atoi(fm);
 	int hour; int minute;
-	if (Starthour >= Finalhour&&Startminute >= Finalminute)
+	if (CStarthour >= Finalhour&&CStartminute >= Finalminute)
 		return 0;
+	if ((CStarthour >= Starthour) && (CStartminute >= Startminute))
+	{
+		Starthour = CStarthour; Startminute = CStartminute;
+	}
 	for (hour = Starthour, minute = Startminute; (hour != Finalhour) || (minute != Finalminute);) {
 		if (minute != 59) {
 			if (TimeLine[hour][minute] == 1) {
