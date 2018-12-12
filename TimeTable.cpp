@@ -36,7 +36,7 @@ int TimeTable::table(SOCKET client, string id) {
 						msg = "001 " + iter->first + " " + iter->second;
 						Send(client, msg);
 					}
-				}Send(client, "000");
+				}Send(client, (char*)"000");
 				Sche.clear();
 				file = "c:/server/" + id + "/schedule/weekly/" + day + ".txt";
 				tool::TxtToMap(file.c_str(), Sche);
@@ -49,7 +49,7 @@ int TimeTable::table(SOCKET client, string id) {
 						msg = "003 " + iter->first + " " + iter->second;
 						Send(client, msg);
 					}
-				}Send(client, "002");
+				}Send(client, (char*)"002");
 				file = "c:/server/" + id + "/schedule/group/" + date + ".txt";
 				tool::TxtToGSche(file.c_str(), Sche);
 				Schedule Group; int G = 0;
@@ -67,7 +67,7 @@ int TimeTable::table(SOCKET client, string id) {
 					}
 					for (iter = Group.Map_Schedule.begin(); iter != Group.Map_Schedule.end(); iter++) {
 						string msg;
-						msg = "011" + iter->first + " " + iter->second;
+						msg = "011 " + iter->first + " " + iter->second;
 						Send(client, msg);
 					}
 				}
@@ -227,7 +227,8 @@ int TimeTable::table(SOCKET client, string id) {
 					result = Weekly.CheckOverlap(Dup_Time);
 				}
 				if (result == -1) {
-					msg = "009";
+					string msg = "009";
+					cout << "send msg" + msg << endl;
 					Send(client, msg);
 					error++;
 				}
@@ -335,7 +336,7 @@ int TimeTable::table(SOCKET client, string id) {
 									}
 									if (result == -1) {
 										msg = "010 " + File_Date;
-										Send(client, msg);
+										Send(client,msg);
 										error++;
 									}
 								}
@@ -384,7 +385,8 @@ int TimeTable::table(SOCKET client, string id) {
 							schedule.clear();
 						}
 						else {
-							Send(client, "007");
+							msg = "007";
+							Send(client,msg);
 						}
 					}
 					//while 해당 요일 앞으로 일정 폴더를 전부 검색 할 때까지{
@@ -394,6 +396,6 @@ int TimeTable::table(SOCKET client, string id) {
 				}
 			}
 		}
-		return 0;
 	}
+	return 0;
 }
