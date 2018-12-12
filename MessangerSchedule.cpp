@@ -210,7 +210,7 @@ void MessangerSchedule::Accept_schedule(char* msg, SOCKET client, string Id) {//
 	if (D + W + G == 0)//성공
 	{
 		// ***님이 ***에 여러분을 초대했습니다.
-		char filename[MAX_BUFFER_SIZE];
+		char* filename = _strdup(Chat_file.c_str());
 		set<char*> sid;
 		set<char*>::iterator iditer;
 		ptr = strtok(filename, ",");
@@ -221,18 +221,26 @@ void MessangerSchedule::Accept_schedule(char* msg, SOCKET client, string Id) {//
 		for (iditer = sid.begin(); iditer != sid.end(); iditer++) {
 			string str = (*iditer);
 			string File_Path = "c:/server/" + str + "/schedule/group/" + date + ".txt";
-			tool::TxtToGSche(file.c_str(), schedule);
-			Schedule AddGroup; char* Party = NULL;
+			tool::TxtToGSche(File_Path.c_str(), schedule);
+			Schedule AddGroup; 
 			if (schedule.size() != 0) {
 				for (siter = schedule.begin(); siter != schedule.end(); ++siter) {
 					duptime = _strdup(timeline);
 					char* dupbuf = _strdup(siter->second.c_str());
 					char* cfile = strtok(dupbuf, "|"); 
-					dupbuf = strtok(NULL, "|"); 
-					if (strcmp(siter->first.c_str(), timeline)+strcmp(cfile,Chat_file.c_str())+strcmp(dupbuf,Str) == 0){
+					dupbuf = strtok(NULL, "|");
+					char* alid = strtok(NULL, "|");
+					if ((strcmp(siter->first.c_str(), timeline)==0)&&(strcmp(cfile,Chat_file.c_str())==0)&&(strcmp(dupbuf,Str) == 0)){
+						char* Party = NULL;
 						Party = _strdup(siter->second.c_str());
-						string list = "," + Id;
-						strcat(Party, list.c_str());
+						if (alid == NULL) {
+							strcat(Party, "");
+							strcat(Party, Id.c_str());
+						}
+						else {
+							string list = "," + Id;
+							strcat(Party, list.c_str());
+						}
 						AddGroup.Addmap(siter->first, Party);
 					}
 					else {
@@ -242,14 +250,6 @@ void MessangerSchedule::Accept_schedule(char* msg, SOCKET client, string Id) {//
 				schedule.clear();
 			}
 			tool::GScheToTxt(File_Path.c_str(), AddGroup.Map_Schedule);
-			tool::TxtToSocket("c:/server/Id_Socket_map.txt", socket_info);
-			iter = socket_info.find(ptr);
-			if (iter == socket_info.end()) {}
-			else {
-				SOCKET destsock = iter->second;
-				cout << "목표 소켓 접속중" << endl;
-				Send(destsock, "005 " + message + " " + Party);
-			}
 		}
 		Send(client, "003");//일정 안겹침 성공
 	}
@@ -258,7 +258,7 @@ void MessangerSchedule::Accept_schedule(char* msg, SOCKET client, string Id) {//
 		Send(client, "004");//일정 겹침 실패
 	}
 }
-void MessangerSchedule::Cancel_schedule(char* msg, SOCKET client, string Id) { //코드 file yymmdd 00,00,00,00 wod sche
+void MessangerSchedule::Cancel_schedule(char* msg, SOCKET client, string Id) { //009 file yy,mm,dd 00,00,00,00 wod sche
 	map<string, SOCKET>::iterator iter;
 	map<string, SOCKET>socket_info;
 	map<string, string> schedule;
@@ -285,8 +285,6 @@ void MessangerSchedule::Cancel_schedule(char* msg, SOCKET client, string Id) { /
 	tool::TxtToSocket("c:/server/Id_Socket_map.txt", socket_info);
 	set<char*> sid;
 	set<char*>::iterator iditer;
-	duptime = _strdup(timeline); 
-	string invite_msg = "____" + Id + " 님이 " + message + "에 여러분을 초대했습니다.____\n" + "( " + date + " | " + duptime + " )";
 	ptr = strtok(filename, ",");
 	while (ptr != NULL) {
 		sid.insert(ptr);
@@ -294,42 +292,38 @@ void MessangerSchedule::Cancel_schedule(char* msg, SOCKET client, string Id) { /
 	}
 	for (iditer = sid.begin(); iditer != sid.end(); iditer++) {
 		string str = (*iditer);
-		char* Party = NULL;
-		Schedule CancelGroup; 
 		string File_Path = "c:/server/" + str + "/schedule/group/" + date + ".txt";
 		tool::TxtToGSche(File_Path.c_str(), schedule);
+		Schedule AddGroup;
 		if (schedule.size() != 0) {
-			vector<string> name;
-			vector<string>::iterator niter;
 			for (siter = schedule.begin(); siter != schedule.end(); ++siter) {
-				if (strcmp(siter->first.c_str(), timeline) == 0) {
-					Party = _strdup(siter->second.c_str()); strtok(Party, "|"); strtok(NULL, "|"); strtok(NULL, "|");
-					char* lptr = strtok(NULL, ",");
-					while (lptr != NULL) {
-						name.push_back(lptr);
-						lptr = strtok(NULL, ",");
+				duptime = _strdup(timeline);
+				char* dupbuf = _strdup(siter->second.c_str());
+				char* cfile = strtok(dupbuf, "|");
+				dupbuf = strtok(NULL, "|");
+				char* alid = strtok(NULL, "|");
+				if ((strcmp(siter->first.c_str(), timeline) == 0) && (strcmp(cfile, Chat_file.c_str()) == 0) && (strcmp(dupbuf, Str) == 0)) {
+					char* on = strtok(alid, ",");
+					char* id_list =_strdup("");
+					while (on != NULL) {
+						if (on != Id) {
+							strcat(id_list, on);
+							strcat(id_list, ",");
+						}
+						on = strtok(NULL, ",");
 					}
-					niter = find(name.begin(), name.end(), Id);
-					name.erase(niter);
-					ZeroMemory(Party, MAX_BUFFER_SIZE);
-					string dup = (string)timeline + "|"  + Chat_file + "|" + Sche + "|";
-					strcpy(Party, dup.c_str()); 
-					niter = name.begin();
-					strcat(Party, (*niter).c_str()); 
-					++niter;
-					for (niter; niter != name.end(); ++niter) {
-						strcat(Party, ",");
-						strcat(Party, (*niter).c_str());
-					}
-					// ,Id 삭제 후 vector 저장 vector string에 저장
-					CancelGroup.Addmap(siter->first, Party);
+					string l = id_list;
+					int length = l.size();
+					l = l.substr(0,length-1);
+					string second = Chat_file + "|" + Str + "|" + l;
+					AddGroup.Addmap(siter->first, second);
 				}
 				else {
-					CancelGroup.Addmap(siter->first, siter->second);
+					AddGroup.Addmap(siter->first, siter->second);
 				}
-				tool::GScheToTxt(File_Path.c_str(), CancelGroup.Map_Schedule);
 			}
 			schedule.clear();
 		}
+		tool::GScheToTxt(File_Path.c_str(), AddGroup.Map_Schedule);
 	}
 }
