@@ -142,12 +142,17 @@ int Messanger::in(SOCKET client, string Id) {
 		else if (strcmp(code.c_str(), "007") == 0) {
 		cout << "Send Schedule invite to Chat" << endl;
 		MessangerSchedule MS(client, Id);
-		MS.Schedule_invite(msg);
+		MS.Schedule_invite(msg,client,Id);
 		}
 		else if (strcmp(code.c_str(), "008") == 0) {
 		cout << " Accept invite" << endl;
 		MessangerSchedule Ms(client, Id);
-		Ms.Accept_schedule(msg);
+		Ms.Accept_schedule(msg,client,Id);
+		}
+		else if (strcmp(code.c_str(), "009") == 0) {
+		cout << "Cancle Schedule" << endl;
+		MessangerSchedule Ms(client, Id);
+		Ms.Cancel_schedule(msg,client, Id);
 		}
 		else if (Bytein <= 0) {
 			tool::TxtToSocket("c:/server/Id_Socket_map.txt", socket_info);

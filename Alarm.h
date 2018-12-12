@@ -1,5 +1,6 @@
 #pragma once
 #define _CRT_SECURE_NO_WARNINGS
+#define MAX_BUFFER_SIZE 4092
 #include <WinSock2.h>
 #include <string>
 #include <iostream>
@@ -10,9 +11,11 @@
 #include <algorithm>
 #include "Tool.h"
 #include <stdlib.h>
+#include <thread>
+#include <mutex>
 #pragma comment(lib,"ws2_32")
 using namespace std;
-class Alarm
+class Alarm:public tool
 {
 private:
 	string Id;

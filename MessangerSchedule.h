@@ -8,9 +8,9 @@
 #include <stdio.h>
 #include <map>
 #include <vector>
+#include <set>
 #include <algorithm>
 #include "Tool.h"
-#include "Alarm.h"
 #include "AddFriends.h"
 #include "MakeChat.h"
 #include "Schedule.h"
@@ -25,7 +25,7 @@ private:
 public:
 	MessangerSchedule(SOCKET client, string Id);
 	~MessangerSchedule();
-	void Schedule_invite(char* msg);
-	void Accept_schedule(char* msg);
-	void Cancel_schedule(char* msg);
+	void Schedule_invite(char* msg,SOCKET client,string Id);
+	void Accept_schedule(char* msg, SOCKET client, string Id);
+	void Cancel_schedule(char* msg, SOCKET client, string Id);
 };

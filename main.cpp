@@ -6,14 +6,13 @@
 #include <direct.h>
 #include <WS2tcpip.h>
 #include "Signin.h"
-#include "Alarm.h"
+//#include "Alarm.h"
 #include "Login.h"
 #include "Messanger.h"
 #include "TimeTable.h"
 #include "Tool.h"
 //#include "TimeTable.h"
 using namespace std;
-
 fd_set Fd;
 #pragma comment(lib,"ws2_32.lib")
 void Sign(SOCKET client) {
@@ -24,12 +23,12 @@ void Log(SOCKET client) {
 	Login login(client);
 	login.logging(client);
 }
-void Message(SOCKET client, string id) {
-	Alarm alarm(client, id);
-	alarm.Messanger(client, id);
-	Messanger messanger(client, id);
-	messanger.in(client, id);
-}
+//void Message(SOCKET client, string id) {
+//	Alarm alarm(client, id);
+//	alarm.Messanger(client, id);
+//	Messanger messanger(client, id);
+//	messanger.in(client, id);
+//}
 void Table(SOCKET client, string id) {
 	TimeTable table(client, id);
 	table.table(client, id);
@@ -95,20 +94,20 @@ int main() {
 							thread LOGIN(&Log, sock);
 							LOGIN.detach();
 						}
-						else if (strcmp(buf, "Messanger") == 0) {
-							cout << "Messanger in" << endl;
-							buf[MAX_BUFFER_SIZE];
-							ZeroMemory(buf, MAX_BUFFER_SIZE);
-							int byteIn = recv(sock, buf, MAX_BUFFER_SIZE, 0);
-							if (byteIn <= 0) {
-								closesocket(sock);
-								FD_CLR(sock, &Fd);
-							}
-							else {
-								thread Messange(&Message, sock, buf);
-								Messange.detach();
-							}
-						}
+						//else if (strcmp(buf, "Messanger") == 0) {
+						//	cout << "Messanger in" << endl;
+						//	buf[MAX_BUFFER_SIZE];
+						//	ZeroMemory(buf, MAX_BUFFER_SIZE);
+						//	int byteIn = recv(sock, buf, MAX_BUFFER_SIZE, 0);
+						//	if (byteIn <= 0) {
+						//		closesocket(sock);
+						//		FD_CLR(sock, &Fd);
+						//	}
+						//	else {
+						//		thread Messange(&Message, sock, buf);
+						//		Messange.detach();
+						//	}
+						//}
 						else if (strcmp(buf, "TimeTable") == 0) {
 							cout << "TimeTable in" << endl;
 							buf[MAX_BUFFER_SIZE];
