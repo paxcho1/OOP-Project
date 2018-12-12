@@ -36,7 +36,7 @@ int TimeTable::table(SOCKET client, string id) {
 						msg = "001 " + iter->first + " " + iter->second;
 						Send(client, msg);
 					}
-				}Send(client, (char*)"000");
+				}Send(client, "000");
 				Sche.clear();
 				file = "c:/server/" + id + "/schedule/weekly/" + day + ".txt";
 				tool::TxtToMap(file.c_str(), Sche);
@@ -49,7 +49,7 @@ int TimeTable::table(SOCKET client, string id) {
 						msg = "003 " + iter->first + " " + iter->second;
 						Send(client, msg);
 					}
-				}Send(client, (char*)"002");
+				}Send(client, "002");
 				file = "c:/server/" + id + "/schedule/group/" + date + ".txt";
 				tool::TxtToGSche(file.c_str(), Sche);
 				Schedule Group; int G = 0;
@@ -204,7 +204,7 @@ int TimeTable::table(SOCKET client, string id) {
 				int result = 0;
 				string msg;
 				strtok(buf, " ");
-				int Cur_Date = atoi(strtok(NULL, " "));
+				char* Cur_Date = strtok(NULL, " ");
 				char* Time = strtok(NULL, " ");
 				char* Dup_Time = _strdup(Time);
 				char* day = strtok(NULL, " ");
@@ -246,9 +246,9 @@ int TimeTable::table(SOCKET client, string id) {
 					else {
 						do {
 							cout << FindData.cFileName << endl;
-							int File_Date = atoi(FindData.cFileName);
-							if (Cur_Date > File_Date) {}
-							else if (Cur_Date < File_Date) {
+							char* File_Date = FindData.cFileName;
+							if (strcmp(Cur_Date,File_Date) > 0) {}
+							else if (strcmp(Cur_Date, File_Date) < 0) {
 								//현재 날짜 이후 파일들
 								Schedule Find_File;
 								string File_Date = FindData.cFileName;
@@ -310,9 +310,9 @@ int TimeTable::table(SOCKET client, string id) {
 						else {
 							do {
 								cout << FindData.cFileName << endl;
-								int File_Date = atoi(FindData.cFileName);
-								if (Cur_Date > File_Date) {}
-								else if (Cur_Date < File_Date) {
+								char* File_Date = FindData.cFileName;
+								if (strcmp(Cur_Date, File_Date) > 0) {}
+								else if (strcmp(Cur_Date, File_Date) < 0) {
 									//현재 날짜 이후 파일들
 									Schedule Find_File;
 									string File_Date = FindData.cFileName;
