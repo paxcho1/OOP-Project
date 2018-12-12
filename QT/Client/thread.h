@@ -26,6 +26,8 @@ signals:
     void Send_Message(QString);           //006
     void ReceiveInvite(QString);          //007
     void AccceptFriend(QString);          //008
+    void GroupFreeTime(QString);          //009
+    void GroupMember(QString);            //010
 
 public slots:
 

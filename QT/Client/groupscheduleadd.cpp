@@ -45,13 +45,17 @@ void GroupScheduleAdd::on_Add_btn_clicked()
     QString StartTime = ui->GroupStartTime->time().toString("hh,mm");
     QString EndTime = ui->GroupEndTime->time().toString("hh,mm");
     QString Dow = str.split(" ").at(1);
-    QString Contents = ui->GroupContents->text();
+    QString Contents = ui->GroupContents->text().toUtf8();
 
     QString ss = "007 ";
     qDebug(Contents.toUtf8().constData());
-    ss = ss.append(R_Name.c_str()).append(" ").append(day).append(" ").append(StartTime).append(",").append(EndTime).append(" ").append(Dow).append(" ").append(Contents);
+    ss = ss.append(R_Name.c_str()).append(" ").append(day).append(" ").append(StartTime).append(",").append(EndTime).append(" ").append(Dow);
 
-    string msg = ss.toUtf8().constData();
+    string contents = Contents.toLocal8Bit().constData();
+
+
+    string sibal = ss.toLocal8Bit().constData();
+    string msg = sibal + " " + contents;
     qDebug(msg.c_str());
 
     send(sock, msg.c_str(), MAX_BUFFER_SIZE, 0);

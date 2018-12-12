@@ -119,6 +119,7 @@ void Timetable::on_calendarWidget_clicked(const QDate &date)
 
 void Timetable::on_Messanger_btn_clicked()
 {
+
     thr->terminate();
 
     List list;

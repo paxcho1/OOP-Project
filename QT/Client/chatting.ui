@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>790</width>
+    <width>1064</width>
     <height>627</height>
    </rect>
   </property>
@@ -18,7 +18,7 @@
     <rect>
      <x>9</x>
      <y>9</y>
-     <width>771</width>
+     <width>1041</width>
      <height>611</height>
     </rect>
    </property>
@@ -28,6 +28,13 @@
       <property name="rightMargin">
        <number>0</number>
       </property>
+      <item>
+       <widget class="QLabel" name="label">
+        <property name="text">
+         <string>채팅방</string>
+        </property>
+       </widget>
+      </item>
       <item>
        <widget class="QTextEdit" name="Chatting_Text">
         <property name="font">
@@ -76,6 +83,13 @@
       <property name="rightMargin">
        <number>0</number>
       </property>
+      <item>
+       <widget class="QLabel" name="label_2">
+        <property name="text">
+         <string>그룹일정</string>
+        </property>
+       </widget>
+      </item>
       <item>
        <widget class="QListWidget" name="GroupScheduleList"/>
       </item>

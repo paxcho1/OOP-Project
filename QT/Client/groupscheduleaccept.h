@@ -2,6 +2,7 @@
 #define GROUPSCHEDULEACCEPT_H
 
 #include "tool.h"
+#include "thread.h"
 
 namespace Ui {
 class GroupScheduleAccept;
@@ -17,17 +18,19 @@ public:
     void SetSocket(SOCKET s);
     void SetId(string i);
     void SetRoomName(string s);
-    void SetThread(QThread* t);
+    void SetThread();
     void SetDate(QString s);
     void SetTime(QString s);
     void SetDOW(QString s);
     void SetContents(QString s);
+    void SetList();
 
 private slots:
     void on_Accept_clicked();
     void on_Reject_clicked();
     void Success();
     void Failed();
+    void ResetList(QString);
 
 private:
     Ui::GroupScheduleAccept *ui;
@@ -38,7 +41,7 @@ private:
     QString Time;
     QString DOW;
     QString Contents;
-    QThread* thr;
+    Thread* thr;
 };
 
 #endif // GROUPSCHEDULEACCEPT_H

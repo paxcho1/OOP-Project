@@ -15,7 +15,6 @@ void Thread::SetSocket(SOCKET s) {Server = s;}
 
 void Thread::run()
 {
-    qRegisterMetaType<std::string>("string");
     QString strLine;
     QTextCodec *codec = QTextCodec::codecForLocale();
     QString strUnicodeLine;
@@ -75,8 +74,14 @@ void Thread::run()
             strLine.remove(0,4);
             emit AccceptFriend(strLine);
         }
-
-
+        else if(strcmp(code.c_str(),"009")==0){
+            strLine.remove(0,4);
+            emit GroupFreeTime(strLine);
+        }
+        else if(strcmp(code.c_str(),"010")==0){
+            strLine.remove(0,4);
+            emit GroupMember(strLine);
+        }
         ZeroMemory(buf, MAX_BUFFER_SIZE);
 
 

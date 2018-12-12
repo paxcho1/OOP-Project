@@ -98,7 +98,15 @@ void Chatting::FileRead() {
         QString strUnicodeLine = codec->toUnicode( strLine.toLocal8Bit() );
         if (strLine.at(0) == "_") {
             Groupmsg = strLine;
-            ui->GroupScheduleList->addItem(Groupmsg);
+            QString str = Groupmsg.remove(0, Groupmsg.indexOf(" "));
+            QString str1 = str.split("____").at(0);
+            QString str2 = str.split("____").at(1);
+            str1.remove(0,3);
+            str1.truncate(str1.lastIndexOf(QChar(' ')));
+            str1.truncate(str1.lastIndexOf(QChar(' ')));
+            str1.truncate(str1.lastIndexOf(QChar(' ')));
+            str = str1 + str2;
+            ui->GroupScheduleList->addItem(str);
         }
         else {
             ui->Chatting_Text->append(strUnicodeLine);
@@ -151,6 +159,8 @@ void Chatting::on_GroupScheduleList_itemDoubleClicked(QListWidgetItem *item)
     QString dow = str.split("( ").at(1).split(" | ").at(2).split(" ").at(0);
     QString contents = str.split(" ").at(2);
 
+    thr->terminate();
+
     accept->setWindowTitle("Accept");
     accept->SetDate(date);
     accept->SetTime(time);
@@ -159,6 +169,8 @@ void Chatting::on_GroupScheduleList_itemDoubleClicked(QListWidgetItem *item)
     accept->SetRoomName(R_Name);
     accept->SetSocket(sock);
     accept->SetId(id);
-    accept->SetThread(thr);
+    accept->SetThread();
     accept->exec();
+
+    thr->start();
 }

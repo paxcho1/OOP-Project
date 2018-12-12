@@ -6,6 +6,10 @@ GroupScheduleAccept::GroupScheduleAccept(QWidget *parent) :
     ui(new Ui::GroupScheduleAccept)
 {
     ui->setupUi(this);
+
+    QObject::connect(thr, SIGNAL(GroupAddSuccess()), this, SLOT(Success()));      //003 성공
+    QObject::connect(thr, SIGNAL(GroupAddFailed()), this, SLOT(Failed()));        //004 실패
+    QObject::connect(thr, SIGNAL(GroupMember(QString)), this, SLOT(Failed(ResetList(QString))));        //010 참여자확인
 }
 
 GroupScheduleAccept::~GroupScheduleAccept()
@@ -21,8 +25,10 @@ void GroupScheduleAccept::SetId(string i) {
     id = i;
 }
 
-void GroupScheduleAccept::SetThread(QThread *t) {
-    thr = t;
+void GroupScheduleAccept::SetThread() {
+    thr->SetId(id);
+    thr->SetSocket(sock);
+    thr->start();
 }
 
 void GroupScheduleAccept::SetRoomName(string s) {
@@ -46,8 +52,6 @@ void GroupScheduleAccept::SetContents(QString s) {
 }
 
 void GroupScheduleAccept::on_Accept_clicked() {
-    QObject::disconnect(thr, SIGNAL(GroupAddSuccess()), this, SLOT(Success()));      //003 성공
-    QObject::disconnect(thr, SIGNAL(GroupAddFailed()), this, SLOT(Failed()));        //004 실패
 
     QString ss = "008 ";
     qDebug(Contents.toUtf8().constData());
@@ -58,8 +62,7 @@ void GroupScheduleAccept::on_Accept_clicked() {
 
     send(sock, msg.c_str(), MAX_BUFFER_SIZE, 0);
 
-    QObject::connect(thr, SIGNAL(GroupAddSuccess()), this, SLOT(Success()));      //003 성공
-    QObject::connect(thr, SIGNAL(GroupAddFailed()), this, SLOT(Failed()));        //004 실패
+    SetList();
 }
 
 void GroupScheduleAccept::on_Reject_clicked() {
@@ -73,9 +76,10 @@ void GroupScheduleAccept::on_Reject_clicked() {
     send(sock, msg.c_str(), MAX_BUFFER_SIZE, 0);
 
     QMessageBox Msgbox;
-    Msgbox.setText(QString::fromLocal8Bit("Didn't participate in the schedle"));
+    Msgbox.setText(QString::fromLocal8Bit("Didn't participate in the schedule"));
     Msgbox.exec();
-    this->close();
+
+    SetList();
 }
 
 void GroupScheduleAccept::Success() {
@@ -92,3 +96,21 @@ void GroupScheduleAccept::Failed() {
     this->close();
 }
 
+void GroupScheduleAccept::SetList() {
+    QString ss = "011 ";
+    qDebug(Contents.toUtf8().constData());
+    ss = ss.append(R_Name.c_str()).append(" ").append(Date).append(" ").append(Time).append(" ").append(DOW).append(" ").append(Contents);
+
+    string msg = ss.toUtf8().constData();
+    qDebug(msg.c_str());
+
+    send(sock, msg.c_str(), MAX_BUFFER_SIZE, 0);
+}
+
+void GroupScheduleAccept::ResetList(QString str) {
+    QStringList lst = str.split(",");
+    ui->GroupList->clear();
+    for(int i = 0; i < lst.size(); i++) {
+        ui->GroupList->addItem(lst[i]);
+    }
+}
