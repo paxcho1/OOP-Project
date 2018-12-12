@@ -29,8 +29,15 @@ void DailyScheduleAdd::SetDayofWeek(QString dow) {
     DOW = dow;
 }
 
+void DailyScheduleAdd::SetThread(TimeThread *t) {
+    thr = t;
+}
+
 void DailyScheduleAdd::on_Add_btn_clicked()
 {
+    QObject::disconnect(thr, SIGNAL(DailyAddSuccess()), this, SLOT(Success()));      //004 성공
+    QObject::disconnect(thr, SIGNAL(DailyAddFailed()), this, SLOT(Failed()));        //005 실패
+
     StartTime = ui->StartTime->time().toString("hh,mm");
     EndTime = ui->EndTime->time().toString("hh,mm");
     Contents = ui->Contents->text();
@@ -46,21 +53,29 @@ void DailyScheduleAdd::on_Add_btn_clicked()
     str = str.append(" ");
     str = str.append(DOW);
     str = str.append(" ");
-
     string ss = Contents.toUtf8().constData();
-
     string msg = str.toUtf8().constData();
 
     msg = msg + ss;
-
-        qDebug(msg.c_str());
-
-    QMessageBox Msgbox;
-    Msgbox.setText(QString::fromLocal8Bit("Schedule added"));
-    Msgbox.exec();
+    qDebug(msg.c_str());
 
     send(sock, msg.c_str(), MAX_BUFFER_SIZE, 0);
 
-    this->close();
+
+    QObject::connect(thr, SIGNAL(DailyAddSuccess()), this, SLOT(Success()));      //004 성공
+    QObject::connect(thr, SIGNAL(DailyAddFailed()), this, SLOT(Failed()));        //005 실패
 }
 //002 yy/mm/dd ss,se,es,ee dow effasd    일간일정추가
+void DailyScheduleAdd::Success() {
+    QMessageBox Msgbox;
+    Msgbox.setText(QString::fromLocal8Bit("Schedule added"));
+    Msgbox.exec();
+    this->close();
+}
+
+void DailyScheduleAdd::Failed() {
+    QMessageBox Msgbox;
+    Msgbox.setText(QString::fromLocal8Bit("Overlaps with another schedule"));
+    Msgbox.exec();
+    this->close();
+}

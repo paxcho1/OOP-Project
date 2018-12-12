@@ -9,10 +9,10 @@ Schedule::Schedule(QWidget *parent) :
     thr = new TimeThread(this);
     day = new DailyScheduleAdd(this);
 
-    ui->Schedule_list->addItem("Today's Schedule");
 
-    QObject::connect(thr, SIGNAL(SchedulSend(QString)), this, SLOT(UpdateToday(QString)));
+    QObject::connect(thr, SIGNAL(DailySchedulSend(QString)), this, SLOT(UpdateToday(QString)));
     QObject::connect(thr, SIGNAL(TodayEnd()), this, SLOT(TodayEnd()));
+    QObject::connect(thr, SIGNAL(WeeklySchedulSend(QString)), this, SLOT(UpdateWeekly(QString)));
 }
 
 Schedule::~Schedule()
@@ -34,7 +34,13 @@ void Schedule::SetId(string i) {
 
 void Schedule::SetDate(QString d) {
     date = d;
-    ui->Today->setText(d);
+
+    QString day = d;
+    QString week = d;
+    day.append(" Daily Schedule");
+    week.append(" Weekly Schedule");
+    ui->Today->setText(day);
+    ui->label->setText(week);
 }
 
 void Schedule::SetThread() {
@@ -42,6 +48,7 @@ void Schedule::SetThread() {
    thr->SetSocket(sock);
    thr->start();
 }
+
 void Schedule::on_DaySCheduleAdd_btn_clicked() {
     QString dow = date;
     QString Dat = date;
@@ -50,9 +57,11 @@ void Schedule::on_DaySCheduleAdd_btn_clicked() {
     day->SetDate(Dat);
     day->SetSocket(sock);
     day->SetId(id);
+    day->SetThread(thr);
     day->setModal(true);
     day->exec();
 
+    Sleep(10);
     SetList();
 }
 
@@ -62,7 +71,7 @@ void Schedule::on_DaySCheduleDelete_btn_clicked() {
     dow.remove(0, 9);
     Dat.truncate(Dat.lastIndexOf(" "));
 
-    QString sel = ui->Schedule_list->currentItem()->text();
+    QString sel = ui->DailySchedule_list->currentItem()->text();
     QString ss = sel;
     ss = ss.remove(0, ss.lastIndexOf(" "));
     if (strcmp(ss.toUtf8().constData(), " Schedule") == 0) {
@@ -86,6 +95,7 @@ void Schedule::on_DaySCheduleDelete_btn_clicked() {
     qDebug(msg.c_str());
     send(sock, msg.c_str(), MAX_BUFFER_SIZE, 0);
 
+    Sleep(10);
     SetList();
     }
 }
@@ -94,28 +104,36 @@ void Schedule::SetList() {
     string da = date.toUtf8().constData();
     string msg = "000 " + da;
     qDebug(msg.c_str());
+
+    ui->WeeklySchedule_list->clear();
+    ui->DailySchedule_list->clear();
+
     send(sock, msg.c_str(), MAX_BUFFER_SIZE, 0);
 }
 
 void Schedule::UpdateToday(QString str) {
     QString Do = str;
     QStringList ls = str.split(",");
-    ls[3].remove(3);
-    Do.remove(0, 9);
+    ls[3].remove(3, ls[3].size());
+    Do.remove(0, 12);
     QString Time = ls[0].append(":").append(ls[1]).append(" ~ ").append(ls[2]).append(":").append(ls[3]);
 
     QString sche = Time + " " + Do;
-    ui->Schedule_list->addItem(sche);
+    ui->DailySchedule_list->addItem(sche);
+}
+
+void Schedule::UpdateWeekly(QString str) {
+    QString Do = str;
+    QStringList ls = str.split(",");
+    ls[3].remove(3, ls[3].size());
+    Do.remove(0, 12);
+    QString Time = ls[0].append(":").append(ls[1]).append(" ~ ").append(ls[2]).append(":").append(ls[3]);
+
+    QString sche = Time + " " + Do;
+    ui->WeeklySchedule_list->addItem(sche);
 }
 
 void Schedule::TodayEnd() {
-    QString dow = date;
-    dow.remove(0, 9);
-    string da = dow.toUtf8().constData();
-    string ss = da + " Weekly Schedule";
-    QString strLine = QString::fromUtf8(ss.c_str());
-    QTextCodec *codec = QTextCodec::codecForLocale();
-    QString strUnicodeLine = codec->toUnicode( strLine.toLocal8Bit() );
-    ui->Schedule_list->addItem(strUnicodeLine);
+    Sleep(10);
 }
 

@@ -32,10 +32,10 @@
        <widget class="QTextEdit" name="Chatting_Text">
         <property name="font">
          <font>
-          <family>나눔명조 ExtraBold</family>
-          <pointsize>14</pointsize>
-          <weight>75</weight>
-          <bold>true</bold>
+          <family>맑은 고딕 Semilight</family>
+          <pointsize>12</pointsize>
+          <weight>50</weight>
+          <bold>false</bold>
          </font>
         </property>
         <property name="readOnly">
@@ -77,7 +77,7 @@
        <number>0</number>
       </property>
       <item>
-       <widget class="QListWidget" name="listWidget"/>
+       <widget class="QListWidget" name="GroupScheduleList"/>
       </item>
      </layout>
     </item>

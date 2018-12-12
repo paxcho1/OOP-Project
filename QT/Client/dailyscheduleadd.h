@@ -2,6 +2,7 @@
 #define DAILYSCHEDULEADD_H
 
 #include "tool.h"
+#include "timethread.h"
 
 namespace Ui {
 class DailyScheduleAdd;
@@ -18,9 +19,12 @@ public:
     void SetId(string i);
     void SetDate(QString d);
     void SetDayofWeek(QString dow);
+    void SetThread(TimeThread* t);
 
 private slots:
     void on_Add_btn_clicked();
+    void Success();
+    void Failed();
 
 private:
     Ui::DailyScheduleAdd *ui;
@@ -31,6 +35,7 @@ private:
     QString Contents;
     SOCKET sock;
     string id;
+    TimeThread* thr;
 };
 
 #endif // DAILYSCHEDULEADD_H

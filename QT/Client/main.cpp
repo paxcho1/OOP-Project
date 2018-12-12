@@ -9,24 +9,11 @@ int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
     // 윈속 초기화
-        string ip = "127.0.0.1";
+        string ip = "165.194.17.7";
         int port = 4296;
         WSADATA data;
         WORD ver = MAKEWORD(2, 2);
         int wsInit = WSAStartup(ver, &data);
-        if (wsInit != 0) {
-            QMessageBox msgBox;
-            msgBox.setWindowTitle("Warning!!");
-            msgBox.setText("Winsock Reset Failed");
-            msgBox.exec();
-            exit(1);
-        }
-        else {
-            QMessageBox msgBox;
-            msgBox.setText("Winsock Reset Succeeded");
-            msgBox.exec();
-        }
-
 
         SOCKET consock = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
         sockaddr_in insock;

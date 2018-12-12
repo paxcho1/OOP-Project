@@ -26,6 +26,7 @@ private slots:
     void on_DaySCheduleAdd_btn_clicked();
     void on_DaySCheduleDelete_btn_clicked();
     void UpdateToday(QString);
+    void UpdateWeekly(QString);
     void TodayEnd();
 
 private:

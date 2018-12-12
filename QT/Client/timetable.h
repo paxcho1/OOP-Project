@@ -6,6 +6,7 @@
 #include "list.h"
 #include "schedule.h"
 #include "weeklyscheduleadd.h"
+#include "weeklyscheduledelete.h"
 #include "dailyscheduleadd.h"
 #include "timethread.h"
 
@@ -26,6 +27,7 @@ public:
     string GetId();
     void Send000();
     void Thre();
+    void SendtTI();
 
 private slots:
     void on_calendarWidget_clicked(const QDate &date);
@@ -34,6 +36,7 @@ private slots:
     void on_WeekSCheduleDelete_btn_clicked();
     void updateTime();
     void UpdateToday(QString);
+    void UpdateWeekly(QString);
     void TodayEnd();
     void on_DaySCheduleAdd_btn_clicked();
     void on_DaySCheduleDelete_btn_clicked();
@@ -43,7 +46,9 @@ private:
     SOCKET sock;
     string id;
     WeeklyScheduleAdd* week;
+    WeeklyScheduleDelete* weekdel;
     DailyScheduleAdd* day;
+    QDate Date;
     TimeThread* thr;
 };
 

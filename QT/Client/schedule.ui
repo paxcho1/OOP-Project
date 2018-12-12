@@ -34,7 +34,17 @@
      </widget>
     </item>
     <item>
-     <widget class="QListWidget" name="Schedule_list"/>
+     <widget class="QListWidget" name="DailySchedule_list"/>
+    </item>
+    <item>
+     <widget class="QLabel" name="label">
+      <property name="text">
+       <string>TextLabel</string>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QListWidget" name="WeeklySchedule_list"/>
     </item>
     <item>
      <layout class="QHBoxLayout" name="horizontalLayout">

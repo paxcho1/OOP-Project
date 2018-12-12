@@ -2,6 +2,7 @@
 #define WEEKLYSCHEDULEADD_H
 
 #include "tool.h"
+#include "timethread.h"
 
 namespace Ui {
 class WeeklyScheduleAdd;
@@ -17,9 +18,14 @@ public:
     void SetSocket(SOCKET s);
     void SetId(string i);
     void SetToday(QString s);
+    void SetThread(TimeThread* t);
 
 private slots:
     void on_Add_btn_clicked();
+    void Success();
+    void FailedbyDaily(QString);
+    void FailedbyWeek();
+    void FailedbyGroup(QString);
 
 private:
     Ui::WeeklyScheduleAdd *ui;
@@ -30,6 +36,7 @@ private:
     QString Contents;
     SOCKET sock;
     string id;
+    TimeThread* thr;
 };
 
 #endif // WEEKLYSCHEDULEADD_H

@@ -39,7 +39,8 @@ SOURCES += \
     thread.cpp \
     dailyscheduleadd.cpp \
     weeklyscheduleadd.cpp \
-    timethread.cpp
+    timethread.cpp \
+    weeklyscheduledelete.cpp
 
 HEADERS += \
         client.h \
@@ -56,7 +57,8 @@ HEADERS += \
     thread.h \
     dailyscheduleadd.h \
     weeklyscheduleadd.h \
-    timethread.h
+    timethread.h \
+    weeklyscheduledelete.h
 
 FORMS += \
         client.ui \
@@ -69,9 +71,13 @@ FORMS += \
     makechatroom.ui \
     schedule.ui \
     dailyscheduleadd.ui \
-    weeklyscheduleadd.ui
+    weeklyscheduleadd.ui \
+    weeklyscheduledelete.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
+
+DISTFILES += \
+    client.qmodel

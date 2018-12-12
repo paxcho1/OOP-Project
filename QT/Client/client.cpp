@@ -42,7 +42,9 @@ void Client::on_Login_btn_clicked()
     string pw = Pw.toUtf8().constData();
     ui->ID_line->clear();
     ui->PW_line->clear();
+
     QMessageBox Msgbox;
+
     if (Id.isEmpty() || Pw.isEmpty()) {
         if(Id.isEmpty() && !Pw.isEmpty()) {
             Msgbox.setText("Write ID");
@@ -62,10 +64,14 @@ void Client::on_Login_btn_clicked()
         recv(sock, buf, MAX_BUFFER_SIZE, 0);
 
         if (strcmp(buf, "enter your Id and Password") == 0) {
+            Sleep(10);
             send(sock, id.c_str(), MAX_BUFFER_SIZE, 0);
+                qDebug(id.c_str());
             recv(sock, buf, MAX_BUFFER_SIZE, 0);
             if (strcmp(buf, "enter your Id and Password") == 0) {
+                Sleep(10);
                 send(sock, pw.c_str(), MAX_BUFFER_SIZE, 0);
+                qDebug(pw.c_str());
                 recv(sock, buf, MAX_BUFFER_SIZE, 0);
             }
         }
@@ -94,10 +100,8 @@ void Client::on_Login_btn_clicked()
             time.setWindowTitle("Time Table");
             time.SetId(id);
             time.SetSocket(GetSocket());
+            time.SendtTI();
             time.Thre();
-            string msg = "TimeTable";
-            send(sock, msg.c_str(), MAX_BUFFER_SIZE, 0);
-            send(sock, id.c_str(), MAX_BUFFER_SIZE, 0);
             time.Send000();
             time.exec();
 
