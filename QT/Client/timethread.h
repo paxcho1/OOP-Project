@@ -26,9 +26,9 @@ signals:
     void DailyAddFailed();                  //005 일정등록실패
     void WeeklyAddSuccess();                //006 주간일정등록성공
     void WeeklyAddFailedbyDaily(QString);   //008 주간등록실패일간겹침
-    void WeeklyAddFailedbyWeek();          //009 주간등록실패주간겹침
+    void WeeklyAddFailedbyWeek();           //009 주간등록실패주간겹침
     void WeeklyAddFailedbyGroup(QString);   //010 주간등록실패그룹겸침
-
+    void GroupSchedulSend(QString);         //011 그룹일정보내기
 };
 
 #endif // TIMETHREAD_H

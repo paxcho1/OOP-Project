@@ -9,7 +9,7 @@ WeeklyScheduleAdd::WeeklyScheduleAdd(QWidget *parent) :
     ui->WeekSelect->addItem("mon");
     ui->WeekSelect->addItem("tue");
     ui->WeekSelect->addItem("wed");
-    ui->WeekSelect->addItem("thr");
+    ui->WeekSelect->addItem("thu");
     ui->WeekSelect->addItem("fri");
     ui->WeekSelect->addItem("sat");
     ui->WeekSelect->addItem("sun");

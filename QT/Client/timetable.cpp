@@ -19,6 +19,7 @@ Timetable::Timetable(QWidget *parent) :
     QObject::connect(thr, SIGNAL(DailySchedulSend(QString)), this, SLOT(UpdateToday(QString)));                 //001
     QObject::connect(thr, SIGNAL(TodayEnd()), this, SLOT(TodayEnd()));                                          //000
     QObject::connect(thr, SIGNAL(WeeklySchedulSend(QString)), this, SLOT(UpdateWeekly(QString)));               //003
+    QObject::connect(thr, SIGNAL(GroupSchedulSend(QString)), this, SLOT(UpdateGroup(QString)));                 //011
 }
 
 Timetable::~Timetable()
@@ -56,16 +57,17 @@ void Timetable::Send000() {
     QString str;
     if (ui->calendarWidget->selectedDate().isNull()) {
         Date = ui->CurrentTime->date();
-        str = QLocale{QLocale::English}.toString(Date, "yy.MM.dd ddd").toLower();
+        str = QLocale{QLocale::English}.toString(Date, "yy,MM,dd ddd").toLower();
     }
     else {
         Date = ui->calendarWidget->selectedDate();
-         str = QLocale{QLocale::English}.toString(Date, "yy.MM.dd ddd").toLower();
+         str = QLocale{QLocale::English}.toString(Date, "yy,MM,dd ddd").toLower();
     }
     string da = str.toUtf8().constData();
     string msg = "000 " + da;
     qDebug(msg.c_str());
 
+    ui->GroupSchedule_list->clear();
     ui->WeeklySchedule_list->clear();
     ui->DailySchedule_list->clear();
     Sleep(10);
@@ -137,7 +139,7 @@ void Timetable::on_Messanger_btn_clicked()
 
 void Timetable::on_WeekSCheduleAdd_btn_clicked()
 {
-    QString Dat = ui->CurrentTime->date().toString("yy/MM/dd");
+    QString Dat = ui->CurrentTime->date().toString("yy,MM,dd");
     week->SetToday(Dat);
     week->SetSocket(sock);
     week->SetId(id);
@@ -156,6 +158,7 @@ void Timetable::on_WeekSCheduleDelete_btn_clicked() {
     weekdel->SetSocket(sock);
     weekdel->SetId(id);
     weekdel->SetThread();
+    weekdel->setModal(true);
     weekdel->exec();
 
     thr->start();
@@ -190,10 +193,23 @@ void Timetable::UpdateWeekly(QString str) {
     ui->WeeklySchedule_list->addItem(sche);
 }
 
+void Timetable::UpdateGroup(QString str) {
+    QString Do = str;
+    QStringList ls = str.split(",");
+    ls[3].remove(2, ls[3].size());
+    Do.remove(0, 12);
+    QString Time = ls[0].append(":").append(ls[1]).append(" ~ ").append(ls[2]).append(":").append(ls[3]);
+
+    QStringList lst = Do.split("|");
+
+    QString sche = Time + " " + lst[2] + "|" + lst[1];
+    ui->GroupSchedule_list->addItem(sche);
+}
+
 void Timetable::on_DaySCheduleAdd_btn_clicked()
 {
     Date = ui->calendarWidget->selectedDate();
-    QString str = QLocale{QLocale::English}.toString(Date, "yy.MM.dd ddd").toLower();
+    QString str = QLocale{QLocale::English}.toString(Date, "yy,MM,dd ddd").toLower();
     QString dow = str;
     QString Dat = str;
     day->SetDayofWeek(dow.remove(0, 9));
@@ -212,7 +228,7 @@ void Timetable::on_DaySCheduleAdd_btn_clicked()
 void Timetable::on_DaySCheduleDelete_btn_clicked()
 {
     Date = ui->calendarWidget->selectedDate();
-    QString str = QLocale{QLocale::English}.toString(Date, "yy.MM.dd ddd").toLower();
+    QString str = QLocale{QLocale::English}.toString(Date, "yy,MM,dd ddd").toLower();
     QString dow = str;
     QString Dat = str;
     QMessageBox Msgbox;

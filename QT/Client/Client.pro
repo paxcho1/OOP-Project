@@ -40,7 +40,9 @@ SOURCES += \
     dailyscheduleadd.cpp \
     weeklyscheduleadd.cpp \
     timethread.cpp \
-    weeklyscheduledelete.cpp
+    weeklyscheduledelete.cpp \
+    groupscheduleadd.cpp \
+    groupscheduleaccept.cpp
 
 HEADERS += \
         client.h \
@@ -58,7 +60,9 @@ HEADERS += \
     dailyscheduleadd.h \
     weeklyscheduleadd.h \
     timethread.h \
-    weeklyscheduledelete.h
+    weeklyscheduledelete.h \
+    groupscheduleadd.h \
+    groupscheduleaccept.h
 
 FORMS += \
         client.ui \
@@ -72,7 +76,9 @@ FORMS += \
     schedule.ui \
     dailyscheduleadd.ui \
     weeklyscheduleadd.ui \
-    weeklyscheduledelete.ui
+    weeklyscheduledelete.ui \
+    groupscheduleadd.ui \
+    groupscheduleaccept.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
@@ -81,3 +87,6 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 
 DISTFILES += \
     client.qmodel
+
+STATECHARTS += \
+    CL.scxml

@@ -2,6 +2,8 @@
 #define CHATTING_H
 
 #include "tool.h"
+#include "groupscheduleadd.h"
+#include "groupscheduleaccept.h"
 #include <QTextCodec>
 
 namespace Ui {
@@ -30,6 +32,8 @@ public:
 private slots:
     void on_MessageSend_btn_clicked();
     void Msg_Handle();
+    void on_GroupScheduleAdd_btn_clicked();
+    void on_GroupScheduleList_itemDoubleClicked(QListWidgetItem *item);
 
 private:
     Ui::Chatting *ui;
@@ -37,7 +41,10 @@ private:
     string id;
     string R_Name;
     QString filepath;
+    QString Groupmsg;
     QThread* thr;
+    GroupScheduleAdd* group;
+    GroupScheduleAccept* accept;
 };
 
 #endif // CHATTING_H

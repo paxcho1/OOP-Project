@@ -10,11 +10,12 @@ List::List(QWidget *parent) :
     thr = new Thread(this);
   //alarm = new FriendAlarm(this);
 
+
     chat = new Chatting(this);
 
-    QObject::connect(thr, SIGNAL(Send_Message(QString)), this, SLOT(Alarm(QString)));
-    QObject::connect(thr, SIGNAL(AccceptFriend(QString)), this, SLOT(ResetList(QString)));
-    QObject::connect(thr, SIGNAL(ReceiveInvite(QString)), this, SLOT(InviteAlarm(QString)));
+    QObject::connect(thr, SIGNAL(Send_Message(QString)), this, SLOT(Alarm(QString)));           //006
+    QObject::connect(thr, SIGNAL(ReceiveInvite(QString)), this, SLOT(InviteAlarm(QString)));    //007
+    QObject::connect(thr, SIGNAL(AccceptFriend(QString)), this, SLOT(ResetList(QString)));      //008
 }
 
 List::~List()

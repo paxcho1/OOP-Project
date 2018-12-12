@@ -37,6 +37,7 @@ private slots:
     void updateTime();
     void UpdateToday(QString);
     void UpdateWeekly(QString);
+    void UpdateGroup(QString);
     void TodayEnd();
     void on_DaySCheduleAdd_btn_clicked();
     void on_DaySCheduleDelete_btn_clicked();

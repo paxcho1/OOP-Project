@@ -79,6 +79,13 @@
       <item>
        <widget class="QListWidget" name="GroupScheduleList"/>
       </item>
+      <item>
+       <widget class="QPushButton" name="GroupScheduleAdd_btn">
+        <property name="text">
+         <string>그룹 일정 추가</string>
+        </property>
+       </widget>
+      </item>
      </layout>
     </item>
    </layout>

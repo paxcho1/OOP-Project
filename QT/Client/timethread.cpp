@@ -69,6 +69,11 @@ void TimeThread::run() {
             strUnicodeLine = codec->toUnicode(strLine.toLocal8Bit());
             emit WeeklyAddFailedbyGroup(strUnicodeLine);
         }
+        else if(strcmp(code.c_str(),"011")==0){
+            strLine.remove(0,4);
+            strUnicodeLine = codec->toUnicode(strLine.toLocal8Bit());
+            emit GroupSchedulSend(strUnicodeLine);
+        }
         ZeroMemory(buf, MAX_BUFFER_SIZE);
     }
 }

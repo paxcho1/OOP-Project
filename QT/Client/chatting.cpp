@@ -6,6 +6,8 @@ Chatting::Chatting(QWidget *parent) :
     ui(new Ui::Chatting)
 {
     ui->setupUi(this);
+    group = new GroupScheduleAdd(this);
+    accept = new GroupScheduleAccept(this);
 }
 
 Chatting::~Chatting()
@@ -31,6 +33,7 @@ string Chatting::GetId() {
 
 void Chatting::SetRoomName(string s) {
     R_Name = s;
+    qDebug(R_Name.c_str());
 }
 
 string Chatting::GetRoomName() {
@@ -87,12 +90,19 @@ void Chatting::FileRead() {
     QFile file(filepath);
     file.open(QIODevice::ReadOnly | QIODevice::Text);
     ui->Chatting_Text->clear();
+    ui->GroupScheduleList->clear();
     QTextStream stream(&file);
     while(!stream.atEnd()) {
-    QString strLine = stream.readLine();
-    QTextCodec *codec = QTextCodec::codecForLocale();
-    QString strUnicodeLine = codec->toUnicode( strLine.toLocal8Bit() );
-    ui->Chatting_Text->append(strUnicodeLine);
+        QString strLine = stream.readLine();
+        QTextCodec *codec = QTextCodec::codecForLocale();
+        QString strUnicodeLine = codec->toUnicode( strLine.toLocal8Bit() );
+        if (strLine.at(0) == "_") {
+            Groupmsg = strLine;
+            ui->GroupScheduleList->addItem(Groupmsg);
+        }
+        else {
+            ui->Chatting_Text->append(strUnicodeLine);
+        }
     }
     file.close();
 }
@@ -122,3 +132,33 @@ void Chatting::Msg_Handle() {
     Msgbox.exec();
 }
 
+void Chatting::on_GroupScheduleAdd_btn_clicked()
+{
+    group->SetSocket(sock);
+    group->SetId(id);
+    group->SetThread(thr);
+    group->SetRoomName(R_Name);
+    group->SetFilePath(filepath);
+    group->setModal(true);
+    group->exec();
+}
+
+void Chatting::on_GroupScheduleList_itemDoubleClicked(QListWidgetItem *item)
+{
+    QString str = ui->GroupScheduleList->currentItem()->text();
+    QString date = str.split("( ").at(1).split(" | ").at(0);
+    QString time = str.split("( ").at(1).split(" | ").at(1);
+    QString dow = str.split("( ").at(1).split(" | ").at(2).split(" ").at(0);
+    QString contents = str.split(" ").at(2);
+
+    accept->setWindowTitle("Accept");
+    accept->SetDate(date);
+    accept->SetTime(time);
+    accept->SetDOW(dow);
+    accept->SetContents(contents);
+    accept->SetRoomName(R_Name);
+    accept->SetSocket(sock);
+    accept->SetId(id);
+    accept->SetThread(thr);
+    accept->exec();
+}

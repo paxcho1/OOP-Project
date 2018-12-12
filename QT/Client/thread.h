@@ -18,15 +18,14 @@ private:
     void run();
 
 signals:
-    void Close();                   //000
-    void NoUser();                  //001
-    void FindUser();                //002
-    void AcceptInvite();            //003
-    void Send_Message(QString);     //006
-    void ReceiveInvite(QString);           //007
-    void AccceptFriend(QString);           //008
-    void FinishCount(const int value);
-
+    void Close();                         //000
+    void NoUser();                        //001
+    void FindUser();                      //002
+    void GroupAddSuccess();               //003
+    void GroupAddFailed();                //004
+    void Send_Message(QString);           //006
+    void ReceiveInvite(QString);          //007
+    void AccceptFriend(QString);          //008
 
 public slots:
 

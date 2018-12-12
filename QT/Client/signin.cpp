@@ -38,9 +38,10 @@ void Signin::on_Signin_btn_clicked()
     char buf[MAX_BUFFER_SIZE];
 
     send(sock, id.c_str(), MAX_BUFFER_SIZE, 0);
+    Sleep(10);
+    send(sock, pw.c_str(), MAX_BUFFER_SIZE, 0);
     recv(sock, buf, MAX_BUFFER_SIZE, 0);
     if (strcmp(buf, "Successfully finished signin") == 0) {
-        send(sock, pw.c_str(), MAX_BUFFER_SIZE, 0);
         Msgbox.setText(buf);
         Msgbox.exec();
         this->close();
