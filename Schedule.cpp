@@ -135,3 +135,27 @@ int Schedule::CheckCurOverlap(char* time, int CStarthour, int CStartminute) {
 	}
 	return 0; //no overlap
 }
+int Schedule::Make_Sche(char* time) {
+	char* sh = strtok(time, ",");
+	char* sm = strtok(NULL, ",");
+	char* fh = strtok(NULL, ",");
+	char* fm = strtok(NULL, ",");
+	int hour; int minute;
+	int Starthour = atoi(sh);
+	int Startminute = atoi(sm);
+	int Finalhour = atoi(fh);
+	int Finalminute = atoi(fm);
+	for (hour = Starthour, minute = Startminute; (hour != Finalhour) || (minute != Finalminute);) {
+		if (minute != 59) {
+			if (TimeLine[hour][minute] == 1) {
+				return -1; //overlap exist
+			}
+			minute++;
+		}
+		else {
+			hour++;
+			minute = 0;
+		}
+	}
+	return 0; //no overlap
+}

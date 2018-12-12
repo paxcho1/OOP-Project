@@ -28,4 +28,6 @@ public:
 	void Schedule_invite(char* msg,SOCKET client,string Id);
 	void Accept_schedule(char* msg, SOCKET client, string Id);
 	void Cancel_schedule(char* msg, SOCKET client, string Id);
+	void Group_Time(char* msg, SOCKET client, string Id);
+	void Accept_Index(char* msg, SOCKET client, string Id);
 };

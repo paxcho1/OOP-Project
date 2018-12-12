@@ -20,6 +20,7 @@ public:
 	int* AddTimeLine(string Time); 
 	void Addmap(string time, string sche);
 	int CheckOverlap(char* time); 
-	int CheckCurOverlap(char* time, int Starthour, int Startminute);
+	int CheckCurOverlap(char* time, int Starthour, int Startminute); 
+	int Make_Sche(char* time);
 
 };

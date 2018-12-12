@@ -34,8 +34,6 @@ int MakeChat::Make(SOCKET client, string Id, char* msg) {
 							 //string index_path = "c:/server/Socket_Id_Map.txt";
 			pathstr = "c:/server/" + str + "/chat" + str + "alarm/" + file + ".txt";//filename은 같다 user/alarm/filename의 경로
 			strcpy(path, pathstr.c_str());
-			fpath = "c:/server/" + str + "/schedule/group/" + filename;
-			_mkdir(fpath.c_str());
 			ofstream DWrite(path, ios::app);
 			if (DWrite.is_open()) {
 				cout << "writing file" << endl;

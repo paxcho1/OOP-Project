@@ -154,6 +154,16 @@ int Messanger::in(SOCKET client, string Id) {
 		MessangerSchedule Ms(client, Id);
 		Ms.Cancel_schedule(msg,client, Id);
 		}
+		else if (strcmp(code.c_str(), "010") == 0) {
+		cout << "Cancle Schedule" << endl;
+		MessangerSchedule Ms(client, Id);
+		Ms.Group_Time(msg, client, Id);
+		}
+		else if (strcmp(code.c_str(), "011") == 0) {
+		cout << "Cancle Schedule" << endl;
+		MessangerSchedule Ms(client, Id);
+		Ms.Accept_Index(msg, client, Id);
+		}
 		else if (Bytein <= 0) {
 			tool::TxtToSocket("c:/server/Id_Socket_map.txt", socket_info);
 			iter = socket_info.find(Id);

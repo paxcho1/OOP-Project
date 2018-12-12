@@ -203,8 +203,7 @@ void MessangerSchedule::Accept_schedule(char* msg, SOCKET client, string Id) {//
 		G = Group.CheckOverlap(duptime);
 		schedule.clear();
 	}
-
-	//중복검사
+//중복검사
 //중복검사
 //가능하면 004 + 일정추가 불가능하면 005
 	if (D + W + G == 0)//성공
@@ -325,5 +324,98 @@ void MessangerSchedule::Cancel_schedule(char* msg, SOCKET client, string Id) { /
 			schedule.clear();
 		}
 		tool::GScheToTxt(File_Path.c_str(), AddGroup.Map_Schedule);
+	}
+}
+void MessangerSchedule::Group_Time(char* msg, SOCKET client, string Id) {//010 filename yy,mm,dd wod
+	map<string, SOCKET>::iterator iter;
+	map<string, SOCKET>socket_info;
+	map<string, string> schedule;
+	map<string, string>::iterator siter;
+	char* ptr = strtok(msg, " ");
+	ptr = strtok(NULL, " ");
+	string Chat_file = (strcpy, ptr);//file = filename
+	string date = strtok(NULL, " ");
+	char* timeline = strtok(NULL, " ");
+	string day = strtok(NULL, " ");
+	Schedule Daily; char* duptime;
+	set<char*> sid;
+	set<char*>::iterator iditer;
+	char filename[MAX_BUFFER_SIZE];
+	strcpy(filename, Chat_file.c_str());
+	ptr = strtok(filename, ",");
+	while (ptr != NULL) {
+		sid.insert(ptr);
+		ptr = strtok(NULL, ",");
+	}
+	for (iditer = sid.begin(); iditer != sid.end(); iditer++) {
+		string file = "c:/server/" + Id + "/schedule/daily/" + day + "/" + date + ".txt";
+		tool::TxtToMap(file.c_str(), schedule);
+		if (schedule.size() != 0) {
+			for (siter = schedule.begin(); siter != schedule.end(); ++siter) {
+				Daily.Addmap(siter->first, siter->second);
+				Daily.AddTimeLine(siter->first);
+			}
+		}
+		file = "c:/server/" + Id + "/schedule/weekly/" + day + ".txt";
+		tool::TxtToMap(file.c_str(), schedule);
+		if (schedule.size() != 0) {
+			for (siter = schedule.begin(); siter != schedule.end(); ++siter) {
+				Daily.Addmap(siter->first, siter->second);
+				Daily.AddTimeLine(siter->first);
+			}
+		}
+		//group 검색
+		file = "c:/server/" + Id + "/schedule/group/" + date + ".txt";
+		tool::TxtToGSche(file.c_str(), schedule);
+		if (schedule.size() != 0) {
+			for (siter = schedule.begin(); siter != schedule.end(); ++siter) {
+				char* dupbuf = _strdup(siter->second.c_str()); strtok(dupbuf, "|"); strtok(NULL, "|"); dupbuf = strtok(NULL, " ");
+				char* gid = strtok(dupbuf, ",");
+				while (gid != NULL) {
+					if (gid == Id) {
+						Daily.Addmap(siter->first, siter->second);
+						Daily.AddTimeLine(siter->first);
+					}
+					gid = strtok(NULL, ",");
+				}
+			}
+		}
+	}
+
+}
+void MessangerSchedule::Accept_Index(char* msg, SOCKET client, string Id) {//011 filename yy,mm,dd 00,00,00,00 wod sche
+	map<string, SOCKET>::iterator iter;
+	map<string, SOCKET>socket_info;
+	map<string, string> schedule;
+	map<string, string>::iterator siter;
+	char* duptime;
+	char* ptr = strtok(msg, " ");
+	ptr = strtok(NULL, " ");
+	string Chat_file = (strcpy, ptr);//file = filename
+	string date = strtok(NULL, " ");
+	char* timeline = strtok(NULL, " ");
+	string day = strtok(NULL, " ");
+	ptr = strtok(NULL, " ");
+	char Str[MAX_BUFFER_SIZE];
+	string Sche;
+	strcpy(Str, "");
+	while (ptr != NULL) {
+		strcat(Str, ptr);
+		Sche = strcat(Str, " ");
+		ptr = strtok(NULL, " ");
+	}
+	string File_Path = "c:/server/" + Id + "/schedule/group/" + date + ".txt";
+	tool::TxtToGSche(File_Path.c_str(), schedule);
+		if (schedule.size() != 0) {
+				for (siter = schedule.begin(); siter != schedule.end(); ++siter) {
+					duptime = _strdup(timeline);
+					char* dupbuf = _strdup(siter->second.c_str());
+					char* cfile = strtok(dupbuf, "|");
+					dupbuf = strtok(NULL, "|");
+					char* alid = strtok(NULL, "|");
+			if ((strcmp(siter->first.c_str(), timeline) == 0) && (strcmp(cfile, Chat_file.c_str()) == 0) && (strcmp(dupbuf, Str) == 0)) {
+				Send(client, alid);
+			}
+		}
 	}
 }
