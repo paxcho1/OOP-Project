@@ -28,7 +28,8 @@ void tool::splitString(vector<string> &v_str, const string &str, const char ch) 
 	}
 }
 void tool::Send(SOCKET client, string msg) {
-	send(client, msg.c_str(), MAX_BUFFER_SIZE, 0);
+	thread CSend(&mux, client, msg);
+	CSend.detach();
 }
 
 int tool::Recv(SOCKET client, char buf[]) {
@@ -42,41 +43,18 @@ int tool::Recv(SOCKET client, char buf[]) {
 		return 1;
 	}
 }
-
-string tool::MessangerRecv(SOCKET client, string Id, char buf[]) {
-
-	map<string, SOCKET>::iterator iter;
-	map<string, SOCKET>socket_info;
-	ZeroMemory(buf, MAX_BUFFER_SIZE);
-	int Bytein = recv(client, buf, MAX_BUFFER_SIZE, 0);//error handle
-	if (strcmp(buf, "MessangerClose") == 0) {// 메신저 종료
-		cout << "id:" + Id + " is now logout" << endl;
-		tool::TxtToSocket("c:/server/Id_Socket_map.txt", socket_info);
-		iter = socket_info.find(Id);
-		socket_info.erase(iter);
-		tool::SocketToTxt("c:/server/Id_Socket_map.txt", socket_info);
-		return "MessangerClose";
-	}
-	else if (Bytein <= 0) {
-		cout << "id:" + Id + " is now logout" << endl;
-		tool::TxtToSocket("c:/server/Id_Socket_map.txt", socket_info);
-		iter = socket_info.find(Id);
-		if (iter != socket_info.end()) {
-			socket_info.erase(iter);
-		}
-		cout << "id:" + Id + " is now logout" << endl;
-		tool::SocketToTxt("c:/server/Id_Socket_map.txt", socket_info);
-		return "SocketError";
-	}
-	return buf;
-}
 void tool::VectorToTxt(const char* fileName, vector<string> &Vector) {
+	mutex mtx;
+	mtx.lock();
 	ofstream wFile(fileName);
 	ostream_iterator<string> wFile_iterator(wFile, "\n");
 	copy(Vector.begin(), Vector.end(), wFile_iterator);
 	wFile.close();
+	mtx.unlock();
 }
 void tool::TxtToVector(const char* fileName, vector<string> &Vector) {
+	mutex mtx;
+	mtx.lock();
 	string file_string;
 	ifstream rFile(fileName);
 	while (getline(rFile, file_string)) {
@@ -84,16 +62,22 @@ void tool::TxtToVector(const char* fileName, vector<string> &Vector) {
 			Vector.push_back(file_string);
 	}
 	rFile.close();
+	mtx.unlock();
 }
 void tool::MapToTxt(const char* fileName, map<string, string> &Map) {
+	mutex mtx;
+	mtx.lock();
 	ofstream wFile(fileName);
 	for (map<string, string>::const_iterator iterator = Map.begin(); iterator != Map.end(); ++iterator) {
 		wFile << iterator->first << "|" << iterator->second;  
 		wFile << "\n";
 	}
 	wFile.close();
+	mtx.unlock();
 }
 void tool::TxtToMap(const char* fileName, map<string, string> &Map) {
+	mutex mtx;
+	mtx.lock();
 	ifstream rFile(fileName);
 	string file_string;
 	string key;
@@ -106,17 +90,23 @@ void tool::TxtToMap(const char* fileName, map<string, string> &Map) {
 			++iterator;
 		}
 	}
-
+	rFile.close();
+	mtx.unlock();
 }
 void tool::SocketToTxt(const char* fileName, map<string, SOCKET> &Map) {
+	mutex mtx;
+	mtx.lock();
 	ofstream wFile(fileName);
 	for (map<string, SOCKET>::const_iterator iterator = Map.begin(); iterator != Map.end(); ++iterator) {
 		wFile << iterator->first << "|" << iterator->second;
 		wFile << "\n";
 	}
 	wFile.close();
+	mtx.unlock();
 }
 void tool::TxtToSocket(const char* fileName, map<string, SOCKET> &Id_Socket) {
+	mutex mtx;
+	mtx.lock(); 
 	ifstream rFile(fileName);
 	string file_string;
 	string key;
@@ -128,6 +118,35 @@ void tool::TxtToSocket(const char* fileName, map<string, SOCKET> &Id_Socket) {
 			++iterator;
 		}
 	}
+	rFile.close();
+	mtx.unlock();
+}
+void tool::GScheToTxt(const char* fileName,map<string, string>&Map) {
+	mutex mtx;
+	mtx.lock();
+	ofstream wFile(fileName);
+	for (map<string, string>::const_iterator iterator = Map.begin(); iterator != Map.end(); ++iterator) {
+		wFile << iterator->first << "|" << iterator->second;
+		wFile << "\n";
+	}
+	wFile.close();
+	mtx.unlock();
+}
+void tool::TxtToGSche(const char* fileName,map<string, string>&Map) {
+	mutex mtx;
+	mtx.lock();
+	ifstream rFile(fileName);
+	string file_string;
+	string key;
+	vector<string> v_str;
+	while (getline(rFile, file_string)) {
+		char* buf = _strdup(file_string.c_str());
+		char* time = strtok(buf, "|");
+		char* Str = strtok(NULL,"\n");
+		Map[time] = Str;
+	}
+	rFile.close();
+	mtx.unlock();
 }
 /*
 int tool::DailyScheduleToFile(Schedule &Ds, string Id ,string date ,string day) {//day == 해당요일

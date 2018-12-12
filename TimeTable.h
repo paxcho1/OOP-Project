@@ -9,6 +9,7 @@
 #include <stdio.h>
 #include <algorithm>
 #include "Tool.h"
+#include "Alarm.h"
 #include <stdlib.h>
 #include "Messanger.h"
 #define MAX_BUFFER_SIZE 4092

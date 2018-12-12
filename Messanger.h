@@ -9,7 +9,6 @@
 #include <map>
 #include <algorithm>
 #include "Tool.h"
-#include "Alarm.h"
 #include "AddFriends.h"
 #include "MakeChat.h"
 #include "MessangerSchedule.h"
