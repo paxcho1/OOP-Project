@@ -28,8 +28,8 @@ void tool::splitString(vector<string> &v_str, const string &str, const char ch) 
 	}
 }
 void tool::Send(SOCKET client, string msg) {
-	thread CSend(&mux, client, msg);
-	CSend.detach();
+	Sleep(30);
+	send(client, msg.c_str(), MAX_BUFFER_SIZE, 0);
 }
 
 int tool::Recv(SOCKET client, char buf[]) {

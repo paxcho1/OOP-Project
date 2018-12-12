@@ -39,8 +39,8 @@ public:
 	int FileToDailyScheduleClass(Schedule &Ds, string Id, string date,string day);
 	int FileToWeeklyScheduleClass(Schedule &Ds, string Id, string day);*/
 };
+static mutex mtx;
 static void mux(SOCKET client, string msg) {
-	mutex mtx;
 	mtx.lock();
 	Sleep(10);
 	send(client, msg.c_str(), MAX_BUFFER_SIZE, 0);
